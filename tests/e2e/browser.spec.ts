@@ -132,7 +132,16 @@ test("health describes limits without secrets", async ({ request }) => {
   expect(b.subjectiveSlashing).toBe(false);
   expect(b.serverCustody).toBe(false);
   expect(b.arbitratorCount).toBe(1);
-  expect(b.schemaVersion).toBe(3);
+  expect(b.schemaVersion).toBe(4);
+  expect(b.feeVersion).toBe(1);
+  expect(b.platformTreasury).toBe(
+    "CXjKGEBNTTotzoF26nGPfAG4AFicGgP72SMqUQKY1pJN",
+  );
+  expect(b.fees).toEqual({
+    arbitratorBps: 100,
+    platformBps: 100,
+    refundBps: 0,
+  });
   expect(b.automaticKeeper).toBe(true);
   expect(b.keeper.exactDeadlineGuarantee).toBe(false);
   expect(JSON.stringify(b)).not.toMatch(/api[_-]?key|privateKey|secretKey/i);
