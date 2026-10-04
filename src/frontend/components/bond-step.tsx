@@ -147,7 +147,7 @@ export function BondStep({
       <Link href="/admin" target="_blank" rel="noreferrer">
         {t("Quản lý quỹ cọc trọng tài", "Manage arbitrator bond pool")} ↗
       </Link>
-      {feedback}
+      {isArbitrator && feedback}
     </section>
   );
 }

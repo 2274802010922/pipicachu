@@ -188,7 +188,7 @@ async function action(name: string) {
     .click();
 }
 await role("arbitrator");
-await action("Chấp thuận làm trọng tài");
+await action("Dùng cọc hiện có và nhận deal");
 await role("buyer");
 await action("Nạp tiền vào ký quỹ");
 await page.screenshot({
