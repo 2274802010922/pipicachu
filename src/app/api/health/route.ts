@@ -15,6 +15,7 @@ export async function GET() {
   return json({
     app: "pipicachu",
     version: "0.1.0",
+    commit: process.env.VERCEL_GIT_COMMIT_SHA || "local",
     decoderVersion: "pipicachu/1",
     networks: ["mainnet", "devnet"],
     mainnetWrites: false,
