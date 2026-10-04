@@ -1,0 +1,11 @@
+{
+  "network": "devnet",
+  "wallet": "7M6RmPVbWAsFnV2p2LCVWcd7Kcr5ZHZ61En4WtvKAG2b",
+  "signature": "WsvjPxRoD17BQQTNx8yz4rRNKcGG9B2uD1KkR365DBU9yrvZS3up6xDwodCYQNEM1m7C6XLya3Xs9LtCzUPUUv7",
+  "computeUnits": 300000,
+  "priorityMicroLamports": 0,
+  "simulationPassed": true,
+  "signatureBindingPassed": true,
+  "registered": true,
+  "signer": "CLI test signer; not actual Phantom extension"
+}

@@ -9,6 +9,11 @@ import {
 import { Connection, PublicKey, Transaction } from "@solana/web3.js";
 import bs58 from "bs58";
 import { useLanguage } from "./i18n/provider";
+import { simulationFailureCode } from "@/escrow/simulation";
+import {
+  prepareDevnetWalletTransaction,
+  assertWalletResponse,
+} from "@/escrow/wallet-transaction";
 type Phantom = {
   publicKey: PublicKey | null;
   connect: () => Promise<{ publicKey: PublicKey }>;
@@ -78,10 +83,14 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
     )
       throw new Error("RPC_NETWORK_MISMATCH");
     const latest = await c.getLatestBlockhash();
+    prepareDevnetWalletTransaction(tx);
     tx.feePayer = who;
     tx.recentBlockhash = latest.blockhash;
     const simulation = await c.simulateTransaction(tx);
-    if (simulation.value.err) throw new Error("SIMULATION_FAILED");
+    if (simulation.value.err)
+      throw new Error(
+        simulationFailureCode(simulation.value.err, simulation.value.logs),
+      );
     const message = tx.serializeMessage();
     let signed: Transaction;
     try {
@@ -89,8 +98,7 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
     } catch {
       throw new Error("WALLET_REJECTED");
     }
-    if (!p.publicKey?.equals(who) || !signed.serializeMessage().equals(message))
-      throw new Error("WALLET_CHANGED");
+    assertWalletResponse(who, p.publicKey, message, signed);
     const signature = bs58.encode(signed.signature!);
     const bytes = signed.serialize();
     for (let attempt = 0; attempt < 2; attempt++) {

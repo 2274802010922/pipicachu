@@ -18,3 +18,5 @@ Client Borsh/discriminator đối chứng IDL sinh bằng anchor idl build. Loca
 Proxy whitelist method, genesis Devnet, same-origin, payload cap, signed-program whitelist. Client simulate, kiểm message không đổi sau ký, poll finalized bằng HTTP. Memory limiter best-effort per instance, không global/distributed. Không server signing key.
 
 Mint theo [Circle](https://developers.circle.com/stablecoins/usdc-contract-addresses); issuer/freeze authority là yếu tố tin cậy. Local synthetic mint cùng address không phải Circle issuance. CPI/PDA tham khảo [Anchor](https://www.anchor-lang.com/docs/tokens/basics/transfer-tokens).
+
+Wallet ký: khai báo compute budget trước simulate/sign (300.000 CU, priority price 0 trên Devnet), tránh Phantom tự thêm fee instruction khi chưa có budget. [Phantom mô tả hành vi này](https://github.com/orgs/phantom/discussions/203). Không chấp nhận signed message tùy ý khác bản chuẩn bị: wallet address, full message và signature đều kiểm trước broadcast. Regression dùng Phantom-like provider, không thay cho kiểm extension thực.

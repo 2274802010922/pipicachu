@@ -1,5 +1,54 @@
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
+test("create explains missing arbitrator before asking the wallet to sign", async ({
+  page,
+}) => {
+  await page.addInitScript(() => {
+    const address = "BbftECvBKTHMm6t3Sejyz7E9HmBmcRp7NvEYnAnzb7F3";
+    (window as unknown as { phantom: unknown }).phantom = {
+      solana: {
+        publicKey: { toBase58: () => address },
+        connect: async () => ({ publicKey: { toBase58: () => address } }),
+        on: () => {},
+        removeListener: () => {},
+        signTransaction: async () => {
+          throw new Error("Wallet must not be asked to sign");
+        },
+      },
+    };
+  });
+  let broadcasts = 0;
+  await page.route("**/api/rpc", async (route) => {
+    const body = route.request().postDataJSON();
+    if (body.method === "sendTransaction") broadcasts++;
+    await route.fulfill({
+      json: {
+        jsonrpc: "2.0",
+        id: body.id,
+        result: { context: { slot: 1 }, value: null },
+      },
+    });
+  });
+  await page.goto("/deals/new");
+  await page.getByRole("button", { name: "Kết nối ví", exact: true }).click();
+  await page
+    .getByLabel("Ví người mua", { exact: true })
+    .fill("DwTKmg68k39b8jZWt1CHypfoPs5JuJsuP88SfKcbW3uj");
+  await page
+    .getByLabel("Ví trọng tài", { exact: true })
+    .fill("Ht5k38ysGyt2VKoddxbACCeLoVngQFojNeXzACGz9dEP");
+  await page
+    .getByLabel("Điều khoản công khai", { exact: true })
+    .fill("Test unregistered arbitrator");
+  await page.getByRole("checkbox").check();
+  await page
+    .getByRole("button", { name: "Tạo và ký bằng ví", exact: true })
+    .click();
+  await expect(page.locator("main").getByRole("alert")).toContainText(
+    "Ví trọng tài chưa đăng ký",
+  );
+  expect(broadcasts).toBe(0);
+});
 for (const width of [375, 768, 1024, 1440])
   test(`VI/EN navigation and forms at ${width}`, async ({ page }) => {
     await page.setViewportSize({ width, height: 960 });

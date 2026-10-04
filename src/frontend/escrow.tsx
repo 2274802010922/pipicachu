@@ -81,8 +81,16 @@ function errorMessage(error: unknown, vi: boolean) {
       "Signing cancelled. No transaction was sent.",
     ],
     WALLET_CHANGED: [
-      "Ví hoặc nội dung giao dịch đã thay đổi. Thử lại.",
-      "The wallet or transaction changed. Retry.",
+      "Ví đang kết nối đã thay đổi trong lúc ký. Kết nối lại đúng ví rồi thử lại.",
+      "The connected wallet changed while signing. Reconnect the correct wallet and retry.",
+    ],
+    TRANSACTION_CHANGED: [
+      "Ví trả về nội dung giao dịch khác bản đã chuẩn bị. Ứng dụng đã chặn gửi; giữ phí mặc định trong ví, tải lại trang và thử lại.",
+      "The wallet returned a different transaction message. Broadcast was blocked; keep the wallet’s default fee, reload and retry.",
+    ],
+    INVALID_WALLET_SIGNATURE: [
+      "Chữ ký ví chưa hợp lệ. Giao dịch chưa được gửi; kết nối lại ví và thử lại.",
+      "The wallet signature is invalid. Nothing was broadcast; reconnect and retry.",
     ],
     INVALID_AMOUNT: [
       "Nhập số tiền dương, tối đa 6 chữ số thập phân.",
@@ -99,6 +107,34 @@ function errorMessage(error: unknown, vi: boolean) {
     SIMULATION_FAILED: [
       "Chưa thể thực hiện. Kiểm tra số dư SOL/USDC, quyền thao tác, cọc khả dụng và thời hạn; tải lại trạng thái trước khi thử lại.",
       "Cannot execute. Check SOL/USDC balances, permissions, available bond and deadlines; refresh before retrying.",
+    ],
+    ARBITRATOR_NOT_REGISTERED: [
+      "Ví trọng tài chưa đăng ký trên phiên bản hiện tại. Chủ ví cần vào trang Trọng tài và bấm Đăng ký trọng tài Devnet; sau đó quay lại ví người bán để tạo deal. Chưa cần nạp cọc ở bước tạo.",
+      "This arbitrator wallet is not registered on the current version. Its owner must open Arbitrator and register on Devnet, then return to the seller wallet to create the deal. Bond is not required at creation.",
+    ],
+    PROGRAM_NOT_READY: [
+      "Cấu hình chương trình chưa sẵn sàng. Chủ dự án cần kiểm tra triển khai Devnet.",
+      "Program configuration is not ready. The project owner must check the Devnet deployment.",
+    ],
+    INSUFFICIENT_SOL: [
+      "Ví đang ký chưa đủ SOL Devnet để trả phí mạng và tạo tài khoản on-chain. Bổ sung SOL Devnet rồi thử lại; USDC không thay cho SOL trả phí.",
+      "The signing wallet needs more Devnet SOL for network fees and account rent. Add Devnet SOL and retry; USDC cannot pay SOL fees.",
+    ],
+    INSUFFICIENT_BOND: [
+      "Cọc khả dụng của trọng tài chưa đủ. Chủ ví trọng tài cần nạp thêm cọc trước khi buyer nạp tiền vào deal.",
+      "The arbitrator’s available bond is insufficient. The arbitrator must deposit more bond before the buyer funds the deal.",
+    ],
+    BOND_LOCKED: [
+      "Khoản cọc này đang khóa cho deal chưa kết thúc; chỉ rút được phần cọc khả dụng.",
+      "This bond is reserved for an active deal; only available bond can be withdrawn.",
+    ],
+    ACTION_UNAUTHORIZED: [
+      "Ví đang kết nối không có quyền thực hiện thao tác này. Kiểm tra vai trò và kết nối đúng ví.",
+      "The connected wallet cannot perform this action. Check the role and connect the correct wallet.",
+    ],
+    ACTION_EXPIRED_OR_CHANGED: [
+      "Trạng thái hoặc thời hạn đã thay đổi. Tải lại deal và chọn thao tác hiện có.",
+      "The state or deadline changed. Refresh the deal and choose an available action.",
     ],
     RPC_NETWORK_MISMATCH: [
       "RPC không phải Devnet. Đã chặn thao tác.",
@@ -294,7 +330,7 @@ export function Home() {
 }
 export function CreateDeal() {
   const { t, locale } = useLanguage();
-  const { who } = useWallet();
+  const { who, connection } = useWallet();
   const op = useOperation();
   const [error, setError] = useState("");
   const [created, setCreated] = useState("");
@@ -336,17 +372,21 @@ export function CreateDeal() {
       const nonce = Buffer.from(random).readBigUInt64LE();
       const address = dealAddress(who, nonce).toBase58();
       await op.run(
-        async () => [
-          await createDealIx(
-            who,
-            buyer,
-            arbitrator,
-            nonce,
-            value,
-            times,
-            form.terms,
-          ),
-        ],
+        async () => {
+          if (!(await readArbitrator(connection(), arbitrator)))
+            throw new Error("ARBITRATOR_NOT_REGISTERED");
+          return [
+            await createDealIx(
+              who,
+              buyer,
+              arbitrator,
+              nonce,
+              value,
+              times,
+              form.terms,
+            ),
+          ];
+        },
         async () => {
           setCreated(address);
         },
@@ -395,23 +435,40 @@ export function CreateDeal() {
         </div>
         <div className="grid">
           <label>
-            {t("Ví trọng tài", "Arbitrator wallet")}
+            <span id="arbitrator-wallet-label">
+              {t("Ví trọng tài", "Arbitrator wallet")}
+            </span>
             <input
+              aria-labelledby="arbitrator-wallet-label"
+              aria-describedby="arbitrator-wallet-help"
               required
               value={form.arbitrator}
               onChange={(e) => field("arbitrator", e.target.value)}
             />
+            <small id="arbitrator-wallet-help">
+              {t(
+                "Ví này phải đăng ký trong trang Trọng tài trước khi tạo deal. Cọc cần đủ trước khi người mua nạp tiền.",
+                "This wallet must register on the Arbitrator page before creating a deal. Sufficient bond is required before the buyer funds.",
+              )}{" "}
+              <Link href="/admin" target="_blank" rel="noreferrer">
+                {t("Mở trang Trọng tài", "Open Arbitrator")} ↗
+              </Link>
+            </small>
           </label>
         </div>
         <label>
-          {t("Điều khoản công khai", "Public terms")}
+          <span id="deal-terms-label">
+            {t("Điều khoản công khai", "Public terms")}
+          </span>
           <textarea
+            aria-labelledby="deal-terms-label"
+            aria-describedby="deal-terms-help"
             required
             rows={4}
             value={form.terms}
             onChange={(e) => field("terms", e.target.value)}
           />
-          <small>
+          <small id="deal-terms-help">
             {t(
               "Tối đa 512 byte. Mô tả hàng, tiêu chí bàn giao và kênh trao đổi. Không ghi mật khẩu hoặc dữ liệu riêng tư.",
               "Up to 512 bytes. Describe goods, delivery criteria and communication channel. Do not include passwords or private data.",

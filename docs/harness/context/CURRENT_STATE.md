@@ -9,3 +9,11 @@ Rust build/IDL, 6 flow/38 checks local pass. Program mới deploy Devnet, dump b
 Web: 23 unit/IDL, 7 browser tests, build/lint/typecheck pass. Browser local và Vercel ký bằng test provider đã pass create, một accept, fund, deliver, reject giữ nguyên state, confirm, axe/VI/EN/privacy. Phantom extension thật chưa kiểm.
 
 Đã push main aa30d7c, giữ nguyên commit đổi tiêu đề README của owner (acfc39f). Vercel health đúng v0.3, schemaVersion 3/arbitratorCount 1/Program ID mới; smoke pass. CI 37207354325 pass cả quality và escrow-program. Evidence/handoff cuối được commit riêng; không đổi code tiền. Không cần env mới.
+
+## Sửa lỗi test thủ công
+
+Owner tạo deal khi trọng tài chưa đăng ký: đã tái hiện Anchor AccountNotInitialized/3012 trên account arbitrator, trước khi ký. Thêm precheck và thông báo riêng, hướng dẫn mở trang Trọng tài; không yêu cầu USDC/cọc ở bước tạo.
+
+Owner đăng ký gặp WALLET_CHANGED sau ký. Hai nguyên nhân trước đây gộp chung: đổi ví hoặc signed message khác. Phantom có hành vi thêm priority-fee instruction nếu dapp chưa khai báo compute budget (nguồn chính thức được ghi trong architecture). Fix khai báo 300.000 CU và 0 micro-lamports priority price cho Devnet trước simulate/sign; vẫn so sánh nguyên message và verify signature. Tách WALLET_CHANGED, TRANSACTION_CHANGED, INVALID_WALLET_SIGNATURE. Đây là mitigation khớp hành vi wallet, chưa có signed message trực tiếp từ extension owner để kết luận chắc chắn nguyên nhân.
+
+Regression tái hiện Phantom-like mutation, signed round-trip, chặn đổi ví/địa chỉ nhận/missing signature; browser chặn create trước ký nếu thiếu trọng tài. 37 unit và 8 browser tests, full verify pass. Fresh Devnet registration với explicit budget pass bằng CLI signer, receipt wallet-register-budget.json; không gọi là Phantom extension pass. Contract/IDL/Program ID không đổi, không cần env mới.
