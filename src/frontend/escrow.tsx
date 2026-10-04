@@ -34,6 +34,8 @@ import { actions } from "@/escrow/policy";
 import deployment from "@/escrow/deployment.json";
 import keeperConfig from "@/escrow/keeper-config.json";
 import { eligibleForAutomaticRelease } from "@/escrow/keeper";
+import { bondReadiness } from "@/escrow/bond";
+import { BondStep } from "./components/bond-step";
 import rawSamples from "@/escrow/samples.json";
 const samples = rawSamples as {
   arbitrator: string;
@@ -336,6 +338,7 @@ export function CreateDeal() {
   const op = useOperation();
   const [error, setError] = useState("");
   const [created, setCreated] = useState("");
+  const [createdBond, setCreatedBond] = useState(0n);
   const [form, setForm] = useState({
     buyer: "",
     arbitrator: "",
@@ -391,6 +394,7 @@ export function CreateDeal() {
         },
         async () => {
           setCreated(address);
+          setCreatedBond((value + 9n) / 10n);
         },
       );
     } catch (e) {
@@ -541,6 +545,18 @@ export function CreateDeal() {
         {op.feedback}
         {created && (
           <Notice>
+            <h2>
+              {t(
+                "Bước tiếp theo: Trọng tài nạp cọc",
+                "Next step: Arbitrator deposits bond",
+              )}
+            </h2>
+            <p>
+              {t(
+                `Đã tạo link. Gửi link cho trọng tài để chuẩn bị ${amount(createdBond)} USDC cọc và nhận deal; sau đó người mua nạp tiền.`,
+                `Link created. Share it with the arbitrator to prepare ${amount(createdBond)} USDC bond and accept, then the buyer funds.`,
+              )}
+            </p>
             <Link href={`/deals/${created}`}>
               {t(
                 "Mở deal vừa tạo để sao chép link",
@@ -591,6 +607,10 @@ export function DealView({ id }: { id: string }) {
   const { t, locale } = useLanguage();
   const { who, connection } = useWallet();
   const op = useOperation();
+  const bondOp = useOperation();
+  const [arbitratorProfile, setArbitratorProfile] = useState<
+    Arbitrator | null | undefined
+  >(undefined);
   const [deal, setDeal] = useState<Deal | null>(null),
     [error, setError] = useState(""),
     [loading, setLoading] = useState(true),
@@ -606,6 +626,14 @@ export function DealView({ id }: { id: string }) {
     try {
       const c = connection();
       const d = await readDeal(c, id);
+      let profile: Arbitrator | null | undefined;
+      if (d.state === "created") {
+        try {
+          profile = await readArbitrator(c, new PublicKey(d.arbitrator));
+        } catch {
+          profile = undefined;
+        }
+      }
       const slot = await c.getSlot();
       const time = await c.getBlockTime(slot);
       if (time === null) throw new Error("RPC_UNAVAILABLE");
@@ -613,6 +641,7 @@ export function DealView({ id }: { id: string }) {
       setNow(time);
       setReadAt(Date.now());
       setError("");
+      setArbitratorProfile(profile);
       const history = await c.getSignaturesForAddress(new PublicKey(id), {
         limit: 10,
       });
@@ -620,6 +649,7 @@ export function DealView({ id }: { id: string }) {
     } catch (e) {
       setError(errorMessage(e, locale === "vi"));
       setReadAt(0);
+      setArbitratorProfile(undefined);
       setDeal((current) => (current?.address === id ? current : null));
     } finally {
       setLoading(false);
@@ -636,11 +666,38 @@ export function DealView({ id }: { id: string }) {
   const available =
     deal && readAt
       ? actions(deal, who?.toBase58() || null, now).filter(
-          (name) => name !== "finalize",
+          (name) =>
+            name !== "finalize" &&
+            name !== "accept_deal" &&
+            !(
+              name === "fund" &&
+              !bondReadiness(deal.bond, arbitratorProfile)?.ready
+            ),
         )
       : [];
   const waitingForKeeper =
     deal && readAt && eligibleForAutomaticRelease(deal, now);
+  async function prepareBond(maxMissing: bigint) {
+    if (!deal || !who || who.toBase58() !== deal.arbitrator) return;
+    await bondOp.run(async () => {
+      const c = connection();
+      const latest = await readDeal(c, id);
+      if (latest.state !== "created")
+        throw new Error("ACTION_EXPIRED_OR_CHANGED");
+      const profile = await readArbitrator(c, who);
+      const status = bondReadiness(latest.bond, profile);
+      if (!status) throw new Error("ARBITRATOR_NOT_REGISTERED");
+      if (status.missing > maxMissing)
+        throw new Error("ACTION_EXPIRED_OR_CHANGED");
+      const ixs = [];
+      if (status.missing > 0n)
+        ixs.push(await bondIx("deposit_bond", who, status.missing));
+      if (latest.approvals !== 1)
+        ixs.push(await act("accept_deal", who, new PublicKey(id)));
+      if (!ixs.length) throw new Error("ACTION_EXPIRED_OR_CHANGED");
+      return ixs;
+    }, refresh);
+  }
   async function execute(name: string) {
     if (!deal || !who) return;
     await op.run(async () => {
@@ -757,6 +814,33 @@ export function DealView({ id }: { id: string }) {
           )}
         </Notice>
       )}
+      <ol
+        className="deal-flow"
+        aria-label={t("Các bước giao dịch", "Deal steps")}
+      >
+        {[
+          t("Seller tạo link", "Seller creates link"),
+          t("Trọng tài chuẩn bị cọc", "Arbitrator prepares bond"),
+          t("Buyer nạp tiền", "Buyer funds"),
+          t("Seller giao hàng", "Seller delivers"),
+          t("Buyer kiểm tra / trả tiền", "Buyer reviews / payout"),
+        ].map((label, i) => (
+          <li key={i}>
+            <span className="eyebrow">0{i + 1}</span> {label}
+          </li>
+        ))}
+      </ol>
+      {deal.state === "created" && (
+        <BondStep
+          deal={deal}
+          profile={arbitratorProfile}
+          wallet={who?.toBase58() || null}
+          busy={op.busy || bondOp.busy}
+          fresh={!!readAt && now < deal.fundBy}
+          onPrepare={prepareBond}
+          feedback={bondOp.feedback}
+        />
+      )}
       <div className="grid">
         <section className="panel">
           <span className="badge">USDC · Devnet</span>
@@ -847,8 +931,8 @@ export function DealView({ id }: { id: string }) {
           {deal.state === "created" && (
             <p>
               {t(
-                "Trọng tài chấp thuận trước khi người mua nạp.",
-                "The arbitrator accepts before the buyer funds.",
+                "Bước cọc trọng tài ở phía trên phải hoàn tất trước khi người mua nạp tiền.",
+                "Complete the arbitrator bond step above before the buyer funds.",
               )}{" "}
               {deal.approvals === 1 ? "✓" : "—"} {t("Trọng tài", "Arbitrator")}
             </p>

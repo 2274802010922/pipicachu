@@ -12,6 +12,12 @@ Web: 23 unit/IDL, 7 browser tests, build/lint/typecheck pass. Browser local và 
 
 ## Sửa lỗi test thủ công
 
+## Hiển thị cọc ngay sau tạo link
+
+Sau seller tạo link, UI có lời dẫn bước tiếp theo cho trọng tài và số cọc của deal. Trang deal có thanh 5 bước; bước 2 hiển thị required / available / missing và trạng thái consent. Trọng tài nạp đúng phần thiếu + accept cùng transaction, hoặc dùng pool hiện có. Buyer chỉ thấy fund khi đọc được đủ cọc và đã accept. Không sửa Rust/ABI: cọc chỉ reserve khi buyer fund.
+
+Đọc lại profile trước ký, không tự tăng deposit vượt phần thiếu user đã xem; khác biệt bất lợi yêu cầu refresh. Lỗi đọc không biến thành available=0 hay ready. 48 unit/11 browser pass; fixture UI synthetic có nhãn riêng. Atomic top-up + accept thật Devnet đã kiểm với ví test mới, cọc chưa locked trước funding; receipt bond-preparation.json. Chưa gọi là Phantom extension test.
+
 ## Flow cuối đã chốt và keeper
 
 Seller tạo link; buyer nạp USDC Devnet; seller giao hàng/đánh dấu đã giao; buyer xác nhận hoặc khiếu nại. Không seller cọc, không buyer tạo deal. Một trọng tài và cọc/consent trước funding giữ nguyên để không khóa cọc khi chưa nhận trách nhiệm.

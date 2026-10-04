@@ -418,3 +418,39 @@ th {
     font-size: 30px;
   }
 }
+.bond-step {
+  border: 2px solid var(--blue);
+  background: #fff;
+}
+.deal-flow {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 12px;
+  list-style: none;
+  padding: 0;
+  margin: 24px 0;
+}
+.deal-flow li {
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font-size: 13px;
+  background: white;
+}
+.deal-flow span {
+  display: block;
+  margin-bottom: 4px;
+}
+@media (max-width: 768px) {
+  .deal-flow {
+    grid-template-columns: 1fr;
+  }
+  .deal-flow li {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+  .deal-flow span {
+    margin: 0;
+  }
+}

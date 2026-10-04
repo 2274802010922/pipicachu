@@ -1,0 +1,11 @@
+{
+  "network": "devnet",
+  "deal": "Hu7MPFa5Q3dGaZsc1WUdJc58G9hwpZACcY3Emru9Uzbk",
+  "signature": "3pHRWZ5pqvXVyk6xPrXXP17MnGTd3nJnFPwQQTkvrTqkh8LnHf3p7wys5jgD4hkrkNNUdR9q6uodv5TPeSeJXD8W",
+  "requiredAtomic": "100000",
+  "depositedAtomic": "100000",
+  "availableAfterAtomic": "100000",
+  "approved": true,
+  "bondNotLockedBeforeBuyerFunding": true,
+  "signer": "CLI test signer, not Phantom extension"
+}
