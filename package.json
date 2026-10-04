@@ -1,6 +1,6 @@
 {
   "name": "pipicachu",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "license": "MIT",
   "type": "module",
@@ -21,14 +21,15 @@
     "check": "npm run format:check && npm run lint && npm run typecheck && npm test",
     "verify": "npm run check && npm run build && npm run test:e2e && npm run check:docs",
     "check:docs": "node scripts/checks/docs.mjs",
-    "check:live": "tsx scripts/checks/live.ts",
-    "demo:fixtures": "tsx scripts/devnet/fixtures.ts"
+    "check:live": "tsx scripts/devnet/health.ts",
+    "demo:fixtures": "tsx scripts/devnet/cycle.ts",
+    "test:program": "tsx tests/program/cycle.ts"
   },
   "dependencies": {
     "@fontsource/be-vietnam-pro": "5.3.0",
     "@solana/web3.js": "1.98.4",
     "bs58": "6.0.0",
-    "lossless-json": "4.3.1",
+    "buffer": "6.0.3",
     "lucide-react": "1.48.0",
     "next": "16.3.8",
     "react": "19.3.0",

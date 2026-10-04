@@ -1,37 +1,32 @@
-<div align="center">
+# pipicachu · Escrow deals
 
-<img src="public/brand/picachu-logo.jpg" width="100" alt="pipicachu logo" />
+[Website](https://pipicachu.vercel.app) · [Devnet demo](https://pipicachu.vercel.app/demo) · [Tiếng Việt](README.md)
 
-# pipicachu
+A small escrow tool for community intermediaries and their customers. Sellers create a deal link, two arbitrators accept, buyers deposit Devnet USDC, and delivery is followed by confirmation, timeout release or dispute resolution.
 
-**Solana transactions, explained for beginners in Vietnamese and English.**
+**Devnet only. Test tokens have no real value. No independent audit; upgrade authority is retained.**
 
-Paste a link → read evidenced facts → compare an expected payment.
+## Flow
 
-[Tiếng Việt](README.md) · [Demo](docs/demo/README.md) · [Architecture](docs/architecture/README.md) · [Deployment](docs/deployment/README.md)
+- Immutable participants, mint, amount, deadlines and fee.
+- Program-controlled token vault holds the principal.
+- Missed delivery allows a buyer refund; delivery opens the review window.
+- Buyer confirmation or an undisputed review deadline allows seller payout.
+- Disputes stop timeout payout. Primary arbitration is followed by a preselected backup.
+- If both arbitrators expire, a buyer proposal requires seller acceptance. Without agreement, funds may remain locked.
+- Each arbitrator reserves 10% of deal value. Demo fee is 1% of seller payouts; refunds have no fee.
 
-</div>
+Bond is not insurance. No wrongful-ruling slashing, appeal or automatic keeper. Off-chain goods and game-account ownership are not verified. No validated willingness to pay or traction is claimed.
 
-## What it does
-
-Reads SOL/USDC transfers, status, fees and asset changes, with labeled partial Jupiter interpretation. Compares network, recipient, canonical token mint, exact integer amounts and finality. The core owns numerical conclusions; AI only supplies a short explanation.
-
-No account, transaction history, or wallet connection is required for lookups. The separate Phantom lab signs a 0.001 SOL Devnet transfer. Mainnet is read-only.
-
-## Run
+## Build and review
 
 ```bash
 npm ci
-npm run dev -- --port 3104
+cp .env.example .env.local
+npm run dev
 npm run verify
 ```
 
-See [.env.example](.env.example). Production requires shared Redis; local memory limits are explicitly labeled. New fixture wallets are kept in ignored `work/private`. Never publish private keys or copy another project's configuration.
+[Architecture](docs/architecture/README.md), [deployment](docs/deployment/README.md), [tests](docs/testing/README.md), [evidence](docs/evidence/README.md). Includes Anchor contract, generated IDL, transaction client and executable program tests. No server custody key, AI or account database.
 
-## Limits and evidence
-
-Matching confirms only the fields entered. It does not establish identity, invoice settlement, exchange credit, transaction non-reuse or absolute safety. Missing evidence stays unknown; failed operations are never counted as payments. SOL balance changes can include fees and rent, not just swap amounts.
-
-[Current state](docs/harness/context/CURRENT_STATE.md) · [Tests](docs/testing/README.md) · [Evidence](docs/evidence/README.md) · [Judge kit](docs/judging/README.md)
-
-Technical tests are not user traction or universal accuracy claims. Code is [MIT](LICENSE); see [third-party notices](THIRD_PARTY_NOTICES.md). Owner-provided artwork is excluded from the code license.
+Code MIT; logo excluded. [Notices](THIRD_PARTY_NOTICES.md). Former explainer preserved at checkpoint `7315d42`. Previous Picachu project untouched.

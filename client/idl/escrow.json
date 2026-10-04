@@ -1,0 +1,1409 @@
+{
+  "address": "HwsHDnbuZbXZtVFvgGkZpzAVEAQN3SYJCfZzUa18Ho5V",
+  "metadata": {
+    "name": "pipicachu_escrow",
+    "version": "0.2.0",
+    "spec": "0.1.0"
+  },
+  "instructions": [
+    {
+      "name": "accept_deal",
+      "discriminator": [76, 156, 34, 30, 129, 136, 76, 244],
+      "accounts": [
+        {
+          "name": "actor",
+          "signer": true
+        },
+        {
+          "name": "deal",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [100, 101, 97, 108]
+              },
+              {
+                "kind": "account",
+                "path": "deal.seller",
+                "account": "Deal"
+              },
+              {
+                "kind": "account",
+                "path": "deal.nonce",
+                "account": "Deal"
+              }
+            ]
+          }
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "accept_settlement",
+      "discriminator": [203, 247, 191, 177, 25, 90, 88, 75],
+      "accounts": [
+        {
+          "name": "actor",
+          "signer": true
+        },
+        {
+          "name": "deal",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [100, 101, 97, 108]
+              },
+              {
+                "kind": "account",
+                "path": "deal.seller",
+                "account": "Deal"
+              },
+              {
+                "kind": "account",
+                "path": "deal.nonce",
+                "account": "Deal"
+              }
+            ]
+          }
+        },
+        {
+          "name": "mint",
+          "relations": ["deal", "primary", "backup"]
+        },
+        {
+          "name": "primary",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [97, 114, 98]
+              },
+              {
+                "kind": "account",
+                "path": "deal.primary",
+                "account": "Deal"
+              }
+            ]
+          }
+        },
+        {
+          "name": "backup",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [97, 114, 98]
+              },
+              {
+                "kind": "account",
+                "path": "deal.backup",
+                "account": "Deal"
+              }
+            ]
+          }
+        },
+        {
+          "name": "vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [118, 97, 117, 108, 116]
+              },
+              {
+                "kind": "account",
+                "path": "deal"
+              }
+            ]
+          }
+        },
+        {
+          "name": "buyer_token",
+          "writable": true
+        },
+        {
+          "name": "seller_token",
+          "writable": true
+        },
+        {
+          "name": "primary_token",
+          "writable": true
+        },
+        {
+          "name": "backup_token",
+          "writable": true
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "args": [
+        {
+          "name": "pay_seller",
+          "type": "bool"
+        }
+      ]
+    },
+    {
+      "name": "cancel_deal",
+      "discriminator": [158, 86, 193, 45, 168, 111, 48, 29],
+      "accounts": [
+        {
+          "name": "actor",
+          "signer": true
+        },
+        {
+          "name": "deal",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [100, 101, 97, 108]
+              },
+              {
+                "kind": "account",
+                "path": "deal.seller",
+                "account": "Deal"
+              },
+              {
+                "kind": "account",
+                "path": "deal.nonce",
+                "account": "Deal"
+              }
+            ]
+          }
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "confirm",
+      "discriminator": [174, 1, 15, 213, 3, 190, 131, 0],
+      "accounts": [
+        {
+          "name": "actor",
+          "signer": true
+        },
+        {
+          "name": "deal",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [100, 101, 97, 108]
+              },
+              {
+                "kind": "account",
+                "path": "deal.seller",
+                "account": "Deal"
+              },
+              {
+                "kind": "account",
+                "path": "deal.nonce",
+                "account": "Deal"
+              }
+            ]
+          }
+        },
+        {
+          "name": "mint",
+          "relations": ["deal", "primary", "backup"]
+        },
+        {
+          "name": "primary",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [97, 114, 98]
+              },
+              {
+                "kind": "account",
+                "path": "deal.primary",
+                "account": "Deal"
+              }
+            ]
+          }
+        },
+        {
+          "name": "backup",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [97, 114, 98]
+              },
+              {
+                "kind": "account",
+                "path": "deal.backup",
+                "account": "Deal"
+              }
+            ]
+          }
+        },
+        {
+          "name": "vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [118, 97, 117, 108, 116]
+              },
+              {
+                "kind": "account",
+                "path": "deal"
+              }
+            ]
+          }
+        },
+        {
+          "name": "buyer_token",
+          "writable": true
+        },
+        {
+          "name": "seller_token",
+          "writable": true
+        },
+        {
+          "name": "primary_token",
+          "writable": true
+        },
+        {
+          "name": "backup_token",
+          "writable": true
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "create_deal",
+      "discriminator": [198, 212, 144, 151, 97, 56, 149, 113],
+      "accounts": [
+        {
+          "name": "seller",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [99, 111, 110, 102, 105, 103]
+              }
+            ]
+          }
+        },
+        {
+          "name": "mint",
+          "relations": ["config", "primary", "backup"]
+        },
+        {
+          "name": "primary"
+        },
+        {
+          "name": "backup"
+        },
+        {
+          "name": "deal",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [100, 101, 97, 108]
+              },
+              {
+                "kind": "account",
+                "path": "seller"
+              },
+              {
+                "kind": "arg",
+                "path": "nonce"
+              }
+            ]
+          }
+        },
+        {
+          "name": "vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [118, 97, 117, 108, 116]
+              },
+              {
+                "kind": "account",
+                "path": "deal"
+              }
+            ]
+          }
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "nonce",
+          "type": "u64"
+        },
+        {
+          "name": "buyer",
+          "type": "pubkey"
+        },
+        {
+          "name": "amount",
+          "type": "u64"
+        },
+        {
+          "name": "funding_seconds",
+          "type": "i64"
+        },
+        {
+          "name": "delivery_seconds",
+          "type": "i64"
+        },
+        {
+          "name": "review_seconds",
+          "type": "i64"
+        },
+        {
+          "name": "arbitration_seconds",
+          "type": "i64"
+        },
+        {
+          "name": "terms",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "deliver",
+      "discriminator": [250, 131, 222, 57, 211, 229, 209, 147],
+      "accounts": [
+        {
+          "name": "actor",
+          "signer": true
+        },
+        {
+          "name": "deal",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [100, 101, 97, 108]
+              },
+              {
+                "kind": "account",
+                "path": "deal.seller",
+                "account": "Deal"
+              },
+              {
+                "kind": "account",
+                "path": "deal.nonce",
+                "account": "Deal"
+              }
+            ]
+          }
+        }
+      ],
+      "args": [
+        {
+          "name": "evidence_hash",
+          "type": {
+            "array": ["u8", 32]
+          }
+        }
+      ]
+    },
+    {
+      "name": "deposit_bond",
+      "discriminator": [120, 89, 18, 253, 112, 125, 87, 255],
+      "accounts": [
+        {
+          "name": "authority",
+          "signer": true,
+          "relations": ["arbitrator"]
+        },
+        {
+          "name": "arbitrator",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [97, 114, 98]
+              },
+              {
+                "kind": "account",
+                "path": "authority"
+              }
+            ]
+          }
+        },
+        {
+          "name": "mint",
+          "relations": ["arbitrator"]
+        },
+        {
+          "name": "source",
+          "writable": true
+        },
+        {
+          "name": "vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [98, 111, 110, 100]
+              },
+              {
+                "kind": "account",
+                "path": "arbitrator"
+              }
+            ]
+          }
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "dispute",
+      "discriminator": [216, 92, 128, 146, 202, 85, 135, 73],
+      "accounts": [
+        {
+          "name": "actor",
+          "signer": true
+        },
+        {
+          "name": "deal",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [100, 101, 97, 108]
+              },
+              {
+                "kind": "account",
+                "path": "deal.seller",
+                "account": "Deal"
+              },
+              {
+                "kind": "account",
+                "path": "deal.nonce",
+                "account": "Deal"
+              }
+            ]
+          }
+        }
+      ],
+      "args": [
+        {
+          "name": "evidence_hash",
+          "type": {
+            "array": ["u8", 32]
+          }
+        }
+      ]
+    },
+    {
+      "name": "finalize",
+      "discriminator": [171, 61, 218, 56, 127, 115, 12, 217],
+      "accounts": [
+        {
+          "name": "actor",
+          "signer": true
+        },
+        {
+          "name": "deal",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [100, 101, 97, 108]
+              },
+              {
+                "kind": "account",
+                "path": "deal.seller",
+                "account": "Deal"
+              },
+              {
+                "kind": "account",
+                "path": "deal.nonce",
+                "account": "Deal"
+              }
+            ]
+          }
+        },
+        {
+          "name": "mint",
+          "relations": ["deal", "primary", "backup"]
+        },
+        {
+          "name": "primary",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [97, 114, 98]
+              },
+              {
+                "kind": "account",
+                "path": "deal.primary",
+                "account": "Deal"
+              }
+            ]
+          }
+        },
+        {
+          "name": "backup",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [97, 114, 98]
+              },
+              {
+                "kind": "account",
+                "path": "deal.backup",
+                "account": "Deal"
+              }
+            ]
+          }
+        },
+        {
+          "name": "vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [118, 97, 117, 108, 116]
+              },
+              {
+                "kind": "account",
+                "path": "deal"
+              }
+            ]
+          }
+        },
+        {
+          "name": "buyer_token",
+          "writable": true
+        },
+        {
+          "name": "seller_token",
+          "writable": true
+        },
+        {
+          "name": "primary_token",
+          "writable": true
+        },
+        {
+          "name": "backup_token",
+          "writable": true
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "fund",
+      "discriminator": [218, 188, 111, 221, 152, 113, 174, 7],
+      "accounts": [
+        {
+          "name": "buyer",
+          "signer": true
+        },
+        {
+          "name": "deal",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [100, 101, 97, 108]
+              },
+              {
+                "kind": "account",
+                "path": "deal.seller",
+                "account": "Deal"
+              },
+              {
+                "kind": "account",
+                "path": "deal.nonce",
+                "account": "Deal"
+              }
+            ]
+          }
+        },
+        {
+          "name": "mint",
+          "relations": ["deal", "primary", "backup"]
+        },
+        {
+          "name": "primary",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [97, 114, 98]
+              },
+              {
+                "kind": "account",
+                "path": "deal.primary",
+                "account": "Deal"
+              }
+            ]
+          }
+        },
+        {
+          "name": "backup",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [97, 114, 98]
+              },
+              {
+                "kind": "account",
+                "path": "deal.backup",
+                "account": "Deal"
+              }
+            ]
+          }
+        },
+        {
+          "name": "source",
+          "writable": true
+        },
+        {
+          "name": "vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [118, 97, 117, 108, 116]
+              },
+              {
+                "kind": "account",
+                "path": "deal"
+              }
+            ]
+          }
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "initialize",
+      "discriminator": [175, 175, 109, 31, 13, 152, 155, 237],
+      "accounts": [
+        {
+          "name": "authority",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [99, 111, 110, 102, 105, 103]
+              }
+            ]
+          }
+        },
+        {
+          "name": "mint"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "propose_settlement",
+      "discriminator": [228, 149, 56, 61, 137, 43, 106, 25],
+      "accounts": [
+        {
+          "name": "actor",
+          "signer": true
+        },
+        {
+          "name": "deal",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [100, 101, 97, 108]
+              },
+              {
+                "kind": "account",
+                "path": "deal.seller",
+                "account": "Deal"
+              },
+              {
+                "kind": "account",
+                "path": "deal.nonce",
+                "account": "Deal"
+              }
+            ]
+          }
+        }
+      ],
+      "args": [
+        {
+          "name": "pay_seller",
+          "type": "bool"
+        }
+      ]
+    },
+    {
+      "name": "refund_expired",
+      "discriminator": [118, 153, 164, 244, 40, 128, 242, 250],
+      "accounts": [
+        {
+          "name": "actor",
+          "signer": true
+        },
+        {
+          "name": "deal",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [100, 101, 97, 108]
+              },
+              {
+                "kind": "account",
+                "path": "deal.seller",
+                "account": "Deal"
+              },
+              {
+                "kind": "account",
+                "path": "deal.nonce",
+                "account": "Deal"
+              }
+            ]
+          }
+        },
+        {
+          "name": "mint",
+          "relations": ["deal", "primary", "backup"]
+        },
+        {
+          "name": "primary",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [97, 114, 98]
+              },
+              {
+                "kind": "account",
+                "path": "deal.primary",
+                "account": "Deal"
+              }
+            ]
+          }
+        },
+        {
+          "name": "backup",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [97, 114, 98]
+              },
+              {
+                "kind": "account",
+                "path": "deal.backup",
+                "account": "Deal"
+              }
+            ]
+          }
+        },
+        {
+          "name": "vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [118, 97, 117, 108, 116]
+              },
+              {
+                "kind": "account",
+                "path": "deal"
+              }
+            ]
+          }
+        },
+        {
+          "name": "buyer_token",
+          "writable": true
+        },
+        {
+          "name": "seller_token",
+          "writable": true
+        },
+        {
+          "name": "primary_token",
+          "writable": true
+        },
+        {
+          "name": "backup_token",
+          "writable": true
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "register",
+      "discriminator": [211, 124, 67, 15, 211, 194, 178, 240],
+      "accounts": [
+        {
+          "name": "authority",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [99, 111, 110, 102, 105, 103]
+              }
+            ]
+          }
+        },
+        {
+          "name": "mint",
+          "relations": ["config"]
+        },
+        {
+          "name": "arbitrator",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [97, 114, 98]
+              },
+              {
+                "kind": "account",
+                "path": "authority"
+              }
+            ]
+          }
+        },
+        {
+          "name": "vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [98, 111, 110, 100]
+              },
+              {
+                "kind": "account",
+                "path": "arbitrator"
+              }
+            ]
+          }
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "resolve",
+      "discriminator": [246, 150, 236, 206, 108, 63, 58, 10],
+      "accounts": [
+        {
+          "name": "actor",
+          "signer": true
+        },
+        {
+          "name": "deal",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [100, 101, 97, 108]
+              },
+              {
+                "kind": "account",
+                "path": "deal.seller",
+                "account": "Deal"
+              },
+              {
+                "kind": "account",
+                "path": "deal.nonce",
+                "account": "Deal"
+              }
+            ]
+          }
+        },
+        {
+          "name": "mint",
+          "relations": ["deal", "primary", "backup"]
+        },
+        {
+          "name": "primary",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [97, 114, 98]
+              },
+              {
+                "kind": "account",
+                "path": "deal.primary",
+                "account": "Deal"
+              }
+            ]
+          }
+        },
+        {
+          "name": "backup",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [97, 114, 98]
+              },
+              {
+                "kind": "account",
+                "path": "deal.backup",
+                "account": "Deal"
+              }
+            ]
+          }
+        },
+        {
+          "name": "vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [118, 97, 117, 108, 116]
+              },
+              {
+                "kind": "account",
+                "path": "deal"
+              }
+            ]
+          }
+        },
+        {
+          "name": "buyer_token",
+          "writable": true
+        },
+        {
+          "name": "seller_token",
+          "writable": true
+        },
+        {
+          "name": "primary_token",
+          "writable": true
+        },
+        {
+          "name": "backup_token",
+          "writable": true
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "args": [
+        {
+          "name": "pay_seller",
+          "type": "bool"
+        },
+        {
+          "name": "reason_hash",
+          "type": {
+            "array": ["u8", 32]
+          }
+        }
+      ]
+    },
+    {
+      "name": "withdraw_bond",
+      "discriminator": [222, 199, 141, 31, 188, 93, 155, 40],
+      "accounts": [
+        {
+          "name": "authority",
+          "signer": true,
+          "relations": ["arbitrator"]
+        },
+        {
+          "name": "arbitrator",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [97, 114, 98]
+              },
+              {
+                "kind": "account",
+                "path": "authority"
+              }
+            ]
+          }
+        },
+        {
+          "name": "mint",
+          "relations": ["arbitrator"]
+        },
+        {
+          "name": "source",
+          "writable": true
+        },
+        {
+          "name": "vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [98, 111, 110, 100]
+              },
+              {
+                "kind": "account",
+                "path": "arbitrator"
+              }
+            ]
+          }
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "Arbitrator",
+      "discriminator": [85, 123, 106, 57, 25, 249, 89, 192]
+    },
+    {
+      "name": "Config",
+      "discriminator": [155, 12, 170, 224, 30, 250, 204, 130]
+    },
+    {
+      "name": "Deal",
+      "discriminator": [125, 223, 160, 234, 71, 162, 182, 219]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "Unauthorized",
+      "msg": "Wallet is not authorized for this action"
+    },
+    {
+      "code": 6001,
+      "name": "InvalidTerms",
+      "msg": "Invalid amount, participants, evidence or time window"
+    },
+    {
+      "code": 6002,
+      "name": "WrongState",
+      "msg": "Action is not available in this state or time window"
+    },
+    {
+      "code": 6003,
+      "name": "BondLocked",
+      "msg": "This bond is reserved for active deals"
+    },
+    {
+      "code": 6004,
+      "name": "InsufficientBond",
+      "msg": "Arbitrator needs more available bond"
+    },
+    {
+      "code": 6005,
+      "name": "Overflow",
+      "msg": "Arithmetic overflow"
+    }
+  ],
+  "types": [
+    {
+      "name": "Arbitrator",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "authority",
+            "type": "pubkey"
+          },
+          {
+            "name": "mint",
+            "type": "pubkey"
+          },
+          {
+            "name": "total",
+            "type": "u64"
+          },
+          {
+            "name": "locked",
+            "type": "u64"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Config",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "mint",
+            "type": "pubkey"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Deal",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "seller",
+            "type": "pubkey"
+          },
+          {
+            "name": "buyer",
+            "type": "pubkey"
+          },
+          {
+            "name": "primary",
+            "type": "pubkey"
+          },
+          {
+            "name": "backup",
+            "type": "pubkey"
+          },
+          {
+            "name": "mint",
+            "type": "pubkey"
+          },
+          {
+            "name": "nonce",
+            "type": "u64"
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          },
+          {
+            "name": "bond",
+            "type": "u64"
+          },
+          {
+            "name": "fee",
+            "type": "u64"
+          },
+          {
+            "name": "created_at",
+            "type": "i64"
+          },
+          {
+            "name": "fund_by",
+            "type": "i64"
+          },
+          {
+            "name": "delivery_seconds",
+            "type": "i64"
+          },
+          {
+            "name": "review_seconds",
+            "type": "i64"
+          },
+          {
+            "name": "arbitration_seconds",
+            "type": "i64"
+          },
+          {
+            "name": "deliver_by",
+            "type": "i64"
+          },
+          {
+            "name": "review_by",
+            "type": "i64"
+          },
+          {
+            "name": "arbitrate_by",
+            "type": "i64"
+          },
+          {
+            "name": "state",
+            "type": {
+              "defined": {
+                "name": "State"
+              }
+            }
+          },
+          {
+            "name": "approvals",
+            "type": "u8"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          },
+          {
+            "name": "proposal",
+            "type": "u8"
+          },
+          {
+            "name": "delivery_hash",
+            "type": {
+              "array": ["u8", 32]
+            }
+          },
+          {
+            "name": "dispute_hash",
+            "type": {
+              "array": ["u8", 32]
+            }
+          },
+          {
+            "name": "resolution_hash",
+            "type": {
+              "array": ["u8", 32]
+            }
+          },
+          {
+            "name": "terms",
+            "type": "string"
+          }
+        ]
+      }
+    },
+    {
+      "name": "State",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "Created"
+          },
+          {
+            "name": "Funded"
+          },
+          {
+            "name": "Delivered"
+          },
+          {
+            "name": "Disputed"
+          },
+          {
+            "name": "Completed"
+          },
+          {
+            "name": "Refunded"
+          },
+          {
+            "name": "Cancelled"
+          }
+        ]
+      }
+    }
+  ]
+}

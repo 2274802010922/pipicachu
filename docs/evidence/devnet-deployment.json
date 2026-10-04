@@ -1,0 +1,10 @@
+{
+  "network": "devnet",
+  "programId": "HwsHDnbuZbXZtVFvgGkZpzAVEAQN3SYJCfZzUa18Ho5V",
+  "signature": "2QqkyYzy2MKTwdMgMW4FSLWmhRr4ZMvH4kD5jSYy96AXpo38Dm83apKYFxxK2BfbbBVFAFCnabXmBPpf144LnrdX",
+  "upgradeAuthority": "DwTKmg68k39b8jZWt1CHypfoPs5JuJsuP88SfKcbW3uj",
+  "initializer": "DwTKmg68k39b8jZWt1CHypfoPs5JuJsuP88SfKcbW3uj",
+  "independentAudit": false,
+  "mint": "4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU",
+  "upgradeSignature": "2MXjjL3YUdG5VU3aiLeyaCsGHBjzwvMVfSvCpR8fDp5DUjPpkMcwxTJw6fy9vys9BzLBok5pq3PN8Abi7KX7ptJA"
+}

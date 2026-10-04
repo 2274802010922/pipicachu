@@ -1,21 +1,16 @@
-# Triển khai Vercel
+# Vercel và Devnet
 
-Import **2274802010922/pipicachu** làm project riêng, framework Next.js, Node 24, root repository, install `npm ci`, build `npm run build`. Không nối vào Picachu cũ.
+Vercel: Next.js, npm ci, npm run build, .next; project pipicachu riêng. Program/mint pin trong src/escrow/deployment.json, cập nhật cùng IDL/source, không env override tùy ý.
 
-| Key                    | Value/cách lấy                                                                                          |
-| ---------------------- | ------------------------------------------------------------------------------------------------------- |
-| SOLANA_MAINNET_RPC_URL | `https://api.mainnet-beta.solana.com` để thử; production nên dùng endpoint có lịch sử giao dịch phù hợp |
-| SOLANA_DEVNET_RPC_URL  | `https://api.devnet.solana.com`                                                                         |
-| AI_ENABLED             | `true` khi đã cấu hình key và Redis, `false` để dùng template                                           |
-| AI_MODEL               | `openrouter/free` ban đầu; ghi model thực tế khi nghiệm thu                                             |
-| OPENROUTER_API_KEY     | Key tạo trong dashboard OpenRouter, nhập trực tiếp vào Vercel; không gửi trong chat                     |
-| RATE_LIMIT_REDIS_URL   | REST URL của Redis tương thích Upstash                                                                  |
-| RATE_LIMIT_REDIS_TOKEN | REST token server-only của Redis                                                                        |
-| NEXT_PUBLIC_SITE_URL   | URL production do Vercel cấp cho pipicachu                                                              |
-| DEMO_RECEIVER_ADDRESS  | `A1tGEfNhktM3XypMk9tVHt1Xvs8D5E1SgdBpW1ihWYtc` — ví nhận Devnet mới đã tạo                              |
+| Biến                  | Value                                               |
+| --------------------- | --------------------------------------------------- |
+| NEXT_PUBLIC_SITE_URL  | https://pipicachu.vercel.app                        |
+| SOLANA_DEVNET_RPC_URL | https://api.devnet.solana.com hoặc RPC Devnet riêng |
 
-Hai Redis variables bắt buộc cho production, namespace tách riêng. Health cần productionReady=true/testMode=false. aiConfigured chỉ là cấu hình, không chứng minh provider đã gọi thành công.
+Không cần AI/OpenRouter, Redis, SOLANA_MAINNET_RPC_URL, DEMO_RECEIVER_ADDRESS. Biến cũ có thể xóa; code không đọc. Không private key trên Vercel.
 
-Sau đổi env: redeploy → health → đọc mẫu Mainnet/Devnet → đối chiếu → AI source=ai/model thực → ký demo và đọc lại signature. RPC key, AI key, Redis token không dùng NEXT_PUBLIC.
+Anchor 1.1.2, Solana 3.1.10, Rust và Cargo.lock pin. Build `cargo build-sbf --manifest-path programs/pipicachu-escrow/Cargo.toml`. Kiểm log không Stack offset error vì CLI có thể exit 0.
 
-Nếu agent chưa có login/secret, build và tài liệu vẫn được bàn giao; ghi live gates pending thay vì claim đã deploy.
+Deploy chỉ key pipicachu mới trong vùng ignore, kiểm genesis Devnet. `solana program deploy target/deploy/pipicachu_escrow.so --program-id work/private/escrow-program.json --keypair work/private/fixture-signer.json --url https://api.devnet.solana.com`. Initializer DwTKmg68k39b8jZWt1CHypfoPs5JuJsuP88SfKcbW3uj; mint Config immutable. Để fork: key mới, sửa initializer, declare_id/deployment/Anchor.toml, build IDL và test lại. Upgrade authority demo còn giữ.
+
+[Circle Faucet](https://faucet.circle.com/): Solana Devnet USDC, mint 4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU. SOL trả rent/fee. Không bypass CAPTCHA.

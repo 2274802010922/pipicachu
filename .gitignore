@@ -12,3 +12,8 @@ work/
 *.tsbuildinfo
 __pycache__/
 *.log
+
+target/
+.anchor/
+Cargo.lock.tmp
+.next*/

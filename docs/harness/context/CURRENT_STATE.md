@@ -1,20 +1,9 @@
 # Trạng thái — 04/10/2026
 
-## Scope đã duyệt
+Đã chuyển scope sang escrow USDC Devnet, giữ thương hiệu/UI; tra cứu archived ở checkpoint 7315d42. Picachu cũ không sửa.
 
-pipicachu độc lập, VI/EN, không login hoặc lịch sử. Chuyển SOL/USDC, Jupiter partial, đối chiếu deterministic, lab ký SOL Devnet. Bộ slide và hai video nằm trong scope.
+Chương trình .so build thành công sau sửa stack allocation bằng Box; IDL sinh từ Rust. Bảy flow và 42 checks pass cả local validator lẫn Devnet USDC Circle. Có thêm destination/vault substitution và stale proposal acceptance. Program upgrade thành công, code dump khớp prefix .so, phần dư zero padding. Web: 23 unit/IDL tests, 7 browser tests, 10 routes build, lint/typecheck/links pass. Browser lần đầu có 2 lỗi locator route announcer đã sửa selector đúng vùng, không giảm assertion.
 
-## Đang triển khai
+Đã kiểm script CI-like Linux/WSL với wallet mới, genesis Config/mint synthetic, không cần key maintainer: 42 checks pass. Devnet run đầu dừng vì seller thiếu SOL rent khi tạo deal thứ sáu; bổ sung SOL và chạy lại toàn bộ pass. RPC public có 429 và retry, ghi đúng giới hạn nguồn dữ liệu.
 
-- Core/API/UI đã có. 48 unit/integration pass; production build 13 routes pass.
-- 8 browser tests pass sau sửa label và scoped alert; VI/EN tại 375/768/1024/1440, comparison đủ/failed/fake mint, storage privacy. Lần đầu có 4 lỗi được giữ trong ghi nhận, không giảm assertion để bỏ lỗi.
-- Giao dịch mẫu, live AI, Phantom popup, Vercel, slide/video và publication chưa hoàn tất.
-- Playwright MCP báo chưa có browser extension; CLI Playwright chạy local được. Không dùng mật khẩu/key Picachu cũ.
-- Repo cũ chỉ đọc; logo copied byte-for-byte. Chưa copy old .env hoặc signer.
-- Live genesis Mainnet/Devnet đã xác minh; capture một chuyển USDC Devnet thật, full decode. Jupiter capture đầu gặp version chưa hỗ trợ, đang tìm mẫu legacy/v0 phù hợp.
-- Owner đã cấp 5 SOL Devnet cho signer mới và cung cấp https://pipicachu.vercel.app/. Env Vercel chưa thêm; đây chưa phải production acceptance.
-- Fixture signer đã kiểm transfer SOL0,001, transfer50 token khác mint Circle và một transfer failed thật. Receipt ở docs/evidence/devnet-cycle.json; chưa gọi đây là Phantom popup proof.
-
-## Cổng còn lại
-
-Full verify → commit/push main/CI → raw live fixtures/Devnet receipt → production secrets/deploy → AI/live browser/wallet → slide/video QA → release → chờ owner-uploaded YouTube URLs.
+Phần còn lại: browser signer-to-program flow đang kiểm, Phantom extension thật chưa khả dụng trong browser automation, CI/push và Vercel smoke. Không slide/video mới trong scope. Cọc/slashing/keeper/arb timeout ghi rõ. Browser init provider từng lỗi helper __name của tsx (test harness); đã sửa helper injection riêng trong test.

@@ -1,18 +1,14 @@
-# pipicachu
-
-## Bắt đầu
+# pipicachu — escrow Devnet
 
 - Đọc docs/harness/context/CURRENT_STATE.md, HANDOFF.md và docs/design/system.md.
-- Mục tiêu: giải thích giao dịch Solana cho người mới Việt Nam; đối chiếu do core, AI chỉ chú giải.
-- Repo Picachu cũ là tham chiếu chỉ đọc. Không dùng lại key, .env, deployment, video hoặc dữ liệu riêng của dự án cũ.
-
-## Workflow
-
-- Cập nhật ngữ cảnh, quyết định và bằng chứng cùng code. Commit mới bằng tiếng Việt và push main theo yêu cầu người dùng.
-- npm ci; npm run check; npm run verify. Check live/AI/ký ví là các cổng riêng, không gọi fixture là proof live.
-- Không tạo kết luận thanh toán từ số thực, symbol token, instruction của transaction failed hoặc output LLM.
-- Không biến null/RPC error/missing metadata thành zero hoặc thành công. Không lưu lịch sử người dùng.
-- Chỉ ký và gửi Devnet trong demo; Mainnet chỉ đọc. Giữ message binding, expiry, idempotency và kiểm genesis.
-- VI/EN phải nhất quán; kiểm mobile, bàn phím, loading/empty/error/partial. Giữ light terminal.
-- Code/asset kế thừa ghi nguồn, commit và license trong THIRD_PARTY_NOTICES.md. Logo ngoài phạm vi MIT của code.
-- Không báo hoàn tất khi live deploy, AI thật, ký ví, slide/video còn chưa nghiệm thu; ghi rõ phần phụ thuộc cấu hình owner.
+- Scope: buyer nạp USDC Devnet, seller bàn giao ngoài chuỗi, hai trọng tài, cọc khóa; không phạt xử sai.
+- Không phục hồi API diễn giải vào sản phẩm mới. Picachu cũ chỉ đọc; không dùng key/.env/password/deployment cũ.
+- Commit tiêu đề và nội dung bằng tiếng Việt. Cập nhật ngữ cảnh/bằng chứng, push main và kiểm CI.
+- Mọi quyền tiền do Rust program kiểm tra. UI chỉ UX, không authority.
+- BigInt/u64; Clock mạng. Pending/RPC error không được báo hoàn tất.
+- Không Mainnet writes, keeper, bảo hiểm, marketplace, AI hoặc đổi VND.
+- Không đưa mật khẩu/key/bằng chứng riêng tư vào Git/on-chain/log.
+- VI/EN nhất quán, light terminal; kiểm 375/768/1024/1440, bàn phím/axe.
+- npm run verify; build-sbf + test:program; Devnet receipt và Phantom thật là cổng riêng.
+- Không gọi local/mocked wallet là Phantom proof. Hai trọng tài bỏ xử và không đồng thuận có thể kẹt tiền.
+- Khóa cọc sau khi hai trọng tài accept và buyer nạp; mở khóa đúng một lần khi terminal.

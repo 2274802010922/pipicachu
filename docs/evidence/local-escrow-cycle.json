@@ -1,0 +1,227 @@
+{
+  "at": "2026-10-04T12:32:58.141Z",
+  "network": "local-validator",
+  "tokenSource": "synthetic local mint at Devnet USDC address (not Circle issuance)",
+  "genesis": "HzmH55Kkc3bN4MCvcGtHpmD7yaGsvfwUbsXXS2rnnuGG",
+  "programId": "HwsHDnbuZbXZtVFvgGkZpzAVEAQN3SYJCfZzUa18Ho5V",
+  "roles": {
+    "buyer": "DwTKmg68k39b8jZWt1CHypfoPs5JuJsuP88SfKcbW3uj",
+    "seller": "BbftECvBKTHMm6t3Sejyz7E9HmBmcRp7NvEYnAnzb7F3",
+    "primary": "Ht5k38ysGyt2VKoddxbACCeLoVngQFojNeXzACGz9dEP",
+    "backup": "7KDt8uumw3APftajN6FpnNNWSqC2eKLQfprf7GXgd5Sh"
+  },
+  "results": [
+    {
+      "scenario": "buyer confirmation: cannot fund before arbitrators accept",
+      "detail": "Rejected by program / transaction validation"
+    },
+    {
+      "scenario": "buyer confirmation: wrong buyer",
+      "detail": "Rejected by program / transaction validation"
+    },
+    {
+      "scenario": "seller destination cannot be replaced by buyer account",
+      "detail": "Rejected by program / transaction validation"
+    },
+    {
+      "scenario": "fee destination cannot be redirected",
+      "detail": "Rejected by program / transaction validation"
+    },
+    {
+      "scenario": "unrelated vault cannot substitute deal vault",
+      "detail": "Rejected by program / transaction validation"
+    },
+    {
+      "scenario": "only buyer confirms",
+      "detail": "Rejected by program / transaction validation"
+    },
+    {
+      "scenario": "confirm",
+      "signature": "FAHNYwNzhoGWRjeLCMybJh8eF94HegY4kNKLCJC7v8pgtG5j6mnJnrFVcuBwY1cWBna4G4at6HgqHnQsmH8u64S",
+      "detail": "completed"
+    },
+    {
+      "scenario": "confirm: double settlement",
+      "detail": "Rejected by program / transaction validation"
+    },
+    {
+      "scenario": "review timeout: cannot fund before arbitrators accept",
+      "detail": "Rejected by program / transaction validation"
+    },
+    {
+      "scenario": "review timeout: wrong buyer",
+      "detail": "Rejected by program / transaction validation"
+    },
+    {
+      "scenario": "no early payout",
+      "detail": "Rejected by program / transaction validation"
+    },
+    {
+      "scenario": "finalize",
+      "signature": "3Zoee7P4T4dsQ83WRa6taMFL8cKGKG3A36CvUjhviSscRkupM1cLDfkK1qmPkM66mySjENEaLEeqJGP1SsksWipG",
+      "detail": "completed"
+    },
+    {
+      "scenario": "finalize: double settlement",
+      "detail": "Rejected by program / transaction validation"
+    },
+    {
+      "scenario": "missed delivery: cannot fund before arbitrators accept",
+      "detail": "Rejected by program / transaction validation"
+    },
+    {
+      "scenario": "missed delivery: wrong buyer",
+      "detail": "Rejected by program / transaction validation"
+    },
+    {
+      "scenario": "cannot withdraw reserved bond",
+      "detail": "Rejected by program / transaction validation"
+    },
+    {
+      "scenario": "no late delivery",
+      "detail": "Rejected by program / transaction validation"
+    },
+    {
+      "scenario": "refund_expired",
+      "signature": "3iccKJ8XKBCtjMRx5XaoLYcLBiyrgmMbFEu97gTfSMdkKhw3Vnrfe7bdgyaBEQzZwotL7MVKqkfipYo8qFkDvsMM",
+      "detail": "refunded"
+    },
+    {
+      "scenario": "refund_expired: double settlement",
+      "detail": "Rejected by program / transaction validation"
+    },
+    {
+      "scenario": "arbitrator pays seller: cannot fund before arbitrators accept",
+      "detail": "Rejected by program / transaction validation"
+    },
+    {
+      "scenario": "arbitrator pays seller: wrong buyer",
+      "detail": "Rejected by program / transaction validation"
+    },
+    {
+      "scenario": "disputed funds cannot finalize",
+      "detail": "Rejected by program / transaction validation"
+    },
+    {
+      "scenario": "backup cannot rule early",
+      "detail": "Rejected by program / transaction validation"
+    },
+    {
+      "scenario": "resolve",
+      "signature": "4RwjpS1eQs2CoH5Ui3myBwGyfLzo9HzyiXZQ7cpdSJbHCESXFZoEa4fgGCEeG1QCY8kktUXLgmdXxX5SUipAe1RX",
+      "detail": "completed"
+    },
+    {
+      "scenario": "resolve: double settlement",
+      "detail": "Rejected by program / transaction validation"
+    },
+    {
+      "scenario": "arbitrator refunds buyer: cannot fund before arbitrators accept",
+      "detail": "Rejected by program / transaction validation"
+    },
+    {
+      "scenario": "arbitrator refunds buyer: wrong buyer",
+      "detail": "Rejected by program / transaction validation"
+    },
+    {
+      "scenario": "disputed funds cannot finalize",
+      "detail": "Rejected by program / transaction validation"
+    },
+    {
+      "scenario": "backup cannot rule early",
+      "detail": "Rejected by program / transaction validation"
+    },
+    {
+      "scenario": "resolve",
+      "signature": "yJZNgDu7p5BbpEFwzXmjMqbiCgmyhk8UJ2LzKf5UJZLA9M8UosCZGHCFbpon4PD1g3DsD862FtWShJbsxZhbA6B",
+      "detail": "refunded"
+    },
+    {
+      "scenario": "resolve: double settlement",
+      "detail": "Rejected by program / transaction validation"
+    },
+    {
+      "scenario": "backup arbitration: cannot fund before arbitrators accept",
+      "detail": "Rejected by program / transaction validation"
+    },
+    {
+      "scenario": "backup arbitration: wrong buyer",
+      "detail": "Rejected by program / transaction validation"
+    },
+    {
+      "scenario": "primary cannot rule after own deadline",
+      "detail": "Rejected by program / transaction validation"
+    },
+    {
+      "scenario": "resolve",
+      "signature": "jSqRDNYRSjRKywbK4vrsTZwuCLfzVdX4AYgUBHV2iwmwm7a4dpU1RzEJZqWuYd4AcqLQDh2gKVbMYaw76EcRpKB",
+      "detail": "refunded"
+    },
+    {
+      "scenario": "resolve: double settlement",
+      "detail": "Rejected by program / transaction validation"
+    },
+    {
+      "scenario": "mutual resolution after arbitration timeout: cannot fund before arbitrators accept",
+      "detail": "Rejected by program / transaction validation"
+    },
+    {
+      "scenario": "mutual resolution after arbitration timeout: wrong buyer",
+      "detail": "Rejected by program / transaction validation"
+    },
+    {
+      "scenario": "changed proposal invalidates previous seller acceptance",
+      "detail": "Rejected by program / transaction validation"
+    },
+    {
+      "scenario": "buyer cannot accept own proposal",
+      "detail": "Rejected by program / transaction validation"
+    },
+    {
+      "scenario": "accept_settlement",
+      "signature": "uBHrGHXBKcgY9qpqDpqfWiXHrWiVQvPne7zGAoNXoqFrnGNG2tLeP6UqWeRJrgkV7op7Amgx8xNoQTTYuMq1FvD",
+      "detail": "refunded"
+    },
+    {
+      "scenario": "accept_settlement: double settlement",
+      "detail": "Rejected by program / transaction validation"
+    }
+  ],
+  "deals": [
+    {
+      "address": "CrPcy2ajQnBvD67ykqx1P2dhJqNt73j87bVA4Nthg2it",
+      "vi": "Buyer xác nhận → trả seller",
+      "en": "Buyer confirms → seller paid"
+    },
+    {
+      "address": "3tEmJEH8B1iXDCmYNiWL9oezs6aTHZ11YuKjE9VMgWfT",
+      "vi": "Hết hạn kiểm tra → giải ngân",
+      "en": "Review deadline → release"
+    },
+    {
+      "address": "CUjVbZK1TLMH3MvaZdhm5WWCEuEbPNYKNz9iJ1nrpoFP",
+      "vi": "Không bàn giao → hoàn buyer",
+      "en": "Missed delivery → buyer refunded"
+    },
+    {
+      "address": "5AoNsyiPGt9S7AN2nGmsntJWuLrLn4zmCbebV9W4YU2a",
+      "vi": "Tranh chấp → trọng tài trả seller",
+      "en": "Dispute → arbitrator pays seller"
+    },
+    {
+      "address": "HMnFxb29oBHFo9dSae4fS6sv5shUpdRYc6xo5gCfne9",
+      "vi": "Tranh chấp → trọng tài hoàn buyer",
+      "en": "Dispute → arbitrator refunds buyer"
+    },
+    {
+      "address": "BFs4N2Nk9hCQjTAsa2Szd4h7b6VapojGVaS3WctVFHWA",
+      "vi": "Trọng tài chính bỏ xử → dự phòng hoàn buyer",
+      "en": "Primary timeout → backup refunds buyer"
+    },
+    {
+      "address": "555DJetQa1VWybK1DLBTiKsWgfWsXW5Wug5sMp4G2SG6",
+      "vi": "Hai trọng tài hết hạn → hai bên đồng ý hoàn tiền",
+      "en": "Both arbitrators expire → mutual refund"
+    }
+  ]
+}

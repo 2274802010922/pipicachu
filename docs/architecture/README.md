@@ -1,17 +1,20 @@
-# Kiến trúc và hợp đồng dữ liệu
+# Kiến trúc escrow v0.2
 
-Next.js/React/TypeScript, Vercel Node 24. RPC server-side dùng lossless-json; số lượng tài sản là bigint và JSON integer strings. Zod validate request. Redis namespace pipicachu:v1 cho cache, quota và demo journal; không lưu lịch sử người dùng.
+```text
+Browser + Phantom → Devnet RPC proxy → Anchor program
+                                    ├─ Config immutable mint
+                                    ├─ Arbitrator + BondVault
+                                    └─ Deal + DealVault
+```
 
-Input URL chỉ được phân tích signature/network; không fetch HTML hoặc nhận custom RPC. Chỉ Mainnet/Devnet, kiểm genesis. getTransaction và getSignatureStatuses là hai nguồn khác nhau; null không tự thành failed.
+Config chỉ initializer pin trong chương trình tạo một lần; không instruction sửa mint hoặc admin rút principal. Upgrade authority còn có thể thay code để sửa demo: không gọi hoàn toàn trustless.
 
-Core normalize giữ movements đã thực hiện/đã thử, fee payer, bằng chứng instruction/CPI, native/token balance changes, partial warnings. Địa chỉ owner token phải có bằng chứng lịch sử; không đoán từ authority hoặc người trả phí. USDC theo mint Circle và decimals.
+PDA seeds: config; arb+authority; bond+arb; deal+seller+nonce(u64 LE); vault+deal. SPL Token cổ điển, 6 decimals; không Token-2022 fee/hooks. Kiểm account owner, mint, authority. Checked arithmetic, refund đúng principal, fee chỉ seller payout, cọc tách deal principal.
 
-Comparison chỉ chấp nhận successful/finalized/full/live/direct transfers, kiểm cả movement và balance evidence. Swap, mint, rent refund, outgoing ambiguity, partial hoặc archive không được báo matched. Không invoice/replay protection và không xác nhận sàn ghi có.
+Create chưa khóa cọc. Hai arbitrator accept; funding atomically kiểm cọc khả dụng và khóa cả hai. Settlement chuyển tiền + unlock một lần. Bất kỳ actor chỉ finalize/refund khi đủ điều kiện; destination bị ràng buộc buyer/seller/arb.
 
-AI nhận context tối thiểu, không địa chỉ/signature/memo/raw logs/expected amounts. Headline/amount/verdict nằm ngoài AI. Narrative tối đa hai câu/60 từ, validate/fallback có nhãn.
+Client Borsh/discriminator đối chứng IDL sinh bằng anchor idl build. Local validator thực thi .so, kiểm balances/state. UI policy chỉ mirror, chương trình quyết định.
 
-API: POST analysis/explain/compare; POST demo/prepare và demo/submit; GET demo/status, health. Client không cung cấp facts đáng tin. Tất cả trả Cache-Control no-store; read quota và AI budget có giới hạn.
+Proxy whitelist method, genesis Devnet, same-origin, payload cap, signed-program whitelist. Client simulate, kiểm message không đổi sau ký, poll finalized bằng HTTP. Memory limiter best-effort per instance, không global/distributed. Không server signing key.
 
-Demo prepare xây/simulate 0,001 SOL Devnet, bind SHA-256 message+wallet+expiry. Signature cryptographic được kiểm trước broadcast. Redis SET NX giữ signature trước gửi để retry không tạo transaction khác. Mainnet không có send path. Test signer/receiver mới; private file chỉ trong ignored work/private.
-
-legacy/v0 được hỗ trợ. Jupiter v6 nhận diện program, hiển thị effects và luôn ghi intent partial. Chưa claim full IDL decoder, simulator trước ký Mainnet hoặc hỗ trợ mọi DeFi protocol.
+Mint theo [Circle](https://developers.circle.com/stablecoins/usdc-contract-addresses); issuer/freeze authority là yếu tố tin cậy. Local synthetic mint cùng address không phải Circle issuance. CPI/PDA tham khảo [Anchor](https://www.anchor-lang.com/docs/tokens/basics/transfer-tokens).

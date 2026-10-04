@@ -1,11 +1,11 @@
-# pipicachu — phạm vi sản phẩm
+# Phạm vi và chính sách
 
-User: người Việt mới dùng ví Solana, cần hiểu một giao dịch hoặc đối chiếu khoản nhận. Không phải dashboard đầu tư, không phải hệ thống hóa đơn.
+Người dùng giả định: admin trung gian hàng/dịch vụ số và buyer/seller. WTP chưa xác thực. Không gộp P2P VND vì flow nạp/bằng chứng khác.
 
-Luồng: dán link → đọc dữ kiện → chú giải → tùy chọn đối chiếu. VI mặc định/EN; không account hoặc lịch sử. Demo ký ví là phần riêng, Devnet only.
+Buyer nạp USDC Devnet, SOL trả phí. 4 ví khác nhau; hai trọng tài đăng ký và chấp thuận trước funding. Phí 1%, bond mỗi trọng tài ceil(amount/10). Principal tối thiểu 1, tối đa 1 triệu USDC thử nghiệm. Thời hạn 10 giây đến 30 ngày.
 
-Problem evidence công khai: người dùng hỏi cách đọc [Solscan](https://www.reddit.com/r/solana/comments/19cy6wa/), [unstake/withdraw](https://www.reddit.com/r/Phantom/comments/1c1ejuy/), [gas fees](https://www.reddit.com/r/Phantom/comments/1qpongq/). Đây là self-report quốc tế, không phải nghiên cứu người Việt hay willingness-to-pay.
+Unix timestamp từ Clock. Funding/delivery/dispute dùng `< deadline`, timeout `>=`. Hai vòng trọng tài bằng nhau; primary mất quyền khi backup bắt đầu. Sau hai vòng: buyer đề nghị, seller ký đồng ý đề nghị đang lưu. Không operator tùy ý rút.
 
-Đối thủ: Solscan AI Explanation, TokenToolHub, solana-explain. Không claim world-first hoặc chưa có đối thủ. Giá trị cần kiểm chứng: người Việt đọc đúng dữ kiện và giới hạn hơn khi dùng explorer trực tiếp.
+Payout/refund toàn phần. Phí primary khi seller được trả bình thường, backup nếu backup phán quyết seller payout; refund không phí. Settlement unlock hai bond một lần trong cùng token transfer transaction. Terminal giữ account/vault để tra cứu, chưa đóng/hoàn rent.
 
-Business model là giả thuyết: công cụ miễn phí cho người mới, tích hợp giải thích/đối chiếu cho đơn vị hỗ trợ onboarding. MVP không billing, không traction giả. Không outreach khi chưa có yêu cầu.
+Không phạt xử sai, bảo hiểm, kháng nghị/keeper. Hai trọng tài bỏ xử và hai bên bất đồng có thể khóa tiền vô thời hạn. Không bảo đảm hàng ngoài chuỗi/account game không reclaim/quy định nền tảng cho phép mua bán.

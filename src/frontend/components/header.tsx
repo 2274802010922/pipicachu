@@ -1,11 +1,10 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
 import { useLanguage } from "../i18n/provider";
+import { WalletButton } from "../wallet";
 export function Header() {
-  const { locale, setLocale, t } = useLanguage(),
-    [open, setOpen] = useState(false);
+  const { locale, setLocale, t } = useLanguage();
   return (
     <>
       <a className="skip" href="#main">
@@ -22,21 +21,14 @@ export function Header() {
               priority
             />
             <span>
-              pipicachu
-              <small>{t("HIỂU GIAO DỊCH", "TRANSACTIONS, EXPLAINED")}</small>
+              pipicachu<small>{t("GIAO DỊCH CÓ KÝ QUỸ", "ESCROW DEALS")}</small>
             </span>
           </Link>
           <div className="header-actions">
-            <nav
-              className={open ? "nav open" : "nav"}
-              aria-label={t("Điều hướng chính", "Main navigation")}
-            >
-              <Link onClick={() => setOpen(false)} href="/guide">
-                {t("Hướng dẫn", "Guide")}
-              </Link>
-              <Link onClick={() => setOpen(false)} href="/demo">
-                Demo
-              </Link>
+            <nav aria-label={t("Điều hướng chính", "Main navigation")}>
+              <Link href="/admin">{t("Trọng tài", "Arbitrator")}</Link>
+              <Link href="/demo">Demo</Link>
+              <Link href="/guide">{t("Hướng dẫn", "Guide")}</Link>
             </nav>
             <label className="sr-only" htmlFor="language">
               {t("Ngôn ngữ", "Language")}
@@ -49,13 +41,7 @@ export function Header() {
               <option value="vi">VI</option>
               <option value="en">EN</option>
             </select>
-            <button
-              className="mobile-menu"
-              aria-expanded={open}
-              onClick={() => setOpen(!open)}
-            >
-              {open ? t("Đóng", "Close") : "Menu"}
-            </button>
+            <WalletButton />
           </div>
         </div>
       </header>
@@ -65,12 +51,11 @@ export function Header() {
 export function Footer() {
   const { t } = useLanguage();
   return (
-    <footer className="footer">
+    <footer>
       <p>
-        pipicachu ·{" "}
         {t(
-          "Dữ kiện có bằng chứng. Giải thích dễ hiểu.",
-          "Evidence-backed facts. Clear explanations.",
+          "Solana Devnet · USDC thử nghiệm không có giá trị thật.",
+          "Solana Devnet · Test USDC has no real value.",
         )}
       </p>
       <div>

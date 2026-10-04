@@ -1,4 +1,4 @@
-import { Privacy } from "@/frontend/pages";
+import { Guide } from "@/frontend/escrow";
 export default function Page() {
-  return <Privacy />;
+  return <Guide privacy />;
 }

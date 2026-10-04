@@ -31,3 +31,27 @@ jobs:
             playwright-report/
             test-results/
           retention-days: 7
+  escrow-program:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - name: Install pinned Solana CLI
+        run: |
+          sh -c "$(curl -sSfL https://release.anza.xyz/v3.1.10/install)"
+          echo "$HOME/.local/share/solana/install/active_release/bin" >> "$GITHUB_PATH"
+      - name: Execute escrow program tests
+        run: bash scripts/checks/program.sh
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: escrow-program-evidence
+          path: |
+            docs/evidence/local-escrow-cycle.json
+            work/validator/validator.log
+          retention-days: 7

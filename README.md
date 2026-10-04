@@ -1,72 +1,64 @@
-<div align="center">
+<p align="center"><img src="public/brand/picachu-logo.jpg" width="110" alt="Logo pipicachu"></p>
+<h1 align="center">pipicachu · Giao dịch có ký quỹ</h1>
+<p align="center">Link giao dịch cho admin trung gian và khách của họ.<br>Tiền nằm trong escrow Solana; bàn giao, xác nhận và tranh chấp theo điều kiện đã chốt.</p>
+<p align="center"><a href="https://pipicachu.vercel.app">Website</a> · <a href="https://pipicachu.vercel.app/demo">Demo Devnet</a> · <a href="README.en.md">English</a> · <a href="docs/README.md">Tài liệu</a></p>
 
-<img src="public/brand/picachu-logo.jpg" width="100" alt="Logo pipicachu" />
+> **Chỉ Devnet.** USDC thử nghiệm không có giá trị thật. Chương trình còn quyền nâng cấp và chưa audit độc lập. Không dùng tài sản thật.
 
-# pipicachu
+## Sản phẩm dành cho ai?
 
-**Hiểu giao dịch Solana bằng tiếng Việt.**
+Admin trung gian đang hỗ trợ giao dịch hàng/dịch vụ số qua cộng đồng. pipicachu tách việc giữ tiền khỏi ví cá nhân của admin: buyer nạp vào vault, seller bàn giao ngoài chuỗi, chương trình giải ngân theo xác nhận/thời hạn/phán quyết. Chưa có nghiên cứu người dùng hoặc doanh thu được kiểm chứng; nhu cầu trả phí vẫn là giả thuyết.
 
-Dán link → đọc dữ kiện → đối chiếu khoản nhận.
+## Một luồng nhỏ, chạy trọn vẹn
 
-[English](README.en.md) · [Demo](docs/demo/README.md) · [Kiến trúc](docs/architecture/README.md) · [Triển khai](docs/deployment/README.md)
+```text
+Seller tạo link → Hai trọng tài chấp thuận → Buyer nạp USDC
+  ├─ Seller không bàn giao đúng hạn → Hoàn buyer
+  └─ Seller báo bàn giao
+       ├─ Buyer xác nhận → Trả seller
+       ├─ Hết hạn kiểm tra, không tranh chấp → Có thể gửi lệnh giải ngân
+       └─ Buyer tranh chấp → Trọng tài chính → Dự phòng → Đồng thuận hai bên
+```
 
-![Quality](https://github.com/2274802010922/pipicachu/actions/workflows/quality.yml/badge.svg)
-![License](https://img.shields.io/badge/code-MIT-blue)
-![Solana](https://img.shields.io/badge/Solana-Mainnet%20read%20%2B%20Devnet%20demo-9945FF)
+- Các bên, mint, số tiền, phí và thời hạn cố định khi tạo.
+- Phí demo 1% trừ vào seller payout; refund không thu phí.
+- Mỗi trọng tài khóa cọc 10% giá trị deal khi buyer nạp; mở khóa khi kết thúc.
+- Trọng tài chỉ có thể trả seller hoặc hoàn buyer, không nhập địa chỉ nhận tùy ý.
+- Hết hạn là đủ điều kiện gửi giao dịch, không có keeper tự động.
 
-</div>
+## Giới hạn
 
-## Dành cho ai?
+Escrow không kiểm chứng hàng hóa ngoài chuỗi hoặc bảo đảm tài khoản game không bị thu hồi. Hash chỉ gắn với nội dung bằng chứng đã trao đổi. Cọc không phải bảo hiểm và **chưa có phạt xử sai**. Nếu cả hai trọng tài bỏ xử và hai bên không đồng ý, tiền có thể còn khóa. Upgrade authority và quyền của tổ chức phát hành USDC vẫn là yếu tố tin cậy.
 
-Người Việt mới dùng ví Solana và được gửi một link giao dịch nhưng chưa biết tiền đi đâu, token nào đã nhận, hay giao dịch đã hoàn tất chưa. Tool giải thích bằng VI/EN, kèm dữ kiện và link để kiểm tra lại.
+## Công nghệ và phần tự xây
 
-## Hai việc chính
+Next.js/React/TypeScript, Rust/Anchor, SPL Token. Tự xây state machine, vault/cọc, quyền trọng tài, timeout, UI VI/EN và harness. Anchor/SPL cung cấp serialization, account constraints và token CPI; không tuyên bố phát minh escrow.
 
-- **Hiểu giao dịch:** trạng thái, chuyển SOL/USDC, thay đổi tài sản, phí mạng và hoạt động Jupiter có nguồn; thao tác chưa giải mã được ghi rõ.
-- **Đối chiếu khoản nhận:** kiểm mạng, ví nhận, token theo mint, số tiền và finality. Số liệu do code xử lý bằng số nguyên; AI chỉ chú giải.
+Không AI, database tài khoản, chatbot, marketplace hoặc off-ramp. Backend không giữ key có quyền rút tiền. Trạng thái tiền nằm on-chain.
 
-Tra cứu không cần kết nối ví hoặc đăng nhập. Không lưu lịch sử người dùng. Phòng demo riêng dùng Phantom ký chuyển 0,001 SOL Devnet; Mainnet chỉ đọc.
-
-## Chạy local
+## Chạy và kiểm
 
 ```bash
 npm ci
-npm run dev -- --port 3104
-```
-
-Mở `http://localhost:3104`. Cấu hình theo [.env.example](.env.example). Local dùng limiter bộ nhớ; production cần Redis. Không chép `.env` hoặc key từ dự án khác.
-
-```bash
-npm run check
+cp .env.example .env.local
+npm run dev
 npm run verify
-npm run check:live
-npm run demo:fixtures
 ```
 
-Fixture script tạo ví Devnet mới trong `work/private` bị ignore. Script báo địa chỉ công khai nếu faucet không cấp được SOL. Không gửi key vào chat hoặc Git.
+Chương trình: [kiến trúc](docs/architecture/README.md), [kiểm thử](docs/testing/README.md), [triển khai](docs/deployment/README.md). `npm run test:program` cần validator riêng với `.so` đã build.
 
-## Cấu trúc
+## Dễ tìm phần cần chấm
 
-| Thư mục                   | Nội dung                                                  |
-| ------------------------- | --------------------------------------------------------- |
-| `src/core`                | Chuẩn hóa dữ kiện, số nguyên, đối chiếu                   |
-| `src/solana`              | RPC, kiểm mạng, xây giao dịch demo                        |
-| `src/backend`             | AI, cache, giới hạn và điều phối                          |
-| `src/frontend`, `src/app` | UI VI/EN, route và API                                    |
-| `tests`                   | Unit, integration, browser và fixture có nhãn             |
-| `docs`                    | Sản phẩm, kiến trúc, thiết kế, demo, bằng chứng, bàn giao |
-| `scripts`                 | Kiểm tra, Devnet, slide và video                          |
+| Nội dung                 | Đường dẫn                                              |
+| ------------------------ | ------------------------------------------------------ |
+| Smart contract           | [lib.rs](programs/pipicachu-escrow/src/lib.rs)         |
+| IDL sinh từ Rust         | [escrow.json](client/idl/escrow.json)                  |
+| Client instruction/state | [client.ts](src/escrow/client.ts)                      |
+| Luồng on-chain và số dư  | [cycle.ts](tests/program/cycle.ts)                     |
+| Bằng chứng               | [docs/evidence](docs/evidence/README.md)               |
+| UI/design                | [design system](docs/design/system.md)                 |
+| Ngữ cảnh                 | [CURRENT_STATE](docs/harness/context/CURRENT_STATE.md) |
 
-## Giới hạn cần hiểu
+## License và lịch sử
 
-Kết quả khớp chỉ nói giao dịch khớp thông tin đã nhập. Không xác minh danh tính, hóa đơn, ghi có của sàn, nguồn tiền hợp pháp hay việc link đã được dùng lại. Giao dịch partial/unknown/failed không được báo thanh toán thành công. Jupiter intent được suy luận có nhãn, không gọi toàn bộ số dư SOL giảm là số tiền swap.
-
-## Bằng chứng và trạng thái
-
-[Trạng thái hiện tại](docs/harness/context/CURRENT_STATE.md) · [Kiểm thử](docs/testing/README.md) · [Bằng chứng](docs/evidence/README.md) · [Hồ sơ giám khảo](docs/judging/README.md)
-
-Test kỹ thuật và fixture không phải số liệu khách hàng, độ chính xác trên mọi giao dịch hay traction. Phần chưa nghiệm thu live được ghi rõ trong trạng thái.
-
-## License và nguồn
-
-Mã mới: [MIT](LICENSE). [Nguồn kế thừa](THIRD_PARTY_NOTICES.md). Logo do owner cung cấp, không nằm trong MIT của mã nguồn. Không sao chép nghiệp vụ vay, key, deployment hoặc media của Picachu.
+Code MIT; logo ngoài phạm vi MIT. [LICENSE](LICENSE), [THIRD_PARTY_NOTICES](THIRD_PARTY_NOTICES.md). Ý tưởng tra cứu cũ giữ tại checkpoint `7315d42`, xem [archive](docs/archive/README.md). Các API cũ đã thay khỏi sản phẩm. Picachu cũ không bị sửa.

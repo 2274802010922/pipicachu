@@ -1,12 +1,13 @@
-# Cổng kiểm thử
+# Harness escrow
 
-- `npm run check`: format/lint/typecheck/unit/integration.
-- `npm run verify`: thêm production build, Playwright/axe và link docs.
-- E2E chạy offline fixtures có nhãn trên localhost. PIPICACHU_OFFLINE_TEST chỉ áp dụng khi không chạy Vercel; public production không được bật chế độ này.
-- `npm run check:live`: xác minh genesis và lấy raw mẫu thật; không ký Mainnet.
-- `npm run demo:fixtures`: fixture signer Devnet mới, transfer và failed proof. Popup Phantom là cổng riêng, không coi script signer là popup proof.
-- AI provider thật và Vercel smoke là cổng riêng; template success không phải provider success.
+Web: `npm run verify` = formatting, lint, TypeScript, unit/IDL tests, build, Playwright và local Markdown links. Browser VI/EN ở 375/768/1024/1440, axe, không overflow, đổi ngôn ngữ giữ form, missing-wallet và old API 404.
 
-Không dùng số test như tỷ lệ chính xác trên mọi giao dịch. Fixture expected amounts độc lập từ raw instruction/balances; edge cases synthetic được ghi rõ.
+Program Linux/WSL: Node 24, Rust, Solana CLI 3.1.10. `npm ci`, `bash scripts/checks/program.sh`. Script build .so và chặn Stack offset warnings, tạo synthetic local mint/config bằng key mới trong work/private, start validator riêng port 8897 và thực thi tests/program/cycle.ts.
 
-Dependency audit nằm trong dependency-audit.json. Báo cáo có cảnh báo transitive, không claim zero vulnerabilities hoặc tự chạy force upgrade. Routes RPC của ứng dụng không dùng Jayson/stream-json; SDK ký demo vẫn cần review dependency phạm vi runtime.
+CI không cần private key maintainer: Config được inject genesis (ghi rõ synthetic). Local run của maintainer và live Devnet còn kiểm initialize thật. Không gọi synthetic mint local là Circle issuance.
+
+Flow: buyer confirm, review timeout, missed delivery refund, primary seller payout/buyer refund, backup arbitration, mutual refund sau cả hai timeout. Kiểm số dư principal, phí, vault zero, cọc khóa/unlock, double settlement, wrong buyer/actor, thời hạn và tranh chấp. Negative assertions phải là program/transaction rejection, không chấp nhận RPC unavailable như test pass.
+
+Devnet: cần SOL + Circle USDC đúng mint cho ví pipicachu mới; `npm run demo:fixtures`. Script dùng 2 USDC/deal, tự phân bổ cọc nhỏ nếu thiếu; không dùng Mainnet. Receipt viết docs/evidence/devnet-escrow-cycle.json và samples.json. Account/terms/hash công khai, key chỉ work/private ignore.
+
+Phantom thực là cổng riêng. Provider inject để browser ký bằng ví test chỉ kiểm UI-to-program flow, không chứng minh extension Phantom/popup hoạt động trên mọi thiết bị. User đã yêu cầu ưu tiên tự kiểm Devnet; nếu extension không khả dụng ghi rõ giới hạn.

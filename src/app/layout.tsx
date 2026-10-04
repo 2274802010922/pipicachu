@@ -6,21 +6,16 @@ import "@fontsource/be-vietnam-pro/600.css";
 import "@fontsource/be-vietnam-pro/700.css";
 import "./globals.css";
 import { LanguageProvider } from "@/frontend/i18n/provider";
-import { Footer, Header } from "@/frontend/components/header";
+import { WalletProvider } from "@/frontend/wallet";
+import { Header, Footer } from "@/frontend/components/header";
 export const metadata: Metadata = {
   metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3104",
+    process.env.NEXT_PUBLIC_SITE_URL || "https://pipicachu.vercel.app",
   ),
-  title: "pipicachu — Hiểu giao dịch Solana",
+  title: "pipicachu — Giao dịch có ký quỹ",
   description:
-    "Dán link giao dịch Solana. Hiểu tài sản thay đổi và đối chiếu khoản nhận bằng tiếng Việt hoặc English.",
+    "Tạo link giao dịch, ký quỹ USDC Devnet, xác nhận bàn giao và xử lý tranh chấp.",
   icons: { icon: "/brand/picachu-logo.jpg" },
-  openGraph: {
-    title: "pipicachu",
-    description:
-      "Solana transactions, explained. Kiểm tra giao dịch bằng dữ kiện có bằng chứng.",
-    images: ["/brand/picachu-logo.jpg"],
-  },
 };
 export default async function Layout({
   children,
@@ -33,9 +28,11 @@ export default async function Layout({
     <html lang={locale}>
       <body>
         <LanguageProvider initial={locale}>
-          <Header />
-          <main id="main">{children}</main>
-          <Footer />
+          <WalletProvider>
+            <Header />
+            <main id="main">{children}</main>
+            <Footer />
+          </WalletProvider>
         </LanguageProvider>
       </body>
     </html>

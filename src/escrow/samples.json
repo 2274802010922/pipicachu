@@ -1,0 +1,41 @@
+{
+  "primary": "Ht5k38ysGyt2VKoddxbACCeLoVngQFojNeXzACGz9dEP",
+  "backup": "7KDt8uumw3APftajN6FpnNNWSqC2eKLQfprf7GXgd5Sh",
+  "deals": [
+    {
+      "address": "SDVvPkXdNSx9ocy6eHEQx8YeqSsfQrAc7JGAYQjNmEz",
+      "vi": "Buyer xác nhận → trả seller",
+      "en": "Buyer confirms → seller paid"
+    },
+    {
+      "address": "DVus64MVLQV7PpNxAoNfVa9KSxia9VU14JSuVLSZ1Csz",
+      "vi": "Hết hạn kiểm tra → giải ngân",
+      "en": "Review deadline → release"
+    },
+    {
+      "address": "GBGop2MsJmXb3xLZUh78EEcEUxE8Rpf8d3wiPFRCCF6W",
+      "vi": "Không bàn giao → hoàn buyer",
+      "en": "Missed delivery → buyer refunded"
+    },
+    {
+      "address": "631x9p35RKUsSSggqJn6KqwnYaxwxTqFpvbWvzhkH6g1",
+      "vi": "Tranh chấp → trọng tài trả seller",
+      "en": "Dispute → arbitrator pays seller"
+    },
+    {
+      "address": "F8XcJmTqYW7kRwuy47951TuhUk396nevHY7SPURJwmBP",
+      "vi": "Tranh chấp → trọng tài hoàn buyer",
+      "en": "Dispute → arbitrator refunds buyer"
+    },
+    {
+      "address": "BimiEzLhC5H8p3KyC1NSPdGiPuK2NXHraJu8zGsnsi7E",
+      "vi": "Trọng tài chính bỏ xử → dự phòng hoàn buyer",
+      "en": "Primary timeout → backup refunds buyer"
+    },
+    {
+      "address": "7bveqV41nh951ktWLm1vDme9ioFhR2xYG4QYprt5ADSS",
+      "vi": "Hai trọng tài hết hạn → hai bên đồng ý hoàn tiền",
+      "en": "Both arbitrators expire → mutual refund"
+    }
+  ]
+}

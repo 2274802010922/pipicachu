@@ -1,7 +1,0 @@
-{
-  "network": "devnet",
-  "signer": "DwTKmg68k39b8jZWt1CHypfoPs5JuJsuP88SfKcbW3uj",
-  "receiver": "A1tGEfNhktM3XypMk9tVHt1Xvs8D5E1SgdBpW1ihWYtc",
-  "amountAtomic": "1000000",
-  "keys": "Private files in ignored work/private; never publish."
-}

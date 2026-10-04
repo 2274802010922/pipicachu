@@ -1,4 +1,4 @@
-import { Guide } from "@/frontend/pages";
+import { Guide } from "@/frontend/escrow";
 export default function Page() {
   return <Guide />;
 }

@@ -7,3 +7,8 @@ test-results
 package-lock.json
 next-env.d.ts
 docs/evidence/raw
+
+target
+Cargo.lock
+programs
+.next-before-escrow

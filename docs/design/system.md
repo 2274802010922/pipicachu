@@ -1,9 +1,7 @@
-# pipicachu — light terminal
+# Light terminal — escrow
 
-Canvas #F7F6F1, surface #FFFFFF, ink #091426, muted #526174, lime CTA #B7F34D, focus/link #2456E6. Be Vietnam Pro, monospace cho dữ liệu kỹ thuật. Không dark theme hoặc animation trang trí.
+Logo pixel; Be Vietnam Pro. Canvas #F7F6F1, surface trắng, ink #091426, muted #526174, CTA #B7F34D, focus/link #2456E6. Monospace địa chỉ/nhãn. Rhythm 8px, target >=44px; không dark/animation trang trí.
 
-Header logo trái, Guide/Demo/ngôn ngữ phải. Không sidebar. Input đầu trang, kết quả theo thứ tự trạng thái → dữ kiện → giải thích → đối chiếu → bằng chứng. Một hành động chính mỗi bước.
+Không sidebar thường trực. Header logo, nav, VI/EN, kết nối ví; wrap trên mobile. Landing → tạo/link deal → hành động theo role → receipt. Deal: trạng thái → tiền/phí/deadline → bước tiếp theo → điều khoản → bằng chứng.
 
-Loading/error/unknown/partial/failed/finalized có chữ; không dùng riêng màu. Lỗi cạnh field, dữ liệu dài wrap, nút 44px+, focus nhìn thấy. VI/EN không mất input khi chuyển. 375/768/1024/1440px và bàn phím là cổng nghiệm thu.
-
-Logo dùng nguyên ảnh owner. Brand/tagline/nội dung viết cho pipicachu, không sao chép điều hướng người vay hoặc wallet session cũ.
+Acknowledgement trước tiền/phán quyết. Loading/sign/pending/finalized/reject/error riêng. Không mặc định ví xem là buyer. VI/EN giữ form; địa chỉ wrap, kiểm 375/768/1024/1440, keyboard/axe.

@@ -7,6 +7,8 @@ export default defineConfig([
   globalIgnores([
     ".next/**",
     ".next-preview/**",
+    ".next-before-escrow/**",
+    "target/**",
     "work/**",
     "playwright-report/**",
     "test-results/**",
