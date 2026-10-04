@@ -1,0 +1,90 @@
+{
+  "signature": "XK8SS9c2nUhGYieAaCrXXfSZtnjNfMFq18aX6LJjnWZ9rFg5Sr7bodVMHFfmSnuuua9h9daxn6tgdLLog7sW6UD",
+  "network": "devnet",
+  "capturedAt": "2026-10-04T08:32:53.567Z",
+  "raw": {
+    "blockTime": "1791102771",
+    "meta": {
+      "computeUnitsConsumed": "150",
+      "costUnits": "1481",
+      "err": null,
+      "fee": "5000",
+      "innerInstructions": [],
+      "logMessages": [
+        "Program 11111111111111111111111111111111 invoke [1]",
+        "Program 11111111111111111111111111111111 success"
+      ],
+      "postBalances": [
+        "4998995000",
+        "1000000",
+        "1"
+      ],
+      "postTokenBalances": [],
+      "preBalances": [
+        "5000000000",
+        "0",
+        "1"
+      ],
+      "preTokenBalances": [],
+      "rewards": [],
+      "status": {
+        "Ok": null
+      }
+    },
+    "slot": "507303945",
+    "transaction": {
+      "message": {
+        "accountKeys": [
+          {
+            "pubkey": "DwTKmg68k39b8jZWt1CHypfoPs5JuJsuP88SfKcbW3uj",
+            "signer": true,
+            "source": "transaction",
+            "writable": true
+          },
+          {
+            "pubkey": "A1tGEfNhktM3XypMk9tVHt1Xvs8D5E1SgdBpW1ihWYtc",
+            "signer": false,
+            "source": "transaction",
+            "writable": true
+          },
+          {
+            "pubkey": "11111111111111111111111111111111",
+            "signer": false,
+            "source": "transaction",
+            "writable": false
+          }
+        ],
+        "instructions": [
+          {
+            "parsed": {
+              "info": {
+                "destination": "A1tGEfNhktM3XypMk9tVHt1Xvs8D5E1SgdBpW1ihWYtc",
+                "lamports": "1000000",
+                "source": "DwTKmg68k39b8jZWt1CHypfoPs5JuJsuP88SfKcbW3uj"
+              },
+              "type": "transfer"
+            },
+            "program": "system",
+            "programId": "11111111111111111111111111111111",
+            "stackHeight": "1"
+          }
+        ],
+        "recentBlockhash": "4WbGjrgk1u7n7HKFszRq3vhVuStzCHbLeorM2Po1KSry"
+      },
+      "signatures": [
+        "XK8SS9c2nUhGYieAaCrXXfSZtnjNfMFq18aX6LJjnWZ9rFg5Sr7bodVMHFfmSnuuua9h9daxn6tgdLLog7sW6UD"
+      ]
+    },
+    "transactionIndex": "0",
+    "version": "legacy"
+  },
+  "status": {
+    "confirmationStatus": "finalized",
+    "confirmations": null,
+    "err": null,
+    "slot": "507303945",
+    "status": {
+      "Ok": null
+    }
+  }
+}

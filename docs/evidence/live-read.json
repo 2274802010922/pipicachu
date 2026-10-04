@@ -1,0 +1,24 @@
+{
+  "at": "2026-10-04T08:27:25.791Z",
+  "sources": [],
+  "rpc": {
+    "mainnet": "genesis-verified",
+    "devnet": "genesis-verified"
+  },
+  "captures": [
+    {
+      "id": "jupiter",
+      "state": "unavailable",
+      "error": "UNSUPPORTED_VERSION"
+    },
+    {
+      "id": "usdc",
+      "signature": "4QkpoZQbf6RgNChLj2pQoJckjHdwx6r82eAirJ9nkN2vuQFmVSjDGnZso6kzEGYGPoZPyMRFdv7L4wchZjEMhvx",
+      "network": "devnet",
+      "state": "success",
+      "completeness": "full",
+      "category": "transfer"
+    }
+  ],
+  "notes": "Read-only live capture. No Mainnet signing or sending."
+}
