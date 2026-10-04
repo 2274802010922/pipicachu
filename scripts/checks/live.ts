@@ -32,43 +32,51 @@ for (const [id, network, address] of [
     let captured = false;
     for (const row of rows) {
       if (row.err) continue;
-      const data = await readTransaction(row.signature, network);
-      if (!data.raw) continue;
-      const a = normalizeTransaction(
-        row.signature,
-        network,
-        data.raw,
-        data.status,
-      );
-      if (
-        id === "usdc" &&
-        !a.movements.some((m) => m.kind === "transfer" && m.asset === "USDC")
-      )
-        continue;
-      if (id === "jupiter" && a.category !== "swap") continue;
-      await writeFile(
-        `docs/evidence/raw/${id}.json`,
-        JSON.stringify(
-          {
-            signature: row.signature,
-            network,
-            capturedAt: new Date().toISOString(),
-            ...data,
-          },
-          (_, v) => (typeof v === "bigint" ? v.toString() : v),
-          2,
-        ),
-      );
-      (report.captures as unknown[]).push({
-        id,
-        signature: row.signature,
-        network,
-        state: a.state,
-        completeness: a.completeness,
-        category: a.category,
-      });
-      captured = true;
-      break;
+      try {
+        const data = await readTransaction(row.signature, network);
+        if (!data.raw) continue;
+        const a = normalizeTransaction(
+          row.signature,
+          network,
+          data.raw,
+          data.status,
+        );
+        if (
+          id === "usdc" &&
+          !a.movements.some((m) => m.kind === "transfer" && m.asset === "USDC")
+        )
+          continue;
+        if (id === "jupiter" && a.category !== "swap") continue;
+        await writeFile(
+          `docs/evidence/raw/${id}.json`,
+          JSON.stringify(
+            {
+              signature: row.signature,
+              network,
+              capturedAt: new Date().toISOString(),
+              ...data,
+            },
+            (_, v) => (typeof v === "bigint" ? v.toString() : v),
+            2,
+          ),
+        );
+        (report.captures as unknown[]).push({
+          id,
+          signature: row.signature,
+          network,
+          state: a.state,
+          completeness: a.completeness,
+          category: a.category,
+        });
+        captured = true;
+        break;
+      } catch (error) {
+        (report.captures as unknown[]).push({
+          id,
+          skipped: true,
+          error: error instanceof Error ? error.message : "error",
+        });
+      }
     }
     if (!captured)
       (report.captures as unknown[]).push({

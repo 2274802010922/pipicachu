@@ -5,8 +5,18 @@ import { AppError } from "../shared/errors";
 import { limit, offlineTest } from "./store";
 export async function requestJson(request: NextRequest) {
   const origin = request.headers.get("origin");
+  const hostOrigin = origin
+    ? (() => {
+        try {
+          return new URL(origin).host === request.headers.get("host");
+        } catch {
+          return false;
+        }
+      })()
+    : false;
   if (
     origin &&
+    !hostOrigin &&
     origin !== new URL(request.url).origin &&
     origin !== process.env.NEXT_PUBLIC_SITE_URL
   )

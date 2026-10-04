@@ -120,3 +120,23 @@ test("copied token name does not verify USDC", async ({ page }) => {
     page.getByText("Không khớp token mong đợi", { exact: true }),
   ).toBeVisible();
 });
+test("archived real data is labeled and cannot claim live payment verification", async ({
+  page,
+}) => {
+  await page.goto("/demo/archive/sol");
+  await expect(
+    page.getByRole("heading", { name: "Ví dụ từ bản lưu trước" }),
+  ).toBeVisible();
+  await expect(
+    page.getByText("Bản lưu trước", { exact: false }).first(),
+  ).toBeVisible();
+  await page
+    .getByText("Đối chiếu khoản tiền tôi đang chờ nhận", { exact: true })
+    .click();
+  await expect(
+    page.getByRole("button", { name: "Đối chiếu", exact: true }),
+  ).toBeDisabled();
+  await expect(
+    page.getByText("Mở giao dịch từ mạng để đối chiếu.", { exact: false }),
+  ).toBeVisible();
+});

@@ -30,9 +30,14 @@ export async function command(...args: (string | number)[]): Promise<unknown> {
       });
       if (!res.ok) throw new Error();
       const data = (await res.json()) as { result?: unknown; error?: string };
-      if (data.error) throw new Error();
+      if (data.error) {
+        if (/NOPERM|read.?only|not allowed|permission/i.test(data.error))
+          throw new AppError("LIMITER_READ_ONLY", 503);
+        throw new AppError("LIMITER_UNAVAILABLE", 503);
+      }
       return data.result;
-    } catch {
+    } catch (error) {
+      if (error instanceof AppError) throw error;
       throw new AppError("LIMITER_UNAVAILABLE", 503);
     }
   }

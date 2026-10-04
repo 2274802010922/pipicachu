@@ -1,0 +1,14 @@
+{
+  "at": "2026-10-04T08:40:44.632Z",
+  "source": "live-devnet-api-with-new-script-signer",
+  "base": "http://127.0.0.1:3105",
+  "wallet": "DwTKmg68k39b8jZWt1CHypfoPs5JuJsuP88SfKcbW3uj",
+  "receiver": "A1tGEfNhktM3XypMk9tVHt1Xvs8D5E1SgdBpW1ihWYtc",
+  "signature": "2asZEgKVKaJn23WsZ88qPDysi5wbd6DrZsdzfPcVDxt4swDjt5MmvRgSwtwXoFp5rMiSKhnSExK16LKc3XEWQ4CN",
+  "finality": "finalized",
+  "amountAtomic": "1000000",
+  "tamperBlockedHttp": 422,
+  "idempotentSignature": true,
+  "comparison": "matched",
+  "phantomPopup": "not-verified-by-this-script"
+}

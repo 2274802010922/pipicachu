@@ -179,6 +179,10 @@ export function errorText(code: string, vi: boolean): string {
       "Dịch vụ giới hạn lượt gọi chưa sẵn sàng. Thử lại sau hoặc xem ví dụ đã lưu trong Demo.",
       "The request limiter is unavailable. Retry later or view archived examples in Demo.",
     ],
+    LIMITER_READ_ONLY: [
+      "Redis token chỉ có quyền đọc. Cần REST token cho phép ghi để giới hạn lượt gọi và chạy demo.",
+      "The Redis token is read-only. Use a writable REST token for request limits and the demo.",
+    ],
     RATE_LIMITED: [
       "Bạn đã kiểm tra nhiều lần trong thời gian ngắn. Đợi một phút rồi thử lại.",
       "Too many requests. Wait a minute and retry.",

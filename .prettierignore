@@ -1,5 +1,6 @@
 node_modules
 .next
+.next-preview
 work
 playwright-report
 test-results

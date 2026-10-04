@@ -2,7 +2,7 @@ export type Network = "mainnet" | "devnet";
 export type Locale = "vi" | "en";
 export type TxState = "success" | "failed" | "pending" | "unknown";
 export type Finality = "processed" | "confirmed" | "finalized" | "unknown";
-export type Asset = "SOL" | "USDC" | "TOKEN";
+export type Asset = "SOL" | "USDC" | "WSOL" | "TOKEN";
 export interface Movement {
   kind:
     | "transfer"

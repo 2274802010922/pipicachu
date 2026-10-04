@@ -37,15 +37,19 @@ async function post<T>(
 export function Analyzer({
   initial = "",
   initialNetwork = "mainnet",
+  initialArchive,
 }: {
   initial?: string;
   initialNetwork?: Network;
+  initialArchive?: Analysis;
 }) {
   const { locale, t } = useLanguage();
   const [input, setInput] = useState(initial),
     [network, setNetwork] = useState<Network>(initialNetwork),
     [focus, setFocus] = useState("");
-  const [analysis, setAnalysis] = useState<Analysis | null>(null),
+  const [analysis, setAnalysis] = useState<Analysis | null>(
+      initialArchive || null,
+    ),
     [explanation, setExplanation] = useState<Explanation | null>(null),
     [busy, setBusy] = useState(false),
     [aiBusy, setAiBusy] = useState(false),
@@ -90,7 +94,7 @@ export function Analyzer({
     }
   }
   useEffect(() => {
-    if (initial && !initialLoaded.current) {
+    if (initial && !initialArchive && !initialLoaded.current) {
       initialLoaded.current = true;
       void inspect(initial, initialNetwork);
     }
@@ -98,6 +102,15 @@ export function Analyzer({
   useEffect(() => {
     if (!analysis) return;
     const controller = new AbortController();
+    if (analysis.source === "archive") {
+      Promise.resolve().then(() => {
+        if (!controller.signal.aborted) {
+          setExplanation(templateExplanation(analysis, locale));
+          setAiBusy(false);
+        }
+      });
+      return () => controller.abort();
+    }
     // Async completion only: facts remain available even if the provider fails.
     Promise.resolve().then(() => {
       if (!controller.signal.aborted) {
@@ -110,7 +123,9 @@ export function Analyzer({
       { input: analysis.signature, network: analysis.network, locale },
       controller.signal,
     )
-      .then(setExplanation)
+      .then((value) => {
+        if (!controller.signal.aborted) setExplanation(value);
+      })
       .catch(() => {
         if (!controller.signal.aborted)
           setExplanation(templateExplanation(analysis, locale));
@@ -145,6 +160,15 @@ export function Analyzer({
   const primary = completed
     .filter((m) => !focus || m.from === focus || m.to === focus)
     .slice(0, 3);
+  const balanceFocus = focus || analysis?.feePayer;
+  const focusedChanges =
+    analysis?.balances
+      .filter((b) =>
+        b.asset === "SOL"
+          ? b.address === balanceFocus
+          : b.owner === balanceFocus,
+      )
+      .slice(0, 3) || [];
   return (
     <div className="analyzer">
       <form
@@ -181,7 +205,7 @@ export function Analyzer({
         </p>
         <div className="optional-row">
           <label htmlFor="network">
-            {t("Mạng cho mã giao dịch trần", "Network for a bare signature")}
+            {t("Mạng (nếu chỉ dán mã)", "Network (for a signature)")}
             <select
               id="network"
               value={network}
@@ -264,12 +288,32 @@ export function Analyzer({
                 )}
               </h3>
             ) : analysis.category === "swap" ? (
-              <h3>
-                {t(
-                  "Giao dịch tương tác với Jupiter.",
-                  "This transaction interacts with Jupiter.",
-                )}
-              </h3>
+              <>
+                <h3>
+                  {t(
+                    "Giao dịch tương tác với Jupiter.",
+                    "This transaction interacts with Jupiter.",
+                  )}
+                </h3>
+                <p className="muted small">
+                  {focus
+                    ? t(
+                        "Thay đổi của ví bạn nhập:",
+                        "Changes for the wallet you entered:",
+                      )
+                    : t(
+                        "Thay đổi của ví trả phí (không tự xác nhận đây là ví của bạn):",
+                        "Changes for the fee payer (not assumed to be your wallet):",
+                      )}
+                </p>
+                {focusedChanges.map((b, i) => (
+                  <p className="fact-line" key={i}>
+                    <strong>
+                      {formatAmount(b.delta, b.decimals, locale)} {b.asset}
+                    </strong>
+                  </p>
+                ))}
+              </>
             ) : primary.length ? (
               primary.map((m, i) => (
                 <p className="fact-line" key={i}>
@@ -334,7 +378,7 @@ export function Analyzer({
               )}
             </Notice>
           )}
-          <details className="evidence" open={analysis.category === "swap"}>
+          <details className="evidence">
             <summary>
               {t(
                 "Thay đổi tài sản và ví liên quan",
@@ -476,11 +520,27 @@ export function Analyzer({
                   </span>
                 </div>
               </div>
-              <button className="button primary" disabled={compareBusy}>
+              <button
+                className="button primary"
+                disabled={compareBusy || analysis.source === "archive"}
+              >
                 {compareBusy
                   ? t("Đang đối chiếu…", "Comparing…")
                   : t("Đối chiếu", "Compare")}
               </button>
+              {analysis.source === "archive" && (
+                <Notice>
+                  {t(
+                    "Mở giao dịch từ mạng để đối chiếu.",
+                    "Open the live transaction to compare.",
+                  )}{" "}
+                  <Link
+                    href={`/tx/${analysis.signature}?cluster=${analysis.network}`}
+                  >
+                    {t("Đọc từ mạng", "Read from network")} →
+                  </Link>
+                </Notice>
+              )}
               {compareError && (
                 <Notice kind="error">
                   {errorText(compareError, locale === "vi")}

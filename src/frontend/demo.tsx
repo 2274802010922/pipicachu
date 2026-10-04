@@ -156,6 +156,19 @@ export function Demo() {
                 {t("Chưa có mẫu được nghiệm thu", "No accepted example yet")}
               </span>
             )}
+            {e.signature && (
+              <p className="small">
+                <Link
+                  href={`/demo/archive/${e.id === "underpaid" ? "sol" : e.id}`}
+                >
+                  {t(
+                    "Xem bản lưu trước (không đọc live)",
+                    "View snapshot (not live)",
+                  )}{" "}
+                  →
+                </Link>
+              </p>
+            )}
           </article>
         ))}
       </div>

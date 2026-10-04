@@ -17,6 +17,7 @@ import {
   TOKEN,
   TOKEN2022,
   USDC,
+  WSOL,
 } from "../solana/constants";
 import { AppError } from "../shared/errors";
 type Obj = Record<string, unknown>;
@@ -204,7 +205,11 @@ export function normalizeTransaction(
     }
   }
   const asset = (mint: string, decimals: number): Asset =>
-    mint === USDC[network] && decimals === 6 ? "USDC" : "TOKEN";
+    mint === USDC[network] && decimals === 6
+      ? "USDC"
+      : mint === WSOL && decimals === 9
+        ? "WSOL"
+        : "TOKEN";
   const push = (m: Omit<Movement, "executed">) =>
     a.movements.push({ ...m, executed: a.state === "success" });
   for (const { value, evidence } of instructions) {

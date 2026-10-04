@@ -11,11 +11,12 @@ export const examples: Example[] = [
   {
     id: "jupiter",
     title: { vi: "Tương tác Jupiter", en: "Jupiter activity" },
-    signature: "",
+    signature:
+      "KFGYM2VfUbbzXZaMJTPFWMeLUX3QpnZcd9cbhGiLTHVCe9pTNpcETbi7gN9AzbzBqaJXKR327Q42ae25UPt5YsD",
     network: "mainnet",
     note: {
-      vi: "Đang chuẩn bị nguồn giao dịch Mainnet đã kiểm chứng.",
-      en: "A verified Mainnet example is being prepared.",
+      vi: "Giao dịch Mainnet lịch sử. Hiển thị thay đổi tài sản và ghi rõ phần intent chưa giải mã đầy đủ.",
+      en: "A historical Mainnet transaction. Displays asset changes with explicitly partial intent decoding.",
     },
   },
   {
@@ -38,6 +39,17 @@ export const examples: Example[] = [
     note: {
       vi: "Giao dịch công khai dùng mint USDC Devnet của Circle. Chuyển 0,001 USDC thử nghiệm.",
       en: "A public transfer of 0.001 test USDC using Circle's Devnet mint.",
+    },
+  },
+  {
+    id: "underpaid",
+    title: { vi: "Đối chiếu nhận thiếu", en: "Underpayment comparison" },
+    signature:
+      "XK8SS9c2nUhGYieAaCrXXfSZtnjNfMFq18aX6LJjnWZ9rFg5Sr7bodVMHFfmSnuuua9h9daxn6tgdLLog7sW6UD",
+    network: "devnet",
+    note: {
+      vi: "Giao dịch thật nhận 0,001 SOL. Thử đối chiếu với yêu cầu giả định 0,002 SOL để thấy nhận thiếu.",
+      en: "The real transfer received 0.001 SOL. Compare a hypothetical request for 0.002 SOL to see underpayment.",
     },
   },
   {

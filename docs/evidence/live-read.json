@@ -1,5 +1,5 @@
 {
-  "at": "2026-10-04T08:27:25.791Z",
+  "at": "2026-10-04T08:40:44.152Z",
   "sources": [],
   "rpc": {
     "mainnet": "genesis-verified",
@@ -8,15 +8,18 @@
   "captures": [
     {
       "id": "jupiter",
-      "state": "unavailable",
-      "error": "UNSUPPORTED_VERSION"
+      "signature": "KFGYM2VfUbbzXZaMJTPFWMeLUX3QpnZcd9cbhGiLTHVCe9pTNpcETbi7gN9AzbzBqaJXKR327Q42ae25UPt5YsD",
+      "network": "mainnet",
+      "state": "success",
+      "completeness": "partial",
+      "category": "swap"
     },
     {
       "id": "usdc",
-      "signature": "4QkpoZQbf6RgNChLj2pQoJckjHdwx6r82eAirJ9nkN2vuQFmVSjDGnZso6kzEGYGPoZPyMRFdv7L4wchZjEMhvx",
+      "signature": "42NSvxvvnDLAHYc89qSmJyJGqi2eYKdtvkz8HmJgw4SJALfmYpUzJv3D5hn2eDZutiXmqcXKbuNt4z3mZB2BxEbc",
       "network": "devnet",
       "state": "success",
-      "completeness": "full",
+      "completeness": "partial",
       "category": "transfer"
     }
   ],
