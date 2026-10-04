@@ -1,0 +1,6 @@
+{
+  "deal": "Gh3VFdU5gxT2vHpaoAFMXEwk8GogjwcJais7xdoZwCqs",
+  "signature": "5ALjdzsUCoYx25Bv6vxpBCBHtPfzzNZxynudJ9DGsDsWVTtYLRuLoj73yMDr93HvtxcTMofy1upHUBxgXbHgCmd9",
+  "state": "refunded",
+  "reason": "Interrupted browser test after RPC send failure; refunded after delivery deadline."
+}

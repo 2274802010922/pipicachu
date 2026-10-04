@@ -20,7 +20,10 @@ const roles = Object.fromEntries(
   ]),
 );
 const browser = await chromium.launch();
-const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
+const context = await browser.newContext({
+  viewport: { width: 1440, height: 1000 },
+});
+const page = await context.newPage();
 const failures: string[] = [];
 page.on("pageerror", (e) => failures.push(e.message));
 page.on("response", async (response) => {

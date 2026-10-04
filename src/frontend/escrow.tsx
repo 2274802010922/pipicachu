@@ -574,6 +574,7 @@ export function DealView({ id }: { id: string }) {
     } catch (e) {
       setError(errorMessage(e, locale === "vi"));
       setReadAt(0);
+      setDeal((current) => (current?.address === id ? current : null));
     } finally {
       setLoading(false);
     }
@@ -629,7 +630,7 @@ export function DealView({ id }: { id: string }) {
     }, refresh);
     setAck(false);
   }
-  if (loading)
+  if (loading || (deal && deal.address !== id))
     return (
       <>
         <h1>{t("Đang đọc giao dịch…", "Reading deal…")}</h1>
@@ -689,6 +690,14 @@ export function DealView({ id }: { id: string }) {
       </div>
       {copy && <Notice>{copy}</Notice>}
       {error && <Notice error>{error}</Notice>}
+      {!readAt && (
+        <Notice>
+          {t(
+            "Dữ liệu bên dưới là lần đọc trước. Chưa xác nhận được trạng thái hiện tại; các thao tác đang bị khóa.",
+            "The data below is from the previous read. Current state is unverified; actions are disabled.",
+          )}
+        </Notice>
+      )}
       <div className="grid">
         <section className="panel">
           <span className="badge">USDC · Devnet</span>
@@ -696,9 +705,27 @@ export function DealView({ id }: { id: string }) {
           <dl>
             <div>
               <dt>
-                {t("Seller nhận khi giải ngân", "Seller receives on payout")}
+                {deal.state === "refunded"
+                  ? t("Đã hoàn người mua", "Refunded to buyer")
+                  : deal.state === "completed"
+                    ? t("Đã trả người bán", "Paid to seller")
+                    : deal.state === "cancelled"
+                      ? t("Chưa nạp tiền", "No funds deposited")
+                      : t(
+                          "Người bán sẽ nhận khi giải ngân",
+                          "Seller receives on payout",
+                        )}
               </dt>
-              <dd>{amount(deal.amount - deal.fee)} USDC</dd>
+              <dd>
+                {amount(
+                  deal.state === "refunded"
+                    ? deal.amount
+                    : deal.state === "cancelled"
+                      ? 0n
+                      : deal.amount - deal.fee,
+                )}{" "}
+                USDC
+              </dd>
             </div>
             <div>
               <dt>
@@ -707,14 +734,34 @@ export function DealView({ id }: { id: string }) {
                   "Intermediary fee on seller payout",
                 )}
               </dt>
-              <dd>{amount(deal.fee)} USDC (1%)</dd>
+              <dd>
+                {amount(
+                  deal.state === "refunded" || deal.state === "cancelled"
+                    ? 0n
+                    : deal.fee,
+                )}{" "}
+                USDC
+                {deal.state !== "refunded" && deal.state !== "cancelled"
+                  ? " (1%)"
+                  : ""}
+              </dd>
             </div>
             <div>
               <dt>
-                {t(
-                  "Cọc khóa của mỗi trọng tài",
-                  "Reserved bond per arbitrator",
-                )}
+                {["completed", "refunded"].includes(deal.state)
+                  ? t(
+                      "Cọc deal này đã mở khóa cho mỗi trọng tài",
+                      "This deal’s bond released per arbitrator",
+                    )
+                  : deal.state === "created" || deal.state === "cancelled"
+                    ? t(
+                        "Cọc yêu cầu khi nạp (chưa khóa)",
+                        "Required bond on funding (not reserved)",
+                      )
+                    : t(
+                        "Cọc đang khóa của mỗi trọng tài",
+                        "Reserved bond per arbitrator",
+                      )}
               </dt>
               <dd>{amount(deal.bond)} USDC</dd>
             </div>

@@ -20,6 +20,8 @@ Bond is not insurance. No wrongful-ruling slashing, appeal or automatic keeper. 
 
 ## Build and review
 
+Verified 7 executable flows / 42 checks on local validator and Devnet, 23 unit/IDL tests, 7 browser tests and both CI jobs. The full hosted website signing flow passed with an injected test provider; actual Phantom extension UI remains unverified. See [evidence](docs/evidence/README.md).
+
 ```bash
 npm ci
 cp .env.example .env.local

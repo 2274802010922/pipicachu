@@ -6,4 +6,12 @@ Chương trình .so build thành công sau sửa stack allocation bằng Box; ID
 
 Đã kiểm script CI-like Linux/WSL với wallet mới, genesis Config/mint synthetic, không cần key maintainer: 42 checks pass. Devnet run đầu dừng vì seller thiếu SOL rent khi tạo deal thứ sáu; bổ sung SOL và chạy lại toàn bộ pass. RPC public có 429 và retry, ghi đúng giới hạn nguồn dữ liệu.
 
-Phần còn lại: browser signer-to-program flow đang kiểm, Phantom extension thật chưa khả dụng trong browser automation, CI/push và Vercel smoke. Không slide/video mới trong scope. Cọc/slashing/keeper/arb timeout ghi rõ. Browser init provider từng lỗi helper __name của tsx (test harness); đã sửa helper injection riêng trong test.
+Browser signer-to-program flow pass cả local website và https://pipicachu.vercel.app với provider test: create, accept hai trọng tài, fund, deliver, reject signature không đổi state, confirm, read completed, axe, VI/EN, storage privacy. Private key ở Node, không đưa vào browser; KHÔNG phải Phantom extension thực. Phantom popup thật vẫn chưa được kiểm bằng automation.
+
+Commit f707958 đã push main, CI Quality 37203335589 pass cả quality và escrow-program; Vercel health đúng SHA và smoke đọc deal finalized pass. Bản bàn giao tiếp theo bổ sung evidence, nhãn cọc/hoàn tiền theo trạng thái và guard không hiển thị deal cũ khi chuyển link. Các thay đổi cuối đã qua check/build/7 browser tests; CI và deployment cuối sẽ kiểm sau push.
+
+Deal-state audit Devnet: 9 completed, 7 refunded, 1 draft, 0 funded/delivered/disputed. Không còn principal test chờ xử lý hoặc cọc bị giữ bởi active deal. Cổng còn chưa kiểm là Phantom extension/popup thực; browser signing đã chạy bằng test provider trên Vercel. Không báo đây là audit bảo mật hoặc readiness Mainnet.
+
+Browser từng lỗi helper __name của tsx và dùng browser.newPage không tương thích axe; sửa harness, không giảm assertion. Một browser test gặp RPC send error, deal giữ funded; đã hoàn đủ principal theo refund_expired và lưu receipt. RPC proxy retry có giới hạn, wallet chỉ resend cùng signed bytes và theo dõi chữ ký; unknown không báo thành công.
+
+Không slide/video mới trong scope. Cọc/slashing/keeper/arb timeout ghi rõ. Chưa có audit độc lập, Mainnet hoặc kiểm chứng WTP. Production dependency audit còn 4 moderate, 0 high/critical; không gọi hệ thống đã audit an toàn.

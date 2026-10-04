@@ -49,6 +49,10 @@ Chương trình: [kiến trúc](docs/architecture/README.md), [kiểm thử](doc
 
 ## Dễ tìm phần cần chấm
 
+![Giao dịch escrow Devnet đã trả người bán](docs/evidence/screenshots/completed-vi.png)
+
+Đã kiểm 7 flow / 42 checks trên chương trình local và Devnet; 23 unit/IDL tests, 7 browser tests và CI web/program. Luồng ký qua website Vercel đã chạy với provider test, không gọi đó là kiểm Phantom extension thật. Xem bằng chứng bên dưới.
+
 | Nội dung                 | Đường dẫn                                              |
 | ------------------------ | ------------------------------------------------------ |
 | Smart contract           | [lib.rs](programs/pipicachu-escrow/src/lib.rs)         |
