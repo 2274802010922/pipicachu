@@ -1,5 +1,5 @@
 <p align="center"><img src="public/brand/picachu-logo.jpg" width="110" alt="Logo pipicachu"></p>
-<h1 align="center">pipicachu · Giao dịch có ký quỹ</h1>
+<h1 align="center">pipicachu · Giao dịch trung gian</h1>
 <p align="center">Link giao dịch cho admin trung gian và khách của họ.<br>Tiền nằm trong escrow Solana; bàn giao, xác nhận và tranh chấp theo điều kiện đã chốt.</p>
 <p align="center"><a href="https://pipicachu.vercel.app">Website</a> · <a href="https://pipicachu.vercel.app/demo">Demo Devnet</a> · <a href="README.en.md">English</a> · <a href="docs/README.md">Tài liệu</a></p>
 
