@@ -16,7 +16,7 @@ A small escrow tool for community intermediaries and their customers. Sellers cr
 - If the arbitrator expires, a buyer proposal requires seller acceptance. Without agreement, funds may remain locked.
 - The arbitrator reserves 10% of deal value. Demo fee is 1% of seller payouts; refunds have no fee.
 
-Bond is not insurance. No wrongful-ruling slashing, appeal or automatic keeper. Off-chain goods and game-account ownership are not verified. No validated willingness to pay or traction is claimed.
+Bond is not insurance. No wrongful-ruling slashing or appeal. Automatic Devnet payout uses a keeper on an approximately 5-minute schedule, with possible service delays. Off-chain goods and game-account ownership are not verified. No validated willingness to pay or traction is claimed.
 
 ## Build and review
 

@@ -133,5 +133,7 @@ test("health describes limits without secrets", async ({ request }) => {
   expect(b.serverCustody).toBe(false);
   expect(b.arbitratorCount).toBe(1);
   expect(b.schemaVersion).toBe(3);
+  expect(b.automaticKeeper).toBe(true);
+  expect(b.keeper.exactDeadlineGuarantee).toBe(false);
   expect(JSON.stringify(b)).not.toMatch(/api[_-]?key|privateKey|secretKey/i);
 });

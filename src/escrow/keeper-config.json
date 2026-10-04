@@ -1,0 +1,7 @@
+{
+  "enabled": true,
+  "wallet": "CHSZY4SQiRX8EyGfeW7hkp2MqYWUcgC6rp9pwqmCaijc",
+  "intervalMinutes": 5,
+  "workflowUrl": "https://github.com/2274802010922/pipicachu/actions/workflows/devnet-keeper.yml",
+  "service": "GitHub Actions"
+}

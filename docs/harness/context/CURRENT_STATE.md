@@ -12,6 +12,14 @@ Web: 23 unit/IDL, 7 browser tests, build/lint/typecheck pass. Browser local và 
 
 ## Sửa lỗi test thủ công
 
+## Flow cuối đã chốt và keeper
+
+Seller tạo link; buyer nạp USDC Devnet; seller giao hàng/đánh dấu đã giao; buyer xác nhận hoặc khiếu nại. Không seller cọc, không buyer tạo deal. Một trọng tài và cọc/consent trước funding giữ nguyên để không khóa cọc khi chưa nhận trách nhiệm.
+
+Thêm keeper service GitHub Actions lịch khoảng 5 phút, wallet riêng chỉ SOL Devnet, secret repo đã cấu hình. Không key custodial trên Vercel. Keeper chỉ finalize Delivered quá review deadline, không release dispute. UI chờ tự trả tiền và bỏ nút finalize khỏi flow thường. Chưa nghiệm thu service live; đã chuẩn bị một deal expired undisputed và một disputed để kiểm.
+
+45 unit tests và 8 browser tests/build pass trước test service. Không đổi Rust/IDL/Program ID; không hứa payout đúng giây, không phạt xử sai.
+
 Owner tạo deal khi trọng tài chưa đăng ký: đã tái hiện Anchor AccountNotInitialized/3012 trên account arbitrator, trước khi ký. Thêm precheck và thông báo riêng, hướng dẫn mở trang Trọng tài; không yêu cầu USDC/cọc ở bước tạo.
 
 Owner đăng ký gặp WALLET_CHANGED sau ký. Hai nguyên nhân trước đây gộp chung: đổi ví hoặc signed message khác. Phantom có hành vi thêm priority-fee instruction nếu dapp chưa khai báo compute budget (nguồn chính thức được ghi trong architecture). Fix khai báo 300.000 CU và 0 micro-lamports priority price cho Devnet trước simulate/sign; vẫn so sánh nguyên message và verify signature. Tách WALLET_CHANGED, TRANSACTION_CHANGED, INVALID_WALLET_SIGNATURE. Đây là mitigation khớp hành vi wallet, chưa có signed message trực tiếp từ extension owner để kết luận chắc chắn nguyên nhân.

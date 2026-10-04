@@ -1,0 +1,34 @@
+name: Devnet escrow keeper
+on:
+  schedule:
+    - cron: "3-58/5 * * * *"
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: devnet-escrow-keeper
+  cancel-in-progress: false
+jobs:
+  release:
+    if: github.repository == '2274802010922/pipicachu'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - name: Release eligible undisputed Devnet deals
+        env:
+          DEVNET_KEEPER_KEYPAIR: ${{ secrets.DEVNET_KEEPER_KEYPAIR }}
+          SOLANA_DEVNET_RPC_URL: https://api.devnet.solana.com
+          KEEPER_REPORT_PATH: work/keeper/latest.json
+        run: npx tsx scripts/devnet/keeper.ts
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: devnet-keeper-receipt
+          path: work/keeper/latest.json
+          retention-days: 7

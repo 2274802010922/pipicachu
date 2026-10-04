@@ -16,7 +16,7 @@ Seller tạo link → Trọng tài chấp thuận → Buyer nạp USDC
   ├─ Seller không bàn giao đúng hạn → Hoàn buyer
   └─ Seller báo bàn giao
        ├─ Buyer xác nhận → Trả seller
-       ├─ Hết hạn kiểm tra, không tranh chấp → Có thể gửi lệnh giải ngân
+       ├─ Hết hạn kiểm tra, không tranh chấp → Keeper tự giải ngân
        └─ Buyer tranh chấp → Trọng tài → Đồng thuận hai bên sau hạn
 ```
 
@@ -24,7 +24,7 @@ Seller tạo link → Trọng tài chấp thuận → Buyer nạp USDC
 - Phí demo 1% trừ vào seller payout; refund không thu phí.
 - Trọng tài duy nhất khóa cọc 10% giá trị deal khi buyer nạp; mở khóa khi kết thúc.
 - Trọng tài chỉ có thể trả seller hoặc hoàn buyer, không nhập địa chỉ nhận tùy ý.
-- Hết hạn là đủ điều kiện gửi giao dịch, không có keeper tự động.
+- Hết hạn không khiếu nại: keeper tự gửi lệnh trả seller, lịch khoảng 5 phút/lượt có thể trễ.
 
 ## Giới hạn
 

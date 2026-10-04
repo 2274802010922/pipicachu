@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import deployment from "@/escrow/deployment.json";
+import keeperConfig from "@/escrow/keeper-config.json";
 export async function GET() {
   return NextResponse.json(
     {
@@ -16,7 +17,14 @@ export async function GET() {
       mainnetWrites: false,
       serverCustody: false,
       subjectiveSlashing: false,
-      automaticKeeper: false,
+      automaticKeeper: keeperConfig.enabled,
+      keeper: {
+        configuration: keeperConfig.enabled ? "configured" : "disabled",
+        intervalMinutes: keeperConfig.intervalMinutes,
+        wallet: keeperConfig.wallet,
+        workflowUrl: keeperConfig.workflowUrl,
+        exactDeadlineGuarantee: false,
+      },
       limiter: "per-instance-best-effort",
       upgradeAuthority: "retained-for-devnet-demo",
     },

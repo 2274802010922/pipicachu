@@ -6,7 +6,7 @@
 - Commit tiêu đề và nội dung bằng tiếng Việt. Cập nhật ngữ cảnh/bằng chứng, push main và kiểm CI.
 - Mọi quyền tiền do Rust program kiểm tra. UI chỉ UX, không authority.
 - BigInt/u64; Clock mạng. Pending/RPC error không được báo hoàn tất.
-- Không Mainnet writes, keeper, bảo hiểm, marketplace, AI hoặc đổi VND.
+- Không Mainnet writes, bảo hiểm, marketplace, AI hoặc đổi VND. Keeper Devnet tự finalize sau review deadline, không được đổi recipient/amount hoặc resolve tranh chấp.
 - Không đưa mật khẩu/key/bằng chứng riêng tư vào Git/on-chain/log.
 - VI/EN nhất quán, light terminal; kiểm 375/768/1024/1440, bàn phím/axe.
 - npm run verify; build-sbf + test:program; Devnet receipt và Phantom thật là cổng riêng.

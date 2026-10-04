@@ -1,0 +1,19 @@
+{
+  "at": "2026-10-04T15:39:24.061Z",
+  "network": "devnet",
+  "programId": "4Xds5m5JtWR8HbNLdGeF7e3Qh3akKMHwMfjKsQeVXnrb",
+  "deals": [
+    {
+      "kind": "undisputed",
+      "address": "AwWrHWtKhrgutvB75Tt6LjDjbVf32WmSYYShxWUhs2g4",
+      "reviewBy": 1791128361,
+      "state": "delivered"
+    },
+    {
+      "kind": "disputed",
+      "address": "iuC9Rt86GbMv1DqMebGEvMLzt5bk1PYkYeqmgVdHJcv",
+      "reviewBy": 1791128464,
+      "state": "disputed"
+    }
+  ]
+}

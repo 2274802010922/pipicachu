@@ -32,6 +32,8 @@ import {
 } from "@/escrow/client";
 import { actions } from "@/escrow/policy";
 import deployment from "@/escrow/deployment.json";
+import keeperConfig from "@/escrow/keeper-config.json";
+import { eligibleForAutomaticRelease } from "@/escrow/keeper";
 import rawSamples from "@/escrow/samples.json";
 const samples = rawSamples as {
   arbitrator: string;
@@ -632,7 +634,13 @@ export function DealView({ id }: { id: string }) {
     };
   }, [refresh]);
   const available =
-    deal && readAt ? actions(deal, who?.toBase58() || null, now) : [];
+    deal && readAt
+      ? actions(deal, who?.toBase58() || null, now).filter(
+          (name) => name !== "finalize",
+        )
+      : [];
+  const waitingForKeeper =
+    deal && readAt && eligibleForAutomaticRelease(deal, now);
   async function execute(name: string) {
     if (!deal || !who) return;
     await op.run(async () => {
@@ -707,7 +715,14 @@ export function DealView({ id }: { id: string }) {
   return (
     <>
       <span className="eyebrow">DEAL / DEVNET</span>
-      <h1>{t(...STATE_LABELS[deal.state])}</h1>
+      <h1>
+        {waitingForKeeper
+          ? t(
+              "Hết hạn kiểm tra · chờ tự động trả tiền",
+              "Review ended · awaiting automatic payout",
+            )
+          : t(...STATE_LABELS[deal.state])}
+      </h1>
       <div className="actions">
         <button
           onClick={async () => {
@@ -849,10 +864,25 @@ export function DealView({ id }: { id: string }) {
           {deal.state === "delivered" && (
             <p>
               {t(
-                "Buyer kiểm tra hàng, xác nhận hoặc mở tranh chấp trước hạn. Sau hạn, cần gửi giao dịch giải ngân; không có keeper tự chạy.",
-                "The buyer checks delivery, confirms or disputes before the deadline. Afterward, someone must submit a release transaction; there is no automatic keeper.",
+                "Người mua kiểm tra hàng, xác nhận hoặc khiếu nại trước hạn. Hết hạn không khiếu nại, keeper tự gửi lệnh trả người bán; người bán không cần ký thêm.",
+                "The buyer reviews, confirms or disputes before the deadline. Without a timely dispute, the keeper submits seller payout; the seller does not need to sign again.",
               )}
             </p>
+          )}
+          {waitingForKeeper && (
+            <Notice>
+              {t(
+                "Đang chờ keeper kiểm tra và giải ngân. Lịch dự kiến khoảng 5 phút/lượt, có thể chậm hơn do dịch vụ hoặc RPC. Trang sẽ tự tải lại trạng thái.",
+                "Waiting for the keeper to check and release. Runs are scheduled about every 5 minutes and may be delayed by the service or RPC. The page refreshes state automatically.",
+              )}{" "}
+              <a
+                href={keeperConfig.workflowUrl}
+                target="_blank"
+                rel="noreferrer"
+              >
+                {t("Xem trạng thái dịch vụ", "View service status")} ↗
+              </a>
+            </Notice>
           )}
           {deal.state === "disputed" && (
             <Notice>
@@ -890,6 +920,7 @@ export function DealView({ id }: { id: string }) {
           )}
           {who &&
             available.length === 0 &&
+            !waitingForKeeper &&
             !["completed", "refunded", "cancelled"].includes(deal.state) && (
               <p>
                 {t(
@@ -1419,8 +1450,8 @@ export function Guide({ privacy = false }: { privacy?: boolean }) {
               </li>
               <li>
                 {t(
-                  "Không có keeper tự trả tiền theo giờ. Cần người gửi giao dịch khi đủ điều kiện.",
-                  "There is no automatic keeper. Someone must submit the transaction when eligible.",
+                  "Keeper tự gửi lệnh khi hết hạn kiểm tra và không tranh chấp. Lịch khoảng 5 phút/lượt có thể trễ; chương trình kiểm lại điều kiện trước khi chuyển tiền.",
+                  "The keeper submits release after an undisputed review deadline. The roughly 5-minute schedule may be delayed; the program validates conditions before transferring funds.",
                 )}
               </li>
               <li>

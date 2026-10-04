@@ -8,4 +8,4 @@ Unix timestamp từ Clock. Funding/delivery/dispute dùng `< deadline`, timeout 
 
 Payout/refund toàn phần. Phí trả trọng tài duy nhất khi seller nhận tiền; refund không phí. Settlement unlock một bond một lần trong cùng token transfer transaction. Terminal giữ account/vault để tra cứu, chưa đóng/hoàn rent.
 
-Không phạt xử sai, bảo hiểm, kháng nghị/keeper. Trọng tài bỏ xử và hai bên bất đồng có thể khóa tiền vô thời hạn. Không bảo đảm hàng ngoài chuỗi/account game không reclaim/quy định nền tảng cho phép mua bán.
+Không phạt xử sai, bảo hiểm, kháng nghị. Trọng tài bỏ xử và hai bên bất đồng có thể khóa tiền vô thời hạn. Không bảo đảm hàng ngoài chuỗi/account game không reclaim/quy định nền tảng cho phép mua bán.
