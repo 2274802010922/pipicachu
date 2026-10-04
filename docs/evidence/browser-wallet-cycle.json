@@ -1,8 +1,8 @@
 {
-  "at": "2026-10-04T13:58:06.263Z",
+  "at": "2026-10-04T17:29:48.605Z",
   "network": "devnet",
-  "baseURL": "https://pipicachu.vercel.app",
-  "deal": "DxWqka4dz2KwKspnPam7BGc3BhqsYpex8gEQhnRHGty6",
+  "baseURL": "http://127.0.0.1:3106",
+  "deal": "8pBt3PqypAyMWKXYnNfGNmMfZnMkzzoKtjiReBNbBMwS",
   "roles": {
     "seller": "BbftECvBKTHMm6t3Sejyz7E9HmBmcRp7NvEYnAnzb7F3",
     "buyer": "DwTKmg68k39b8jZWt1CHypfoPs5JuJsuP88SfKcbW3uj",

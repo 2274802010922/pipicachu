@@ -54,7 +54,7 @@ for (const width of [375, 1440])
       page.getByRole("button", { name: "Nạp tiền vào ký quỹ", exact: true }),
     ).toHaveCount(0);
     await expect(page.locator(".deal-flow li").nth(1)).toContainText(
-      "Trọng tài chuẩn bị cọc",
+      "Cọc trọng tài",
     );
     expect(
       await page.evaluate(
@@ -105,7 +105,7 @@ test("arbitrator can prepare missing bond directly from deal link", async ({
     name: "Trọng tài nạp cọc và nhận deal",
   });
   const button = panel.getByRole("button", {
-    name: "Nạp 0.5 USDC cọc và nhận deal",
+    name: "Nạp 0.5 USDC và nhận deal",
     exact: true,
   });
   await expect(button).toBeDisabled();

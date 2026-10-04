@@ -36,6 +36,7 @@ import keeperConfig from "@/escrow/keeper-config.json";
 import { eligibleForAutomaticRelease } from "@/escrow/keeper";
 import { bondReadiness } from "@/escrow/bond";
 import { BondStep } from "./components/bond-step";
+import { DealProgress, currentDealStep } from "./components/deal-progress";
 import rawSamples from "@/escrow/samples.json";
 const samples = rawSamples as {
   arbitrator: string;
@@ -184,10 +185,7 @@ function useOperation() {
       const result = await send(new Transaction().add(...(await build())));
       setSignature(result);
       setMessage(
-        t(
-          "Giao dịch đã hoàn tất trên Devnet.",
-          "Transaction finalized on Devnet.",
-        ),
+        t("Đã xác nhận thao tác trên Devnet.", "Action confirmed on Devnet."),
       );
       await after?.();
     } catch (e) {
@@ -352,6 +350,10 @@ export function CreateDeal() {
   const [ack, setAck] = useState(false);
   const field = (name: keyof typeof form, value: string) =>
     setForm({ ...form, [name]: value });
+  let preview: bigint | null = null;
+  try {
+    preview = parseAmount(form.amount);
+  } catch {}
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
@@ -407,8 +409,8 @@ export function CreateDeal() {
       <h1>{t("Tạo giao dịch", "Create a deal")}</h1>
       <p className="lead">
         {t(
-          "Ví đang kết nối là người bán. Trọng tài cần chấp thuận trước khi người mua nạp tiền.",
-          "The connected wallet is the seller. The arbitrator must accept before the buyer can fund.",
+          "Ví đang kết nối là người bán.",
+          "The connected wallet is the seller.",
         )}
       </p>
       {!who && (
@@ -499,7 +501,7 @@ export function CreateDeal() {
                 ],
                 [
                   "arbitration",
-                  t("Mỗi vòng trọng tài", "Each arbitration window"),
+                  t("Thời gian trọng tài xử lý", "Arbitration window"),
                 ],
               ] as [keyof typeof form, string][]
             ).map(([name, label]) => (
@@ -518,11 +520,25 @@ export function CreateDeal() {
           </div>
         </details>
         <Notice>
-          {t(
-            "Phí trung gian 1% trừ từ khoản seller nhận nếu trả seller; hoàn buyer không thu phí. Trọng tài khóa cọc bằng 10% giá trị deal khi buyer nạp.",
-            "A 1% intermediary fee is deducted from seller payouts; refunds have no fee. The arbitrator reserves 10% of the deal value when the buyer funds.",
-          )}
+          {preview
+            ? t(
+                `Buyer nạp ${amount(preview)} USDC · Seller nhận ${amount(preview - preview / 100n)} · Phí ${amount(preview / 100n)}`,
+                `Buyer pays ${amount(preview)} USDC · Seller gets ${amount(preview - preview / 100n)} · Fee ${amount(preview / 100n)}`,
+              )
+            : t(
+                "Phí 1% khi trả seller; hoàn tiền không thu phí.",
+                "1% fee on seller payout; refunds have no fee.",
+              )}
         </Notice>
+        <details>
+          <summary>{t("Lưu ý trước khi ký", "Before signing")}</summary>
+          <p className="small">
+            {t(
+              "Điều kiện cố định sau khi tạo. Cọc trọng tài 10%; không phải bảo hiểm. Nếu trọng tài quá hạn và hai bên không đồng thuận, tiền có thể tiếp tục bị khóa.",
+              "Terms are fixed after creation. Arbitrator bond is 10%, not insurance. After arbitration timeout, funds may remain locked without mutual agreement.",
+            )}
+          </p>
+        </details>
         <label className="check">
           <input
             type="checkbox"
@@ -531,13 +547,16 @@ export function CreateDeal() {
           />
           <span>
             {t(
-              "Tôi hiểu điều kiện không thể đơn phương sửa sau khi tạo. Nếu trọng tài không xử lý và hai bên không đồng ý, tiền có thể bị khóa.",
-              "I understand these terms cannot be changed unilaterally. If the arbitrator does not rule and the parties disagree, funds may remain locked.",
+              "Tôi đồng ý số tiền và điều kiện giao dịch.",
+              "I agree to the amount and deal terms.",
             )}
           </span>
         </label>
         <div>
-          <button className="arbitrator" disabled={!who || !ack || op.busy}>
+          <button
+            className="primary action-current"
+            disabled={!who || !ack || op.busy}
+          >
             {t("Tạo và ký bằng ví", "Create and sign")}
           </button>
         </div>
@@ -759,6 +778,10 @@ export function DealView({ id }: { id: string }) {
         <button onClick={() => void refresh()}>{t("Thử lại", "Retry")}</button>
       </>
     );
+  const readiness = readAt ? bondReadiness(deal.bond, arbitratorProfile) : null;
+  const bondReady = !!readiness?.ready;
+  const step = currentDealStep(deal, bondReady);
+  const terminal = ["completed", "refunded", "cancelled"].includes(deal.state);
   const deadline =
     deal.state === "created"
       ? deal.fundBy
@@ -769,346 +792,410 @@ export function DealView({ id }: { id: string }) {
           : deal.state === "disputed"
             ? deal.arbitrateBy
             : 0;
+  const expired = !!readAt && deadline > 0 && now >= deadline;
+  const remaining = Math.max(0, deadline - now);
+  const countdown =
+    remaining >= 60
+      ? t(
+          `Còn khoảng ${Math.ceil(remaining / 60)} phút`,
+          `About ${Math.ceil(remaining / 60)} min left`,
+        )
+      : t(`Còn khoảng ${remaining} giây`, `About ${remaining} sec left`);
+  const title = terminal
+    ? t(...STATE_LABELS[deal.state])
+    : waitingForKeeper
+      ? t("Đang chờ tự trả tiền", "Awaiting automatic payout")
+      : deal.state === "created"
+        ? step === 1
+          ? t("Trọng tài chuẩn bị cọc", "Arbitrator prepares bond")
+          : t("Người mua nạp tiền", "Buyer funds")
+        : deal.state === "funded"
+          ? expired
+            ? t("Quá hạn giao hàng", "Delivery deadline missed")
+            : t("Người bán giao hàng", "Seller delivers")
+          : deal.state === "disputed"
+            ? expired
+              ? t("Hai bên thống nhất phương án", "Parties agree on settlement")
+              : t("Trọng tài xử lý tranh chấp", "Arbitrator resolves dispute")
+            : t("Người mua kiểm tra hàng", "Buyer reviews delivery");
+  const primaryAction = available.find((n) =>
+    [
+      "fund",
+      "deliver",
+      "confirm",
+      "refund_expired",
+      "accept_settlement",
+    ].includes(n),
+  );
+  const primaryLabel =
+    primaryAction === "fund"
+      ? t(
+          `Nạp ${amount(deal.amount)} USDC`,
+          `Deposit ${amount(deal.amount)} USDC`,
+        )
+      : primaryAction === "deliver"
+        ? t("Đã giao hàng", "Mark delivered")
+        : primaryAction === "confirm"
+          ? t("Đã nhận hàng", "Confirm receipt")
+          : primaryAction === "refund_expired"
+            ? t("Hoàn tiền cho người mua", "Refund buyer")
+            : primaryAction === "accept_settlement"
+              ? t("Đồng ý và kết thúc", "Accept and settle")
+              : "";
+  const requiresEvidence = available.some((n) =>
+    ["deliver", "dispute", "resolve_seller", "resolve_buyer"].includes(n),
+  );
+  const primaryOwner =
+    deal.state === "created"
+      ? step === 1
+        ? t("trọng tài", "the arbitrator")
+        : t("người mua", "the buyer")
+      : deal.state === "funded"
+        ? t("người bán", "the seller")
+        : deal.state === "disputed"
+          ? expired
+            ? deal.proposal
+              ? t("người bán", "the seller")
+              : t("người mua", "the buyer")
+            : t("trọng tài", "the arbitrator")
+          : t("người mua", "the buyer");
+  async function copyLink() {
+    try {
+      await navigator.clipboard.writeText(`${location.origin}/deals/${id}`);
+      setCopy(t("Đã sao chép link.", "Link copied."));
+    } catch {
+      setCopy(
+        t("Sao chép link trên thanh địa chỉ.", "Copy the address-bar link."),
+      );
+    }
+  }
+  function actionButton(name: string, main = false) {
+    return (
+      <button
+        key={name}
+        className={
+          main
+            ? "primary action-current"
+            : name === "dispute"
+              ? "dispute-button"
+              : name.startsWith("resolve_") || name.startsWith("propose_")
+                ? "action-decision"
+                : ""
+        }
+        disabled={!ack || op.busy || bondOp.busy}
+        onClick={() => void execute(name)}
+      >
+        {main ? primaryLabel : t(...ACTION_LABELS[name])}
+      </button>
+    );
+  }
   return (
     <>
-      <span className="eyebrow">DEAL / DEVNET</span>
-      <h1>
-        {waitingForKeeper
-          ? t(
-              "Hết hạn kiểm tra · chờ tự động trả tiền",
-              "Review ended · awaiting automatic payout",
-            )
-          : t(...STATE_LABELS[deal.state])}
-      </h1>
-      <div className="actions">
+      <div className="deal-heading">
+        <div>
+          <span className="eyebrow">DEAL · DEVNET</span>
+          <h1>{title}</h1>
+        </div>
         <button
-          onClick={async () => {
-            try {
-              await navigator.clipboard.writeText(
-                `${location.origin}/deals/${id}`,
-              );
-              setCopy(t("Đã sao chép link.", "Link copied."));
-            } catch {
-              setCopy(
-                t(
-                  "Sao chép link trên thanh địa chỉ.",
-                  "Copy the link from the address bar.",
-                ),
-              );
-            }
-          }}
+          className="quiet"
+          disabled={op.busy || bondOp.busy}
+          onClick={() => void refresh()}
         >
-          {t("Sao chép link deal", "Copy deal link")}
-        </button>
-        <button disabled={op.busy} onClick={() => void refresh()}>
           {t("Tải lại trạng thái", "Refresh state")}
         </button>
       </div>
-      {copy && <Notice>{copy}</Notice>}
+      <DealProgress deal={deal} bondReady={bondReady} />
       {error && <Notice error>{error}</Notice>}
       {!readAt && (
         <Notice>
           {t(
-            "Dữ liệu bên dưới là lần đọc trước. Chưa xác nhận được trạng thái hiện tại; các thao tác đang bị khóa.",
-            "The data below is from the previous read. Current state is unverified; actions are disabled.",
+            "Dữ liệu cũ. Tải lại trước khi thao tác.",
+            "Stale data. Refresh before continuing.",
           )}
         </Notice>
       )}
-      <ol
-        className="deal-flow"
-        aria-label={t("Các bước giao dịch", "Deal steps")}
-      >
-        {[
-          t("Seller tạo link", "Seller creates link"),
-          t("Trọng tài chuẩn bị cọc", "Arbitrator prepares bond"),
-          t("Buyer nạp tiền", "Buyer funds"),
-          t("Seller giao hàng", "Seller delivers"),
-          t("Buyer kiểm tra / trả tiền", "Buyer reviews / payout"),
-        ].map((label, i) => (
-          <li key={i}>
-            <span className="eyebrow">0{i + 1}</span> {label}
-          </li>
-        ))}
-      </ol>
-      {deal.state === "created" && (
+      {copy && <Notice>{copy}</Notice>}
+      <div className="deal-summary">
+        <strong>{amount(deal.amount)} USDC</strong>
+        <span>
+          {deal.state === "refunded"
+            ? t(
+                `Hoàn người mua ${amount(deal.amount)} · Phí 0`,
+                `Buyer refunded ${amount(deal.amount)} · Fee 0`,
+              )
+            : deal.state === "cancelled"
+              ? t("Chưa nạp tiền", "No funds deposited")
+              : t(
+                  `Người bán nhận ${amount(deal.amount - deal.fee)} · Phí ${amount(deal.fee)}`,
+                  `Seller gets ${amount(deal.amount - deal.fee)} · Fee ${amount(deal.fee)}`,
+                )}
+        </span>
+        {!terminal && deadline > 0 && readAt > 0 && (
+          <span className="time-badge">
+            {expired ? t("Đã hết hạn", "Deadline passed") : countdown}
+          </span>
+        )}
+      </div>
+      {deal.state === "created" && step === 1 && !expired ? (
         <BondStep
           deal={deal}
           profile={arbitratorProfile}
           wallet={who?.toBase58() || null}
           busy={op.busy || bondOp.busy}
-          fresh={!!readAt && now < deal.fundBy}
+          fresh={!!readAt}
           onPrepare={prepareBond}
           feedback={bondOp.feedback}
         />
-      )}
-      <div className="grid">
-        <section className="panel">
-          <span className="badge">USDC · Devnet</span>
-          <p className="amount">{amount(deal.amount)} USDC</p>
-          <dl>
-            <div>
-              <dt>
-                {deal.state === "refunded"
+      ) : (
+        <section
+          className={`panel action-card ${deal.state === "disputed" ? "action-dispute" : ""}`}
+          aria-labelledby="action-title"
+        >
+          <span className="eyebrow">
+            {terminal
+              ? t("KẾT QUẢ", "RESULT")
+              : t(`BƯỚC ${step + 1}/5`, `STEP ${step + 1}/5`)}
+          </span>
+          <h2 id="action-title">
+            {terminal
+              ? deal.state === "completed"
+                ? t("Đã trả người bán", "Paid to seller")
+                : deal.state === "refunded"
                   ? t("Đã hoàn người mua", "Refunded to buyer")
-                  : deal.state === "completed"
-                    ? t("Đã trả người bán", "Paid to seller")
-                    : deal.state === "cancelled"
-                      ? t("Chưa nạp tiền", "No funds deposited")
-                      : t(
-                          "Người bán sẽ nhận khi giải ngân",
-                          "Seller receives on payout",
-                        )}
-              </dt>
-              <dd>
-                {amount(
-                  deal.state === "refunded"
-                    ? deal.amount
-                    : deal.state === "cancelled"
-                      ? 0n
-                      : deal.amount - deal.fee,
-                )}{" "}
-                USDC
-              </dd>
-            </div>
-            <div>
-              <dt>
-                {t(
-                  "Phí trung gian khi trả seller",
-                  "Intermediary fee on seller payout",
-                )}
-              </dt>
-              <dd>
-                {amount(
-                  deal.state === "refunded" || deal.state === "cancelled"
-                    ? 0n
-                    : deal.fee,
-                )}{" "}
-                USDC
-                {deal.state !== "refunded" && deal.state !== "cancelled"
-                  ? " (1%)"
-                  : ""}
-              </dd>
-            </div>
-            <div>
-              <dt>
-                {["completed", "refunded"].includes(deal.state)
-                  ? t(
-                      "Cọc deal này đã mở khóa cho mỗi trọng tài",
-                      "This deal’s bond released per arbitrator",
-                    )
-                  : deal.state === "created" || deal.state === "cancelled"
-                    ? t(
-                        "Cọc yêu cầu khi nạp (chưa khóa)",
-                        "Required bond on funding (not reserved)",
-                      )
-                    : t(
-                        "Cọc đang khóa của mỗi trọng tài",
-                        "Reserved bond per arbitrator",
-                      )}
-              </dt>
-              <dd>{amount(deal.bond)} USDC</dd>
-            </div>
-            {deadline > 0 && (
-              <div>
-                <dt>{t("Thời hạn hiện tại", "Current deadline")}</dt>
-                <dd>
-                  {new Date(deadline * 1000).toLocaleString(
-                    locale === "vi" ? "vi-VN" : "en-US",
-                  )}
-                </dd>
-              </div>
-            )}
-          </dl>
-          <p className="small">
-            {t(
-              "Trạng thái thời hạn dùng thời gian mạng ở lần đọc gần nhất. Tải lại để kiểm tra; chương trình kiểm lại khi thực thi.",
-              "Deadlines use network time at the last read. Refresh to check; the program validates again at execution.",
-            )}
-          </p>
-        </section>
-        <section className="panel">
-          <h2>{t("Bước tiếp theo", "Next step")}</h2>
-          {deal.state === "created" && (
-            <p>
-              {t(
-                "Bước cọc trọng tài ở phía trên phải hoàn tất trước khi người mua nạp tiền.",
-                "Complete the arbitrator bond step above before the buyer funds.",
-              )}{" "}
-              {deal.approvals === 1 ? "✓" : "—"} {t("Trọng tài", "Arbitrator")}
+                  : t("Đã hủy deal", "Deal cancelled")
+              : waitingForKeeper
+                ? t("Không cần ký thêm", "No more signatures needed")
+                : primaryAction
+                  ? primaryAction === "fund"
+                    ? t("Nạp tiền vào ký quỹ", "Fund escrow")
+                    : primaryAction === "deliver"
+                      ? t("Xác nhận đã giao", "Mark delivery")
+                      : primaryAction === "confirm"
+                        ? t("Xác nhận hoặc khiếu nại", "Confirm or dispute")
+                        : t("Hoàn tất giao dịch", "Complete the deal")
+                  : available.some((n) => n.startsWith("resolve_"))
+                    ? t("Chọn kết quả xử lý", "Choose the ruling")
+                    : available.some((n) => n.startsWith("propose_"))
+                      ? t("Đề nghị phương án", "Propose a settlement")
+                      : t(`Chờ ${primaryOwner}`, `Waiting for ${primaryOwner}`)}
+          </h2>
+          {terminal ? (
+            <p className="result-amount">
+              {deal.state === "completed"
+                ? `${amount(deal.amount - deal.fee)} USDC`
+                : deal.state === "refunded"
+                  ? `${amount(deal.amount)} USDC`
+                  : t("Chưa nạp tiền", "No funds deposited")}{" "}
+              <span>✓</span>
             </p>
-          )}
-          {deal.state === "funded" && (
-            <p>
-              {t(
-                "Seller bàn giao qua kênh đã thỏa thuận rồi đánh dấu tại đây. Quá hạn có thể hoàn buyer.",
-                "The seller delivers through the agreed channel and marks it here. Missed deadlines allow a buyer refund.",
-              )}
-            </p>
-          )}
-          {deal.state === "delivered" && (
-            <p>
-              {t(
-                "Người mua kiểm tra hàng, xác nhận hoặc khiếu nại trước hạn. Hết hạn không khiếu nại, keeper tự gửi lệnh trả người bán; người bán không cần ký thêm.",
-                "The buyer reviews, confirms or disputes before the deadline. Without a timely dispute, the keeper submits seller payout; the seller does not need to sign again.",
-              )}
-            </p>
-          )}
-          {waitingForKeeper && (
-            <Notice>
-              {t(
-                "Đang chờ keeper kiểm tra và giải ngân. Lịch dự kiến khoảng 5 phút/lượt, có thể chậm hơn do dịch vụ hoặc RPC. Trang sẽ tự tải lại trạng thái.",
-                "Waiting for the keeper to check and release. Runs are scheduled about every 5 minutes and may be delayed by the service or RPC. The page refreshes state automatically.",
-              )}{" "}
-              <a
-                href={keeperConfig.workflowUrl}
-                target="_blank"
-                rel="noreferrer"
-              >
-                {t("Xem trạng thái dịch vụ", "View service status")} ↗
-              </a>
-            </Notice>
-          )}
-          {deal.state === "disputed" && (
-            <Notice>
-              {t(
-                "Tiền đang khóa. Trọng tài xử trước hạn; sau hạn, người mua đề nghị trả người bán hoặc hoàn tiền và người bán phải đồng ý.",
-                "Funds are locked. The arbitrator rules before the deadline; afterward, the buyer proposes payout/refund and the seller must accept.",
-              )}
-            </Notice>
-          )}
-          {deal.proposal > 0 && deal.state === "disputed" && (
-            <p>
-              <strong>
-                {t("Đề nghị hiện tại:", "Current proposal:")}{" "}
-                {deal.proposal === 1
-                  ? t("Trả seller", "Pay seller")
-                  : t("Hoàn buyer", "Refund buyer")}
-              </strong>
-            </p>
-          )}
-          {["completed", "refunded", "cancelled"].includes(deal.state) && (
-            <Notice>
-              {t(
-                "Deal đã kết thúc. Không thể chi khoản tiền này lần nữa.",
-                "Deal is terminal. Its principal cannot be paid a second time.",
-              )}
-            </Notice>
-          )}
-          {!who && (
-            <p>
-              {t(
-                "Kết nối đúng ví để xem hành động của bạn.",
-                "Connect the appropriate wallet to see your actions.",
-              )}
-            </p>
-          )}
-          {who &&
-            available.length === 0 &&
-            !waitingForKeeper &&
-            !["completed", "refunded", "cancelled"].includes(deal.state) && (
+          ) : waitingForKeeper ? (
+            <>
               <p>
                 {t(
-                  "Ví này chưa có thao tác ở trạng thái/thời hạn hiện tại. Xem vai trò và tải lại trạng thái.",
-                  "This wallet has no action in the current state/time window. Check your role and refresh.",
+                  "Hết hạn, không khiếu nại. Keeper sẽ trả tiền.",
+                  "Review ended without dispute. The keeper will release funds.",
                 )}
               </p>
-            )}
-          {available.some((n) =>
-            ["deliver", "dispute", "resolve_seller", "resolve_buyer"].includes(
-              n,
-            ),
-          ) && (
-            <label>
-              {t(
-                "Ghi chú/bằng chứng đã trao đổi ngoài ứng dụng",
-                "Note/evidence exchanged outside the app",
-              )}
-              <textarea
-                rows={3}
-                value={evidence}
-                onChange={(e) => setEvidence(e.target.value)}
-              />
-              <small>
+              <p className="small">
                 {t(
-                  "Chỉ hash được ghi on-chain. Gửi nội dung thực cho bên kia/trọng tài qua kênh đã thỏa thuận; hash không chứng minh hàng đã được giao.",
-                  "Only a hash is recorded on-chain. Share actual evidence through the agreed channel; a hash does not prove delivery.",
-                )}
-              </small>
-            </label>
-          )}
-          {available.length > 0 && (
+                  "Kiểm tra khoảng 5 phút/lượt; có thể trễ.",
+                  "Checks about every 5 minutes; delays are possible.",
+                )}{" "}
+                <a
+                  href={keeperConfig.workflowUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  {t("Trạng thái dịch vụ", "Service status")} ↗
+                </a>
+              </p>
+            </>
+          ) : (
             <>
-              <label className="check">
-                <input
-                  type="checkbox"
-                  checked={ack}
-                  onChange={(e) => setAck(e.target.checked)}
-                />
-                <span>
+              {expired && deal.state === "created" ? (
+                <p>
                   {t(
-                    "Tôi đã đọc điều khoản, số tiền, phí và hiểu hành động sẽ ký. Xác nhận/phán quyết có thể giải ngân không thể đảo ngược.",
-                    "I have read the terms, amount and fee, and understand what I will sign. Confirmation/ruling may cause irreversible payout.",
+                    "Hạn nạp đã hết. Người bán cần tạo link mới.",
+                    "Funding expired. The seller needs to create a new link.",
                   )}
-                </span>
-              </label>
-              <div className="actions">
-                {available.map((name) => (
-                  <button
-                    className={
-                      name === "fund" || name === "confirm" ? "arbitrator" : ""
-                    }
-                    key={name}
-                    disabled={!ack || op.busy}
-                    onClick={() => void execute(name)}
-                  >
-                    {t(...ACTION_LABELS[name])}
-                  </button>
-                ))}
+                </p>
+              ) : deal.state === "disputed" ? (
+                <p>
+                  {t(
+                    "Tiền giữ trong quỹ đến khi có quyết định.",
+                    "Funds stay in escrow until a decision.",
+                  )}
+                </p>
+              ) : !primaryAction ? (
+                <p>
+                  {t(
+                    "Mở link bằng đúng ví để thực hiện bước này.",
+                    "Open this link with the correct wallet to continue.",
+                  )}
+                </p>
+              ) : null}
+              {deal.state === "disputed" && deal.proposal > 0 && (
+                <p>
+                  <strong>
+                    {t("Đề nghị:", "Proposal:")}{" "}
+                    {deal.proposal === 1
+                      ? t("Trả người bán", "Pay seller")
+                      : t("Hoàn người mua", "Refund buyer")}
+                  </strong>
+                </p>
+              )}
+              {requiresEvidence && (
+                <label>
+                  <span id="evidence-label">
+                    {t(
+                      "Ghi chú bàn giao / khiếu nại",
+                      "Delivery / dispute note",
+                    )}
+                  </span>
+                  <textarea
+                    aria-labelledby="evidence-label"
+                    rows={2}
+                    value={evidence}
+                    onChange={(e) => setEvidence(e.target.value)}
+                  />
+                  <small>
+                    {t(
+                      "Chia sẻ bằng chứng qua kênh đã thỏa thuận.",
+                      "Share evidence through the agreed channel.",
+                    )}
+                  </small>
+                </label>
+              )}
+              {available.some((n) => n !== "cancel_deal") && (
+                <label className="check compact-consent">
+                  <input
+                    type="checkbox"
+                    checked={ack}
+                    onChange={(e) => setAck(e.target.checked)}
+                  />
+                  <span>
+                    {t(
+                      "Tôi đồng ý điều kiện và thao tác này.",
+                      "I agree to the terms and this action.",
+                    )}
+                  </span>
+                </label>
+              )}
+              <div className="actions main-actions">
+                {primaryAction && actionButton(primaryAction, true)}
+                {available.includes("dispute") && actionButton("dispute")}
+                {available
+                  .filter(
+                    (n) => n.startsWith("resolve_") || n.startsWith("propose_"),
+                  )
+                  .map((n) => actionButton(n))}
               </div>
+              {!primaryAction &&
+                !available.some(
+                  (n) => n.startsWith("resolve_") || n.startsWith("propose_"),
+                ) &&
+                !expired && (
+                  <button
+                    className="primary action-current"
+                    onClick={() => void copyLink()}
+                  >
+                    {t("Sao chép link gửi đúng người", "Copy link to share")}
+                  </button>
+                )}
+              {available.includes("cancel_deal") && (
+                <details className="secondary-actions">
+                  <summary>{t("Thao tác khác", "Other actions")}</summary>
+                  <label className="check">
+                    <input
+                      type="checkbox"
+                      checked={ack}
+                      onChange={(e) => setAck(e.target.checked)}
+                    />
+                    <span>
+                      {t(
+                        "Tôi muốn hủy deal chưa nạp tiền.",
+                        "I want to cancel this unfunded deal.",
+                      )}
+                    </span>
+                  </label>
+                  {actionButton("cancel_deal")}
+                </details>
+              )}
             </>
           )}
           {op.feedback}
         </section>
+      )}
+      <div className="deal-tools">
+        <button onClick={() => void copyLink()}>
+          {t("Sao chép link deal", "Copy deal link")}
+        </button>
+        {receipts[0] && <Receipt signature={receipts[0].signature} />}
       </div>
-      <section className="panel">
-        <h2>{t("Điều khoản đã cố định", "Fixed terms")}</h2>
-        <p style={{ whiteSpace: "pre-wrap", overflowWrap: "anywhere" }}>
-          {deal.terms}
-        </p>
-        <details>
-          <summary>
-            {t(
-              "Ví, mint và bằng chứng on-chain",
-              "Wallets, mint and on-chain evidence",
-            )}
-          </summary>
-          <dl>
-            {[
-              [t("Người mua", "Buyer"), deal.buyer],
-              [t("Người bán", "Seller"), deal.seller],
-              [t("Trọng tài", "Arbitrator"), deal.arbitrator],
-              ["Mint", deal.mint],
-              ["Deal", id],
-              ["Vault", vaultAddressFor(id)],
-              [t("Hash bàn giao", "Delivery hash"), deal.deliveryHash],
-              [t("Hash tranh chấp", "Dispute hash"), deal.disputeHash],
-              [t("Hash phán quyết", "Resolution hash"), deal.resolutionHash],
-            ].map(([label, value]) => (
-              <div key={label}>
-                <dt>{label}</dt>
-                <dd>
-                  <Address value={value} />
-                </dd>
-              </div>
-            ))}
-          </dl>
-        </details>
+      <details className="panel disclosure">
+        <summary>{t("Điều kiện giao dịch", "Deal terms")}</summary>
+        <p className="terms-text">{deal.terms}</p>
+        <dl>
+          <div>
+            <dt>{t("Tiền giao dịch", "Deal amount")}</dt>
+            <dd>{amount(deal.amount)} USDC</dd>
+          </div>
+          <div>
+            <dt>{t("Phí trung gian", "Intermediary fee")}</dt>
+            <dd>
+              {amount(
+                ["refunded", "cancelled"].includes(deal.state) ? 0n : deal.fee,
+              )}{" "}
+              USDC
+            </dd>
+          </div>
+          <div>
+            <dt>{t("Cọc trọng tài", "Arbitrator bond")}</dt>
+            <dd>
+              {amount(deal.bond)} USDC ·{" "}
+              {["completed", "refunded"].includes(deal.state)
+                ? t("đã mở khóa", "released")
+                : deal.state === "created" || deal.state === "cancelled"
+                  ? t("chưa khóa cho deal", "not reserved yet")
+                  : t("đang khóa", "reserved")}
+            </dd>
+          </div>
+          {deadline > 0 && (
+            <div>
+              <dt>{t("Thời hạn", "Deadline")}</dt>
+              <dd>
+                {new Date(deadline * 1000).toLocaleString(
+                  locale === "vi" ? "vi-VN" : "en-US",
+                )}
+              </dd>
+            </div>
+          )}
+        </dl>
+      </details>
+      <details className="panel disclosure">
+        <summary>{t("Ví và bằng chứng", "Wallets and evidence")}</summary>
+        <dl>
+          {[
+            [t("Người mua", "Buyer"), deal.buyer],
+            [t("Người bán", "Seller"), deal.seller],
+            [t("Trọng tài", "Arbitrator"), deal.arbitrator],
+            ["Mint", deal.mint],
+            ["Deal", id],
+            ["Vault", vaultAddressFor(id)],
+            [t("Hash bàn giao", "Delivery hash"), deal.deliveryHash],
+            [t("Hash khiếu nại", "Dispute hash"), deal.disputeHash],
+            [t("Hash phán quyết", "Resolution hash"), deal.resolutionHash],
+          ].map(([label, value]) => (
+            <div key={label}>
+              <dt>{label}</dt>
+              <dd>
+                <Address value={value} />
+              </dd>
+            </div>
+          ))}
+        </dl>
         <h3>{t("Giao dịch liên quan", "Related transactions")}</h3>
-        {receipts.length === 0 ? (
-          <p>
-            {t("Chưa tải được lịch sử chữ ký.", "No signature history loaded.")}
-          </p>
-        ) : (
+        {receipts.length ? (
           <ul>
             {receipts.map((r) => (
               <li key={r.signature}>
@@ -1117,8 +1204,19 @@ export function DealView({ id }: { id: string }) {
               </li>
             ))}
           </ul>
+        ) : (
+          <p>{t("Chưa tải được lịch sử.", "History unavailable.")}</p>
         )}
-      </section>
+      </details>
+      <details className="panel disclosure">
+        <summary>{t("Cách hoạt động", "How it works")}</summary>
+        <p>
+          {t(
+            "Sau khi giao hàng, người mua xác nhận hoặc khiếu nại trước hạn. Hết hạn không khiếu nại, keeper tự gửi lệnh trả tiền. Cọc không phải bảo hiểm; quá hạn trọng tài cần hai bên đồng thuận.",
+            "After delivery, the buyer confirms or disputes before the deadline. Without a timely dispute, the keeper submits payout. Bond is not insurance; after arbitration timeout both parties must agree.",
+          )}
+        </p>
+      </details>
     </>
   );
 }
@@ -1252,7 +1350,7 @@ export function Admin() {
                   </label>
                   <div className="actions">
                     <button
-                      className="arbitrator"
+                      className="primary action-current"
                       disabled={op.busy}
                       onClick={() =>
                         void op.run(

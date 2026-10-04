@@ -1,4 +1,10 @@
-# Trạng thái — 04/10/2026
+# Trạng thái — 05/10/2026
+
+## UI gọn — 05/10/2026
+
+Tiến trình theo state/bond readiness, current lime + glow tĩnh + aria-current; dispute cam. Một action card với nút chính; complaint vẫn cạnh confirm. Điều kiện/địa chỉ/bằng chứng/rule thu gọn disclosure. Mobile summary Bước N/5; không glow nút payment khi chờ keeper hoặc terminal. Sửa class CTA primary bị lệch tên từ migration cũ, form preview phí gọn.
+
+48 unit, build/lint/typecheck, 16 browser tests pass (VI/EN, 375/768/1024/1440, axe, complaint visible, keeper no misleading CTA). Một lần chạy browser phụ quá sớm khi build chưa xong báo thiếu prerender manifest, không tính pass; lượt verify hoàn chỉnh đã pass. Visual desktop/mobile đã xem; browser ký Devnet qua local UI mới pass từ create đến completed, hủy ký không đổi state, axe/VI/EN/privacy. Provider test, không Phantom thật. Không đổi protocol, Program ID/mint/keeper/guard chữ ký. Đổi success copy thành “Đã xác nhận thao tác” để không nhầm với deal terminal.
 
 User yêu cầu bỏ trọng tài phụ. v0.3 chỉ có buyer, seller, arbitrator; một cọc, một accept và một vòng xử tranh chấp. Hết hạn trọng tài: buyer đề nghị, seller đồng ý; không đồng thuận tiền vẫn khóa. Không phạt xử sai/Mainnet. Keeper được bổ sung theo flow cuối ở bên dưới.
 

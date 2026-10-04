@@ -143,7 +143,7 @@ await page
   .click();
 await page
   .getByRole("heading", { level: 1 })
-  .filter({ hasText: "Chờ chấp thuận" })
+  .filter({ hasText: "Trọng tài chuẩn bị cọc" })
   .waitFor();
 const id = new URL(page.url()).pathname.split("/").at(-1)!;
 console.log("Created deal", id);
@@ -167,7 +167,7 @@ async function action(name: string) {
   try {
     await page
       .locator("main")
-      .getByText("Giao dịch đã hoàn tất trên Devnet.", { exact: false })
+      .getByText("Đã xác nhận thao tác trên Devnet.", { exact: false })
       .waitFor({ timeout: 120000 });
   } catch (error) {
     console.log(
@@ -188,18 +188,18 @@ async function action(name: string) {
     .click();
 }
 await role("arbitrator");
-await action("Dùng cọc hiện có và nhận deal");
+await action("Nhận deal");
 await role("buyer");
-await action("Nạp tiền vào ký quỹ");
+await action("Nạp 1 USDC");
 await page.screenshot({
   path: "docs/evidence/screenshots/funded-vi.png",
   fullPage: true,
 });
 await role("seller");
 await page
-  .getByLabel("Ghi chú/bằng chứng đã trao đổi ngoài ứng dụng")
+  .getByLabel("Ghi chú bàn giao / khiếu nại")
   .fill("Shared test file receipt through agreed channel.");
-await action("Đánh dấu đã bàn giao");
+await action("Đã giao hàng");
 await role("buyer");
 await page.getByRole("checkbox").check();
 await page.evaluate(() =>
@@ -207,7 +207,7 @@ await page.evaluate(() =>
 );
 await page
   .getByRole("button", {
-    name: "Xác nhận nhận hàng và trả seller",
+    name: "Đã nhận hàng",
     exact: true,
   })
   .click();
@@ -218,7 +218,7 @@ await page
   .waitFor({ timeout: 60000 });
 const c = new Connection("https://api.devnet.solana.com");
 assert.equal((await readDeal(c, id)).state, "delivered");
-await action("Xác nhận nhận hàng và trả seller");
+await action("Đã nhận hàng");
 await page
   .getByRole("heading", { level: 1, name: "Đã trả người bán" })
   .waitFor({ timeout: 30000 });

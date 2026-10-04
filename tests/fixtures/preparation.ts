@@ -49,6 +49,7 @@ export function preparationFixture(
   approved = 0,
   total = 1_500_000n,
   locked = 1_000_000n,
+  state = 0,
 ) {
   const terms = Buffer.from(
     "Synthetic browser fixture: 10 USDC deal, 1 USDC bond.",
@@ -64,8 +65,17 @@ export function preparationFixture(
     integer(10_000_000n),
     integer(1_000_000n),
     integer(100_000n),
-    ...[fixtureTime, fixtureTime + 600, 300, 120, 120, 0, 0, 0].map(integer),
-    Buffer.from([0, approved, bump, 0]),
+    ...[
+      fixtureTime,
+      fixtureTime + 600,
+      300,
+      120,
+      120,
+      state > 0 ? fixtureTime + 600 : 0,
+      state >= 2 ? fixtureTime + 600 : 0,
+      state === 3 ? fixtureTime + 600 : 0,
+    ].map(integer),
+    Buffer.from([state, approved, bump, 0]),
     Buffer.alloc(96),
     len,
     terms,
