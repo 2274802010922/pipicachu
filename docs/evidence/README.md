@@ -2,7 +2,7 @@
 
 Chỉ dùng receipt/schema của Program ID 4Xds5m5JtWR8HbNLdGeF7e3Qh3akKMHwMfjKsQeVXnrb để đánh giá bản hiện tại.
 
-Local program: [6 flow / 38 checks](local-escrow-cycle.json) pass. Devnet: [6 kịch bản finalized, đối chiếu số tiền từ vault](devnet-escrow-cycle.json). Script negative-test live gặp RPC 429; không nhận đó là 38 checks live pass. [Browser local](local-browser-wallet-cycle.json) ký flow bằng provider test, không phải Phantom thật. Vercel/CI kiểm sau push.
+Local program: [6 flow / 38 checks](local-escrow-cycle.json) pass. Devnet: [6 kịch bản finalized, đối chiếu số tiền từ vault](devnet-escrow-cycle.json). Script negative-test live gặp RPC 429; không nhận đó là 38 checks live pass. [Browser local](local-browser-wallet-cycle.json), [browser Vercel](browser-wallet-cycle.json) ký flow bằng provider test, không phải Phantom thật. [Vercel smoke](vercel-smoke.json) pass; [CI 37207354325](https://github.com/2274802010922/pipicachu/actions/runs/37207354325) xanh cả web/program.
 
 [Binary](program-binary.json) khớp byte-for-byte program mới, [deployment](devnet-deployment.json), [phục hồi test bị gián đoạn](interrupted-run-recovery.json), [rút cọc legacy](legacy-bond-recovery.json).
 

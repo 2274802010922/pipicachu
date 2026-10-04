@@ -20,7 +20,7 @@ Bond is not insurance. No wrongful-ruling slashing, appeal or automatic keeper. 
 
 ## Build and review
 
-v0.3: 6 flows / 38 local program checks; 6 Devnet scenarios verified from finalized receipts and exact vault transfer amounts. Web has 23 unit/IDL tests and 7 browser tests. The local website signing flow passed with a test provider, not the actual Phantom extension. Vercel and CI are checked after push. See [evidence](docs/evidence/README.md).
+v0.3: 6 flows / 38 local program checks; 6 Devnet scenarios verified from finalized receipts and exact vault transfer amounts. Web has 23 unit/IDL tests and 7 browser tests. Local and Vercel website signing passed with a test provider, not the actual Phantom extension. Both CI jobs passed. See [evidence](docs/evidence/README.md).
 
 ```bash
 npm ci

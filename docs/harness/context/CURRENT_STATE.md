@@ -6,4 +6,6 @@ ABI thay đổi: dùng Program ID mới 4Xds5m5JtWR8HbNLdGeF7e3Qh3akKMHwMfjKsQeV
 
 Rust build/IDL, 6 flow/38 checks local pass. Program mới deploy Devnet, dump binary khớp byte-for-byte. Đã kiểm 6 kịch bản finalized qua RPC, đối chiếu exact transfer từ vault đến buyer/seller/trọng tài. Script full live-negative cycle gặp RPC 429, không gọi là 38 checks live pass; đã xử lý các test bị gián đoạn bằng đồng thuận hoàn tiền.
 
-Web: 23 unit/IDL, 7 browser tests, build/lint/typecheck pass. Browser local ký bằng test provider đã pass create, một accept, fund, deliver, reject giữ nguyên state, confirm, axe/VI/EN/privacy. Phantom extension thật chưa kiểm. Bản một trọng tài đang chuẩn bị push/CI/Vercel.
+Web: 23 unit/IDL, 7 browser tests, build/lint/typecheck pass. Browser local và Vercel ký bằng test provider đã pass create, một accept, fund, deliver, reject giữ nguyên state, confirm, axe/VI/EN/privacy. Phantom extension thật chưa kiểm.
+
+Đã push main aa30d7c, giữ nguyên commit đổi tiêu đề README của owner (acfc39f). Vercel health đúng v0.3, schemaVersion 3/arbitratorCount 1/Program ID mới; smoke pass. CI 37207354325 pass cả quality và escrow-program. Evidence/handoff cuối được commit riêng; không đổi code tiền. Không cần env mới.
