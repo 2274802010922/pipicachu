@@ -1,0 +1,154 @@
+{
+  "at": "2026-10-04T19:42:32.779Z",
+  "treasury": "CXjKGEBNTTotzoF26nGPfAG4AFicGgP72SMqUQKY1pJN",
+  "feeConfig": "4sXcPGCiZRcjmKzFxssk7duiRZKAF9MAhMJwB6jwdVRR",
+  "legacySnapshot": [
+    {
+      "address": "iuC9Rt86GbMv1DqMebGEvMLzt5bk1PYkYeqmgVdHJcv",
+      "state": "refunded",
+      "feeVersion": 0,
+      "platformFee": "0"
+    },
+    {
+      "address": "37f4ahQcQicYVme3MdKcFdtcBjLuyJrLNeMdQiMuCYRJ",
+      "state": "refunded",
+      "feeVersion": 0,
+      "platformFee": "0"
+    },
+    {
+      "address": "4z9UYuPSp3yt2mncVLwUSEBeRwZcKDDE4UoMWVj8tGKv",
+      "state": "refunded",
+      "feeVersion": 0,
+      "platformFee": "0"
+    },
+    {
+      "address": "6qsUDubE3we8FMgYai42JWmajNp3onqB5FpMnPaTSxa9",
+      "state": "completed",
+      "feeVersion": 0,
+      "platformFee": "0"
+    },
+    {
+      "address": "7aWin47gbAorE2zY75rJmZEmHJLAGkhXwPatdr74kAaw",
+      "state": "created",
+      "feeVersion": 0,
+      "platformFee": "0"
+    },
+    {
+      "address": "8pBt3PqypAyMWKXYnNfGNmMfZnMkzzoKtjiReBNbBMwS",
+      "state": "completed",
+      "feeVersion": 0,
+      "platformFee": "0"
+    },
+    {
+      "address": "AJvnggm6a5uzD9A16dRqqrpeyoH6dSfG7pSBLsCjw5c6",
+      "state": "completed",
+      "feeVersion": 0,
+      "platformFee": "0"
+    },
+    {
+      "address": "AXJj2qwZxxoNgCPH44jATs4WbNTLUfRsNvHzpWu8oFJY",
+      "state": "completed",
+      "feeVersion": 0,
+      "platformFee": "0"
+    },
+    {
+      "address": "AabDnwgz7iDVRVrHWJcMkXa5cehnbAbAkH4g1ww8Vr4k",
+      "state": "refunded",
+      "feeVersion": 0,
+      "platformFee": "0"
+    },
+    {
+      "address": "AwWrHWtKhrgutvB75Tt6LjDjbVf32WmSYYShxWUhs2g4",
+      "state": "completed",
+      "feeVersion": 0,
+      "platformFee": "0"
+    },
+    {
+      "address": "CPyxjcYxeL66qbiENRQSimMKnFc1Esd4g2f6tr8Lbbz9",
+      "state": "created",
+      "feeVersion": 0,
+      "platformFee": "0"
+    },
+    {
+      "address": "CSoesNxrPUc46LbnDN2hGtm1HNDhnxXKzundBPvRJhwG",
+      "state": "refunded",
+      "feeVersion": 0,
+      "platformFee": "0"
+    },
+    {
+      "address": "CXwJSHcJDiny121ZXfMY3F2UqdG3eWZoh3pWbFk1fGKd",
+      "state": "completed",
+      "feeVersion": 0,
+      "platformFee": "0"
+    },
+    {
+      "address": "CaNbNkHr1JxCScnQBy4gdazGmi5NiKi3CHhVrh2163X2",
+      "state": "completed",
+      "feeVersion": 0,
+      "platformFee": "0"
+    },
+    {
+      "address": "DZFoQucrr4p4ofPvuaf7KTFaMdNtQPNMBw87gbAbwQaN",
+      "state": "completed",
+      "feeVersion": 0,
+      "platformFee": "0"
+    },
+    {
+      "address": "DtKr2QyB3UFYoQ2CX6QVKCdSxNK62BRMZctvq6yWPb2u",
+      "state": "completed",
+      "feeVersion": 0,
+      "platformFee": "0"
+    },
+    {
+      "address": "DxWqka4dz2KwKspnPam7BGc3BhqsYpex8gEQhnRHGty6",
+      "state": "completed",
+      "feeVersion": 0,
+      "platformFee": "0"
+    },
+    {
+      "address": "FkEZBqP4sTjGvxj7xVNctVrJjNkMiYvY4VdvhdHmv26V",
+      "state": "completed",
+      "feeVersion": 0,
+      "platformFee": "0"
+    },
+    {
+      "address": "G4hyLMgssuwUjgtbRQfaqtetR2RHxVC61WQfZE6YnLf8",
+      "state": "cancelled",
+      "feeVersion": 0,
+      "platformFee": "0"
+    },
+    {
+      "address": "GJWNFWw5DMB6fXLoJnwxqP32B7wuSR2zWCMFDAbRwvnu",
+      "state": "completed",
+      "feeVersion": 0,
+      "platformFee": "0"
+    },
+    {
+      "address": "GqELXQne5Js1VPebu3szg7wuc5vioESnjTtUFz1BQ9fH",
+      "state": "refunded",
+      "feeVersion": 0,
+      "platformFee": "0"
+    },
+    {
+      "address": "GxdJup64dbsnPRn7uyKjCs7X4oNsCPdZLMfR9kCR8BXg",
+      "state": "completed",
+      "feeVersion": 0,
+      "platformFee": "0"
+    },
+    {
+      "address": "Hu7MPFa5Q3dGaZsc1WUdJc58G9hwpZACcY3Emru9Uzbk",
+      "state": "created",
+      "feeVersion": 0,
+      "platformFee": "0"
+    }
+  ],
+  "legacyDeal": "7QjgbYbLgGMB3PARFtCjrJSUbaRiXguz9a68n6ibwYQa",
+  "legacyCreateSignature": "5RTHKJQuSErnzxiHPTMJ7X9GuyfbTpqm9v2xuBHM9SsCmAZLKG6ouRro8Fb5dWjnvbWX51HNfWmdoWH9KVj1iwpd",
+  "initializedAt": "2026-10-04T19:43:34.193Z",
+  "initializeSignature": "3SuQsp31vwT4821LiQiCca2iCmcSHxCoaYvuZfwkibFvUE8XAxEzXGWf1feSDWFitrX1yYESDwwCatDjwvjfjaNu",
+  "legacyPayoutSignature": "2wnHa5WDw74nYnJxmEGM4fLjDvwT9urNWvfo8fBFMQ11axeSfx5bzo92MJZYD28cBAgV31KdZWEVyfyiFWtxjPX5",
+  "legacyFeeVersion": 0,
+  "legacySellerAtomic": "990000",
+  "legacyArbitratorAtomic": "10000",
+  "legacyPlatformAtomic": "0"
+}

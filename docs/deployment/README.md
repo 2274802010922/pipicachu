@@ -24,3 +24,7 @@ Secret GitHub Actions `DEVNET_KEEPER_KEYPAIR` chứa **ví service mới, chỉ 
 Keeper chỉ scan Program ID/mint đã pin trên Devnet, lọc Delivered + review deadline, đọc lại trước ký và gọi finalize. Không resolve/cancel/fund hoặc đổi địa chỉ nhận/số tiền. Contract kiểm điều kiện lại, nên tranh chấp/terminal/giải ngân lặp bị chặn. Mỗi lượt tối đa 5 deal, ưu tiên deadline cũ; cần bổ sung SOL service nếu thấp hơn 0,01 SOL. Keeper/RPC/scheduler lỗi có thể trì hoãn giải ngân, không phải bảo hiểm SLA.
 
 Fork phải tạo ví service mới và secret riêng; workflow mặc định chặn chạy ở fork khác owner. `workflow_dispatch` dùng để kiểm vận hành. Không log key; artifact chỉ receipt/trạng thái public. Nếu không chạy service, contract vẫn permissionless finalize sau hạn nhưng không được quảng cáo tự động.
+
+## Ví nhận phí hệ thống
+
+Ví owner chọn: `CXjKGEBNTTotzoF26nGPfAG4AFicGgP72SMqUQKY1pJN`. Treasury lưu tại FeeConfig PDA trên Devnet; không cần thêm biến môi trường/private key. `npm run check:live` đối chiếu treasury on-chain với deployment public. Không đổi recipient bằng env. Script `scripts/devnet/fee-rollout.ts` ghi legacy trước upgrade và initialize sau upgrade, chỉ dùng key pipicachu trong vùng ignore.

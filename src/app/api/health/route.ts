@@ -5,11 +5,18 @@ export async function GET() {
   return NextResponse.json(
     {
       app: "pipicachu",
-      version: "0.3.0",
+      version: "0.4.0",
       product: "escrow",
       cluster: "devnet",
       programId: deployment.programId,
       schemaVersion: deployment.schemaVersion,
+      feeVersion: deployment.feeVersion,
+      platformTreasury: deployment.platformTreasury,
+      fees: {
+        arbitratorBps: deployment.arbitratorFeeBps,
+        platformBps: deployment.platformFeeBps,
+        refundBps: 0,
+      },
       arbitratorCount: deployment.arbitratorCount,
       mint: deployment.mint,
       deployed: deployment.deployed,

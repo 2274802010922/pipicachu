@@ -1,3 +1,11 @@
+# Rollout phí hệ thống — 05/10/2026
+
+Owner đã chọn treasury CXjKGEBNTTotzoF26nGPfAG4AFicGgP72SMqUQKY1pJN. Chương trình cùng ID đã upgrade Devnet, dump khớp SHA256 cefc482eeb4d2b7b3f6cece0e44a637ac7e7639d805abb21a6f977546166492e. FeeConfig immutable đã initialize đúng treasury. Legacy funded/delivered trước upgrade đã confirm thành công sau upgrade, snapshot platformFee=0.
+
+Đang rollout web/keeper lên main, tiếp tục kiểm số tiền live mới, refund, browser/CI/Vercel và keeper. Chưa nhận nghiệm thu end-to-end. Local checkpoint trước rollout: 39 program checks, native legacy max512, 53 unit/17 browser pass. Không cần env Vercel mới.
+
+## Ngữ cảnh trước rollout (lịch sử, không phải trạng thái hiện tại)
+
 # Trạng thái — 05/10/2026
 
 ## Phí hệ thống 1% — đang chuẩn bị, CHƯA DEPLOY/PUSH

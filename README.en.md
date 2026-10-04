@@ -14,7 +14,7 @@ A small escrow tool for community intermediaries and their customers. Sellers cr
 - Buyer confirmation or an undisputed review deadline allows seller payout.
 - Disputes stop timeout payout. The sole arbitrator rules before the deadline.
 - If the arbitrator expires, a buyer proposal requires seller acceptance. Without agreement, funds may remain locked.
-- The arbitrator reserves 10% of deal value. Demo fee is 1% of seller payouts; refunds have no fee.
+- The arbitrator reserves 10% of deal value. New deals charge 1% arbitrator + 1% platform (98% seller net); refunds have no fee. Legacy deals keep their original 1% arbitrator fee.
 
 Bond is not insurance. No wrongful-ruling slashing or appeal. Automatic Devnet payout uses a keeper on an approximately 5-minute schedule, with possible service delays. Off-chain goods and game-account ownership are not verified. No validated willingness to pay or traction is claimed.
 

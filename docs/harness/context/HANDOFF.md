@@ -1,3 +1,11 @@
+# Rollout phí hệ thống — 05/10/2026
+
+Owner đã chọn treasury CXjKGEBNTTotzoF26nGPfAG4AFicGgP72SMqUQKY1pJN. Chương trình cùng ID đã upgrade Devnet, dump khớp SHA256 cefc482eeb4d2b7b3f6cece0e44a637ac7e7639d805abb21a6f977546166492e. FeeConfig immutable đã initialize đúng treasury. Legacy funded/delivered trước upgrade đã confirm thành công sau upgrade, snapshot platformFee=0.
+
+Đang rollout web/keeper lên main, tiếp tục kiểm số tiền live mới, refund, browser/CI/Vercel và keeper. Chưa nhận nghiệm thu end-to-end. Local checkpoint trước rollout: 39 program checks, native legacy max512, 53 unit/17 browser pass. Không cần env Vercel mới.
+
+## Ngữ cảnh trước rollout (lịch sử, không phải trạng thái hiện tại)
+
 # Bàn giao v0.3 — một trọng tài
 
 Fee-platform WIP: user duyệt tổng 2% (1 arb +1 platform), refund zero. Local code/IDL/UI/keeper/tests đã chuẩn bị, 39 program checks + native legacy-512 compatibility +53 unit/17 browser pass. CHƯA deploy/push; đang cần public treasury wallet user chọn. Không tự chọn treasury hoặc deploy placeholder. Giữ Program ID/layout876, append9 bytes fee/version vào padding; legacy snapshot0 không hồi tố. FeeConfig immutable v1 cần initializer. Xem CURRENT_STATE trước tiếp tục; production hiện vẫn1%.

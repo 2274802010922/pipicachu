@@ -21,7 +21,7 @@ Seller tạo link → Trọng tài chấp thuận → Buyer nạp USDC
 ```
 
 - Các bên, mint, số tiền, phí và thời hạn cố định khi tạo.
-- Phí demo 1% trừ vào seller payout; refund không thu phí.
+- Deal mới: 1% trọng tài + 1% hệ thống, seller nhận 98%; buyer nạp nguyên số tiền. Hoàn buyer không thu phí. Deal cũ giữ 1% trọng tài, không thêm phí hồi tố.
 - Trọng tài duy nhất khóa cọc 10% giá trị deal khi buyer nạp; mở khóa khi kết thúc.
 - Trọng tài chỉ có thể trả seller hoặc hoàn buyer, không nhập địa chỉ nhận tùy ý.
 - Hết hạn không khiếu nại: keeper tự gửi lệnh trả seller, lịch khoảng 5 phút/lượt có thể trễ.
