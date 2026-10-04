@@ -4,8 +4,7 @@ import { parseAmount, amount, type Deal } from "../../src/escrow/client";
 const d = {
   seller: "s",
   buyer: "b",
-  primary: "p",
-  backup: "r",
+  arbitrator: "p",
   state: "created",
   approvals: 0,
   fundBy: 100,
@@ -31,12 +30,12 @@ describe("Exact amounts", () => {
   });
 });
 describe("Actions mirror chain state", () => {
-  it("requires both arbiters to accept before funding", () => {
+  it("requires the single arbitrator to accept before funding", () => {
     expect(actions(d, "b", 50)).not.toContain("fund");
-    expect(actions({ ...d, approvals: 3 }, "b", 50)).toContain("fund");
+    expect(actions({ ...d, approvals: 1 }, "b", 50)).toContain("fund");
   });
   it("never treats a viewer as buyer", () =>
-    expect(actions({ ...d, approvals: 3 }, "viewer", 50)).toEqual([]));
+    expect(actions({ ...d, approvals: 1 }, "viewer", 50)).toEqual([]));
   it("cuts delivery off at exact deadline", () => {
     expect(actions({ ...d, state: "funded" }, "s", 199)).toContain("deliver");
     expect(actions({ ...d, state: "funded" }, "s", 200)).not.toContain(
@@ -61,14 +60,15 @@ describe("Actions mirror chain state", () => {
     expect(actions({ ...d, state: "disputed" }, "s", 450)).not.toContain(
       "finalize",
     ));
-  it("switches arbiters at the exact boundary", () => {
+  it("ends arbitration and enables mutual settlement at the exact boundary", () => {
     expect(actions({ ...d, state: "disputed" }, "p", 399)).toContain(
       "resolve_seller",
     );
     expect(actions({ ...d, state: "disputed" }, "p", 400)).toEqual([]);
-    expect(actions({ ...d, state: "disputed" }, "r", 400)).toContain(
-      "resolve_buyer",
+    expect(actions({ ...d, state: "disputed" }, "b", 400)).toContain(
+      "propose_buyer",
     );
+    expect(actions({ ...d, state: "disputed" }, "r", 400)).toEqual([]);
   });
   it("requires seller acceptance for mutual settlement", () => {
     expect(

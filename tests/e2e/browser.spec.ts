@@ -15,6 +15,12 @@ for (const width of [375, 768, 1024, 1440])
     await page
       .getByRole("link", { name: "Tạo giao dịch", exact: true })
       .click();
+    await expect(
+      page.getByLabel("Ví trọng tài", { exact: true }),
+    ).toBeVisible();
+    await expect(
+      page.getByLabel("Ví trọng tài dự phòng", { exact: true }),
+    ).toHaveCount(0);
     await page
       .getByLabel("Ví người mua", { exact: true })
       .fill("long-address-to-test-retention");
@@ -76,5 +82,7 @@ test("health describes limits without secrets", async ({ request }) => {
   expect(b.mainnetWrites).toBe(false);
   expect(b.subjectiveSlashing).toBe(false);
   expect(b.serverCustody).toBe(false);
+  expect(b.arbitratorCount).toBe(1);
+  expect(b.schemaVersion).toBe(3);
   expect(JSON.stringify(b)).not.toMatch(/api[_-]?key|privateKey|secretKey/i);
 });

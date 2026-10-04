@@ -1,0 +1,20 @@
+{
+  "programId": "HwsHDnbuZbXZtVFvgGkZpzAVEAQN3SYJCfZzUa18Ho5V",
+  "network": "devnet",
+  "records": [
+    {
+      "wallet": "Ht5k38ysGyt2VKoddxbACCeLoVngQFojNeXzACGz9dEP",
+      "amount": "1000000",
+      "signature": "4YWdLiWE6pshbsMAmD7mJsTQhLDc6b6SsJgKNpXUWDeLQVgQVfCVyYJgVdh8c8KNV3D1zy7Zm4eQ36w3uFNof4mw"
+    },
+    {
+      "wallet": "7KDt8uumw3APftajN6FpnNNWSqC2eKLQfprf7GXgd5Sh",
+      "amount": "2000000",
+      "signature": "4gHNPSmL626U3iGAd7XkxpJCipRE4qtqdXv8fqvZUK3p7JEBHAq3wK8xe1t7VnK7mueTLnQuiqJY1YXur3FeGg1b"
+    },
+    {
+      "reason": "Recycle own test-role tokens for next Devnet validation",
+      "signature": "V63NicqgnThKCaTb2w4RiTaY4SjXLD1VceDMuEgZakShrYzBfHgSFfzoFi7UUZxKUiwDuYq8aaK6mRF226UHv3F"
+    }
+  ]
+}

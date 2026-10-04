@@ -1,13 +1,14 @@
 {
-  "at": "2026-10-04T13:37:16.830Z",
-  "network": "local-validator",
-  "tokenSource": "synthetic local mint at Devnet USDC address (not Circle issuance)",
-  "genesis": "FAHSP7C3L83evZMSestGDfCKg2YNd9dZnhut34C1JUx3",
-  "programId": "4Xds5m5JtWR8HbNLdGeF7e3Qh3akKMHwMfjKsQeVXnrb",
+  "at": "2026-10-04T12:33:53.530Z",
+  "network": "devnet",
+  "tokenSource": "Circle Devnet USDC",
+  "genesis": "EtWTRABZaYq6iMfeYKouRu166VU2xqa1wcaWoxPkrZBG",
+  "programId": "HwsHDnbuZbXZtVFvgGkZpzAVEAQN3SYJCfZzUa18Ho5V",
   "roles": {
-    "buyer": "Ef4nftv5jmn2E7D1TkcAgz4THUPACg7rt2FguDAkd67w",
-    "seller": "66dKi2rPfxuKGrmytrFPVzo6LF5P12pTmKGaGMYPZtbA",
-    "arbitrator": "7cNPf9PaFpvfvmZgpDc7h4vgthNugNP1pK3AvsJek6eq"
+    "buyer": "DwTKmg68k39b8jZWt1CHypfoPs5JuJsuP88SfKcbW3uj",
+    "seller": "BbftECvBKTHMm6t3Sejyz7E9HmBmcRp7NvEYnAnzb7F3",
+    "primary": "Ht5k38ysGyt2VKoddxbACCeLoVngQFojNeXzACGz9dEP",
+    "backup": "7KDt8uumw3APftajN6FpnNNWSqC2eKLQfprf7GXgd5Sh"
   },
   "results": [
     {
@@ -36,7 +37,7 @@
     },
     {
       "scenario": "confirm",
-      "signature": "32m3LY6JoSayam1LygDg7Tnvv5cffC64EMyAGFRaoXqiTxig9PPfUVokuQrnesYgtnt6kAoavViTTet2mBckWfEe",
+      "signature": "5tgQPQCcinq66T8hMSzpbrUnFCbNiMbi4hKhincTDsRSMoyRFtRk5DdUzkieYPRamT4SdnFzPJYuThWgktAGKWV2",
       "detail": "completed"
     },
     {
@@ -57,7 +58,7 @@
     },
     {
       "scenario": "finalize",
-      "signature": "5Vcn4vmdbwKaY6i3DpFUzBPf2Qudix1N9Fz3owJpKGATzSqMBZ68A28TMZcwS1rukgohM4Mgxfm8jfmvgNCYk3VY",
+      "signature": "KHBTjqFmgeiaF3nkV894rp726uGhqKH21dQa5RCedeDBCxcu65NqGKcGqPjdBxYBDkKxm4AwHcjgr3Yb3dDoFUA",
       "detail": "completed"
     },
     {
@@ -82,7 +83,7 @@
     },
     {
       "scenario": "refund_expired",
-      "signature": "4TmL37tAoNQiSWPM3GZFKAFehMRfgFwUJgngjfS44MdC28dMXsGKb6fiRNe9oe8gzpaT1H8WYb8Bo56jT4ShYd6R",
+      "signature": "2BkeQocu3Mmze3mDger39qzNTdoCCDMNdUYzH3szyHYaZmRqQUeY18KKSYT8pzahvyLiBcb9XCUuYTYrfn96peNf",
       "detail": "refunded"
     },
     {
@@ -102,12 +103,12 @@
       "detail": "Rejected by program / transaction validation"
     },
     {
-      "scenario": "seller cannot arbitrate",
+      "scenario": "backup cannot rule early",
       "detail": "Rejected by program / transaction validation"
     },
     {
       "scenario": "resolve",
-      "signature": "54bMiQjH9CNJNGCzRBny7iZFE78K1S9goVNPvJMLVbiJUoKHRgzHkvrJebPny17VLN5KHFUrHDmbB2swb21LwGh3",
+      "signature": "AJBqESt3Wy7m2ZstvAY5cYK6phPr9BjSMcESyKWVU3X65CRnt7vokuXqFohu6qu7iNFKfiPtSkezFpQjmAJikpz",
       "detail": "completed"
     },
     {
@@ -127,12 +128,33 @@
       "detail": "Rejected by program / transaction validation"
     },
     {
-      "scenario": "seller cannot arbitrate",
+      "scenario": "backup cannot rule early",
       "detail": "Rejected by program / transaction validation"
     },
     {
       "scenario": "resolve",
-      "signature": "YAmu47VxmChuHPXekz5d7Ri6YTSbGDf15aJCzkw2LTouVz4nFLQiP1b5GscWAzpp1UX2gQLKbnBkKKX7LAPF6LP",
+      "signature": "2pGbdaa3e4wC3CBtwkade7gg1yMBEjZvkm1HsCgpbHFGYdmP5fppH5AsxUEviN5Tmwy8EMYU8QTBbPoNpgT4NK7m",
+      "detail": "refunded"
+    },
+    {
+      "scenario": "resolve: double settlement",
+      "detail": "Rejected by program / transaction validation"
+    },
+    {
+      "scenario": "backup arbitration: cannot fund before arbitrators accept",
+      "detail": "Rejected by program / transaction validation"
+    },
+    {
+      "scenario": "backup arbitration: wrong buyer",
+      "detail": "Rejected by program / transaction validation"
+    },
+    {
+      "scenario": "primary cannot rule after own deadline",
+      "detail": "Rejected by program / transaction validation"
+    },
+    {
+      "scenario": "resolve",
+      "signature": "2JryLj4AQsvs5cqMR9G773cDXVbjz2FmoFDhmtVVMFQ6rFXDxq6iEEWvLUem94G3gafgK5t3ci53CV7ZynBgGju9",
       "detail": "refunded"
     },
     {
@@ -148,10 +170,6 @@
       "detail": "Rejected by program / transaction validation"
     },
     {
-      "scenario": "arbitrator cannot rule after deadline",
-      "detail": "Rejected by program / transaction validation"
-    },
-    {
       "scenario": "changed proposal invalidates previous seller acceptance",
       "detail": "Rejected by program / transaction validation"
     },
@@ -161,7 +179,7 @@
     },
     {
       "scenario": "accept_settlement",
-      "signature": "5qtsSojjM3E61SFYzJwVbtXTTJdcohro8QcoaEmmpVQ4w39RRqYfBSmCMmE7YvgtNyMjGgPzYknGuyMD9DpYcp8C",
+      "signature": "2gKXsqtMzJToQ3n4CV7BhQX58HfnWygAYXSaPQZHDqmEZtS4dchDHGQEBCkevLxCxfGbxAnysW1JaXhAWidSWjfd",
       "detail": "refunded"
     },
     {
@@ -171,34 +189,39 @@
   ],
   "deals": [
     {
-      "address": "6f36yWLyp2KZ1g41HEE4iCKGqsvQrnH4RiRftSJ9hhtj",
+      "address": "SDVvPkXdNSx9ocy6eHEQx8YeqSsfQrAc7JGAYQjNmEz",
       "vi": "Buyer xác nhận → trả seller",
       "en": "Buyer confirms → seller paid"
     },
     {
-      "address": "Gb43YcF3cJqshP9DxZ2VnfL1EZrg7CiAb1Bnb6pYn24A",
+      "address": "DVus64MVLQV7PpNxAoNfVa9KSxia9VU14JSuVLSZ1Csz",
       "vi": "Hết hạn kiểm tra → giải ngân",
       "en": "Review deadline → release"
     },
     {
-      "address": "HgvzAfen3pGMh8F816GuECcm3MgB7dMBNDfnNgX3FEEZ",
+      "address": "GBGop2MsJmXb3xLZUh78EEcEUxE8Rpf8d3wiPFRCCF6W",
       "vi": "Không bàn giao → hoàn buyer",
       "en": "Missed delivery → buyer refunded"
     },
     {
-      "address": "PryTR91TXoK46EHLGBjy7UMow69WH4gjfpT2GWQHsDX",
+      "address": "631x9p35RKUsSSggqJn6KqwnYaxwxTqFpvbWvzhkH6g1",
       "vi": "Tranh chấp → trọng tài trả seller",
       "en": "Dispute → arbitrator pays seller"
     },
     {
-      "address": "2eykmYc6vz2raGvtVteeQpsCv8hbCmsCm3Dxy3tr8GZw",
+      "address": "F8XcJmTqYW7kRwuy47951TuhUk396nevHY7SPURJwmBP",
       "vi": "Tranh chấp → trọng tài hoàn buyer",
       "en": "Dispute → arbitrator refunds buyer"
     },
     {
-      "address": "q7sfpa3qLRjiH3pv8FJG6znJsNzJ9CkcErFzk6oLZCr",
-      "vi": "Trọng tài hết hạn → hai bên đồng ý hoàn tiền",
-      "en": "Arbitrator expires → mutual refund"
+      "address": "BimiEzLhC5H8p3KyC1NSPdGiPuK2NXHraJu8zGsnsi7E",
+      "vi": "Trọng tài chính bỏ xử → dự phòng hoàn buyer",
+      "en": "Primary timeout → backup refunds buyer"
+    },
+    {
+      "address": "7bveqV41nh951ktWLm1vDme9ioFhR2xYG4QYprt5ADSS",
+      "vi": "Hai trọng tài hết hạn → hai bên đồng ý hoàn tiền",
+      "en": "Both arbitrators expire → mutual refund"
     }
   ]
 }

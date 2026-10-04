@@ -4,10 +4,12 @@ export async function GET() {
   return NextResponse.json(
     {
       app: "pipicachu",
-      version: "0.2.0",
+      version: "0.3.0",
       product: "escrow",
       cluster: "devnet",
       programId: deployment.programId,
+      schemaVersion: deployment.schemaVersion,
+      arbitratorCount: deployment.arbitratorCount,
       mint: deployment.mint,
       deployed: deployment.deployed,
       commit: process.env.VERCEL_GIT_COMMIT_SHA || null,

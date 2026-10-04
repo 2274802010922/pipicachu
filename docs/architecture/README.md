@@ -1,4 +1,4 @@
-# Kiến trúc escrow v0.2
+# Kiến trúc escrow v0.3
 
 ```text
 Browser + Phantom → Devnet RPC proxy → Anchor program
@@ -11,7 +11,7 @@ Config chỉ initializer pin trong chương trình tạo một lần; không ins
 
 PDA seeds: config; arb+authority; bond+arb; deal+seller+nonce(u64 LE); vault+deal. SPL Token cổ điển, 6 decimals; không Token-2022 fee/hooks. Kiểm account owner, mint, authority. Checked arithmetic, refund đúng principal, fee chỉ seller payout, cọc tách deal principal.
 
-Create chưa khóa cọc. Hai arbitrator accept; funding atomically kiểm cọc khả dụng và khóa cả hai. Settlement chuyển tiền + unlock một lần. Bất kỳ actor chỉ finalize/refund khi đủ điều kiện; destination bị ràng buộc buyer/seller/arb.
+Create chưa khóa cọc. Trọng tài accept; funding atomically kiểm cọc khả dụng và khóa một bond. Settlement chuyển tiền + unlock một lần. Bất kỳ actor chỉ finalize/refund khi đủ điều kiện; destination bị ràng buộc buyer/seller/arb.
 
 Client Borsh/discriminator đối chứng IDL sinh bằng anchor idl build. Local validator thực thi .so, kiểm balances/state. UI policy chỉ mirror, chương trình quyết định.
 

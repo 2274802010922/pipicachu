@@ -7,6 +7,7 @@ import {
   SystemProgram,
   Transaction,
   sendAndConfirmTransaction,
+  SYSVAR_CLOCK_PUBKEY,
 } from "@solana/web3.js";
 import {
   getOrCreateAssociatedTokenAccount,
@@ -59,8 +60,7 @@ const load = (name: string) => {
 };
 const buyer = load("fixture-signer"),
   seller = load("escrow-seller"),
-  primary = load("escrow-primary"),
-  backup = load("escrow-backup");
+  arbitrator = load("escrow-arbitrator");
 const results: { scenario: string; signature?: string; detail?: string }[] = [];
 async function send(signer: Keypair, ixs: Awaited<ReturnType<typeof act>>[]) {
   return sendAndConfirmTransaction(
@@ -82,7 +82,7 @@ async function expectReject(scenario: string, fn: () => Promise<unknown>) {
   });
   console.log("PASS rejected", scenario);
 }
-for (const wallet of [buyer, seller, primary, backup]) {
+for (const wallet of [buyer, seller, arbitrator]) {
   const balance = await connection.getBalance(wallet.publicKey);
   if (balance < 100_000_000) {
     if (!live) {
@@ -119,7 +119,7 @@ if (!(await connection.getAccountInfo(CONFIG)))
       key(SystemProgram.programId),
     ]),
   ]);
-for (const a of [primary, backup]) {
+for (const a of [arbitrator]) {
   if (!(await readArbitrator(connection, a.publicKey)))
     await send(a, [await registerIx(a.publicKey)]);
   const current = await readArbitrator(connection, a.publicKey);
@@ -154,8 +154,7 @@ async function create(
     await createDealIx(
       seller.publicKey,
       buyer.publicKey,
-      primary.publicKey,
-      backup.publicKey,
+      arbitrator.publicKey,
       n,
       principal,
       times,
@@ -172,8 +171,9 @@ async function create(
         ),
       ]),
   );
-  await send(primary, [await act("accept_deal", primary.publicKey, address)]);
-  await send(backup, [await act("accept_deal", backup.publicKey, address)]);
+  await send(arbitrator, [
+    await act("accept_deal", arbitrator.publicKey, address),
+  ]);
   const d = await readDeal(connection, address.toBase58());
   await expectReject(`${title}: wrong buyer`, async () =>
     send(seller, [await fundIx(seller.publicKey, d)]),
@@ -184,7 +184,7 @@ async function create(
     principal,
   );
   assert.ok(
-    (await readArbitrator(connection, primary.publicKey))!.locked >=
+    (await readArbitrator(connection, arbitrator.publicKey))!.locked >=
       principal / 10n,
   );
   return address;
@@ -211,12 +211,21 @@ async function disputed(address: PublicKey) {
   ]);
 }
 async function waitUntil(timestamp: number) {
-  while (true) {
-    const slot = await connection.getSlot();
-    const now = await connection.getBlockTime(slot);
-    if (now !== null && now >= timestamp) return;
-    await new Promise((r) => setTimeout(r, 1000));
+  const expires = Date.now() + 300_000;
+  while (Date.now() < expires) {
+    try {
+      const clock = await connection.getAccountInfo(SYSVAR_CLOCK_PUBKEY);
+      if (
+        clock?.data.length === 40 &&
+        Number(clock.data.readBigInt64LE(32)) >= timestamp
+      )
+        return;
+    } catch {
+      /* Network failure is never a passing time assertion. */
+    }
+    await new Promise((r) => setTimeout(r, 2500));
   }
+  throw new Error("Network clock could not be verified before timeout");
 }
 async function settle(
   name: string,
@@ -305,7 +314,7 @@ const confirmed = await create("buyer confirmation");
 await delivered(confirmed);
 const deliveredDeal = await readDeal(connection, confirmed.toBase58());
 const redirected = await settleIxs("confirm", buyer.publicKey, deliveredDeal);
-redirected.at(-1)!.keys[7].pubkey = getAssociatedTokenAddressSync(
+redirected.at(-1)!.keys[6].pubkey = getAssociatedTokenAddressSync(
   MINT,
   buyer.publicKey,
 );
@@ -318,7 +327,7 @@ const redirectedFee = await settleIxs(
   buyer.publicKey,
   deliveredDeal,
 );
-redirectedFee.at(-1)!.keys[8].pubkey = getAssociatedTokenAddressSync(
+redirectedFee.at(-1)!.keys[7].pubkey = getAssociatedTokenAddressSync(
   MINT,
   buyer.publicKey,
 );
@@ -326,7 +335,7 @@ await expectReject("fee destination cannot be redirected", async () =>
   send(buyer, redirectedFee),
 );
 const wrongVault = await settleIxs("confirm", buyer.publicKey, deliveredDeal);
-wrongVault.at(-1)!.keys[5].pubkey = getAssociatedTokenAddressSync(
+wrongVault.at(-1)!.keys[4].pubkey = getAssociatedTokenAddressSync(
   MINT,
   buyer.publicKey,
 );
@@ -370,9 +379,9 @@ deals.push({
 });
 const expired = await create("missed delivery");
 await expectReject("cannot withdraw reserved bond", async () => {
-  const a = await readArbitrator(connection, primary.publicKey);
-  return send(primary, [
-    await bondIx("withdraw_bond", primary.publicKey, a!.total),
+  const a = await readArbitrator(connection, arbitrator.publicKey);
+  return send(arbitrator, [
+    await bondIx("withdraw_bond", arbitrator.publicKey, a!.total),
   ]);
 });
 await waitUntil((await readDeal(connection, expired.toBase58())).deliverBy);
@@ -398,12 +407,12 @@ for (const pay of [true, false]) {
       ),
     ),
   );
-  await expectReject("backup cannot rule early", async () =>
+  await expectReject("seller cannot arbitrate", async () =>
     send(
-      backup,
+      seller,
       await settleIxs(
         "resolve",
-        backup.publicKey,
+        seller.publicKey,
         await readDeal(connection, address.toBase58()),
         Buffer.concat([Buffer.from([pay ? 1 : 0]), await digest("reason")]),
       ),
@@ -411,7 +420,7 @@ for (const pay of [true, false]) {
   );
   await settle(
     "resolve",
-    primary,
+    arbitrator,
     address,
     Buffer.concat([
       Buffer.from([pay ? 1 : 0]),
@@ -428,35 +437,21 @@ for (const pay of [true, false]) {
       : "Dispute → arbitrator refunds buyer",
   });
 }
-const secondary = await create("backup arbitration");
-await disputed(secondary);
-await waitUntil((await readDeal(connection, secondary.toBase58())).arbitrateBy);
-await expectReject("primary cannot rule after own deadline", async () =>
-  send(
-    primary,
-    await settleIxs(
-      "resolve",
-      primary.publicKey,
-      await readDeal(connection, secondary.toBase58()),
-      Buffer.concat([Buffer.from([1]), await digest("reason")]),
-    ),
-  ),
-);
-await settle(
-  "resolve",
-  backup,
-  secondary,
-  Buffer.concat([Buffer.from([0]), await digest("backup reasoning")]),
-);
-deals.push({
-  address: secondary.toBase58(),
-  vi: "Trọng tài chính bỏ xử → dự phòng hoàn buyer",
-  en: "Primary timeout → backup refunds buyer",
-});
 const mutual = await create("mutual resolution after arbitration timeout");
 await disputed(mutual);
 const md = await readDeal(connection, mutual.toBase58());
-await waitUntil(md.arbitrateBy + md.arbitrationSeconds);
+await waitUntil(md.arbitrateBy);
+await expectReject("arbitrator cannot rule after deadline", async () =>
+  send(
+    arbitrator,
+    await settleIxs(
+      "resolve",
+      arbitrator.publicKey,
+      await readDeal(connection, mutual.toBase58()),
+      Buffer.concat([Buffer.from([1]), await digest("late ruling")]),
+    ),
+  ),
+);
 await send(buyer, [
   await act("propose_settlement", buyer.publicKey, mutual, Buffer.from([0])),
 ]);
@@ -489,17 +484,17 @@ await expectReject("buyer cannot accept own proposal", async () =>
 await settle("accept_settlement", seller, mutual);
 deals.push({
   address: mutual.toBase58(),
-  vi: "Hai trọng tài hết hạn → hai bên đồng ý hoàn tiền",
-  en: "Both arbitrators expire → mutual refund",
+  vi: "Trọng tài hết hạn → hai bên đồng ý hoàn tiền",
+  en: "Arbitrator expires → mutual refund",
 });
-for (const a of [primary, backup])
+for (const a of [arbitrator])
   assert.equal((await readArbitrator(connection, a.publicKey))!.locked, 0n);
-const existing = await readArbitrator(connection, primary.publicKey);
-await send(primary, [
-  await bondIx("withdraw_bond", primary.publicKey, 1_000_000n),
+const existing = await readArbitrator(connection, arbitrator.publicKey);
+await send(arbitrator, [
+  await bondIx("withdraw_bond", arbitrator.publicKey, 1_000_000n),
 ]);
 assert.equal(
-  (await readArbitrator(connection, primary.publicKey))!.total,
+  (await readArbitrator(connection, arbitrator.publicKey))!.total,
   existing!.total - 1_000_000n,
 );
 const report = {
@@ -513,8 +508,7 @@ const report = {
   roles: {
     buyer: buyer.publicKey.toBase58(),
     seller: seller.publicKey.toBase58(),
-    primary: primary.publicKey.toBase58(),
-    backup: backup.publicKey.toBase58(),
+    arbitrator: arbitrator.publicKey.toBase58(),
   },
   results,
   deals,
@@ -529,8 +523,7 @@ if (live)
     "src/escrow/samples.json",
     JSON.stringify(
       {
-        primary: primary.publicKey.toBase58(),
-        backup: backup.publicKey.toBase58(),
+        arbitrator: arbitrator.publicKey.toBase58(),
         deals,
       },
       null,

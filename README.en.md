@@ -2,7 +2,7 @@
 
 [Website](https://pipicachu.vercel.app) · [Devnet demo](https://pipicachu.vercel.app/demo) · [Tiếng Việt](README.md)
 
-A small escrow tool for community intermediaries and their customers. Sellers create a deal link, two arbitrators accept, buyers deposit Devnet USDC, and delivery is followed by confirmation, timeout release or dispute resolution.
+A small escrow tool for community intermediaries and their customers. Sellers create a deal link, one arbitrator accepts, buyers deposit Devnet USDC, and delivery is followed by confirmation, timeout release or dispute resolution.
 
 **Devnet only. Test tokens have no real value. No independent audit; upgrade authority is retained.**
 
@@ -12,15 +12,15 @@ A small escrow tool for community intermediaries and their customers. Sellers cr
 - Program-controlled token vault holds the principal.
 - Missed delivery allows a buyer refund; delivery opens the review window.
 - Buyer confirmation or an undisputed review deadline allows seller payout.
-- Disputes stop timeout payout. Primary arbitration is followed by a preselected backup.
-- If both arbitrators expire, a buyer proposal requires seller acceptance. Without agreement, funds may remain locked.
-- Each arbitrator reserves 10% of deal value. Demo fee is 1% of seller payouts; refunds have no fee.
+- Disputes stop timeout payout. The sole arbitrator rules before the deadline.
+- If the arbitrator expires, a buyer proposal requires seller acceptance. Without agreement, funds may remain locked.
+- The arbitrator reserves 10% of deal value. Demo fee is 1% of seller payouts; refunds have no fee.
 
 Bond is not insurance. No wrongful-ruling slashing, appeal or automatic keeper. Off-chain goods and game-account ownership are not verified. No validated willingness to pay or traction is claimed.
 
 ## Build and review
 
-Verified 7 executable flows / 42 checks on local validator and Devnet, 23 unit/IDL tests, 7 browser tests and both CI jobs. The full hosted website signing flow passed with an injected test provider; actual Phantom extension UI remains unverified. See [evidence](docs/evidence/README.md).
+v0.3: 6 flows / 38 local program checks; 6 Devnet scenarios verified from finalized receipts and exact vault transfer amounts. Web has 23 unit/IDL tests and 7 browser tests. The local website signing flow passed with a test provider, not the actual Phantom extension. Vercel and CI are checked after push. See [evidence](docs/evidence/README.md).
 
 ```bash
 npm ci

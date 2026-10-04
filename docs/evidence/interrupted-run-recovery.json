@@ -1,0 +1,6 @@
+{
+  "network": "devnet",
+  "programId": "4Xds5m5JtWR8HbNLdGeF7e3Qh3akKMHwMfjKsQeVXnrb",
+  "cause": "Public RPC rate limit interrupted clock polling, not a program rejection",
+  "receipts": []
+}

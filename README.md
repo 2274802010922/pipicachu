@@ -12,23 +12,23 @@ Admin trung gian đang hỗ trợ giao dịch hàng/dịch vụ số qua cộng 
 ## Một luồng nhỏ, chạy trọn vẹn
 
 ```text
-Seller tạo link → Hai trọng tài chấp thuận → Buyer nạp USDC
+Seller tạo link → Trọng tài chấp thuận → Buyer nạp USDC
   ├─ Seller không bàn giao đúng hạn → Hoàn buyer
   └─ Seller báo bàn giao
        ├─ Buyer xác nhận → Trả seller
        ├─ Hết hạn kiểm tra, không tranh chấp → Có thể gửi lệnh giải ngân
-       └─ Buyer tranh chấp → Trọng tài chính → Dự phòng → Đồng thuận hai bên
+       └─ Buyer tranh chấp → Trọng tài → Đồng thuận hai bên sau hạn
 ```
 
 - Các bên, mint, số tiền, phí và thời hạn cố định khi tạo.
 - Phí demo 1% trừ vào seller payout; refund không thu phí.
-- Mỗi trọng tài khóa cọc 10% giá trị deal khi buyer nạp; mở khóa khi kết thúc.
+- Trọng tài duy nhất khóa cọc 10% giá trị deal khi buyer nạp; mở khóa khi kết thúc.
 - Trọng tài chỉ có thể trả seller hoặc hoàn buyer, không nhập địa chỉ nhận tùy ý.
 - Hết hạn là đủ điều kiện gửi giao dịch, không có keeper tự động.
 
 ## Giới hạn
 
-Escrow không kiểm chứng hàng hóa ngoài chuỗi hoặc bảo đảm tài khoản game không bị thu hồi. Hash chỉ gắn với nội dung bằng chứng đã trao đổi. Cọc không phải bảo hiểm và **chưa có phạt xử sai**. Nếu cả hai trọng tài bỏ xử và hai bên không đồng ý, tiền có thể còn khóa. Upgrade authority và quyền của tổ chức phát hành USDC vẫn là yếu tố tin cậy.
+Escrow không kiểm chứng hàng hóa ngoài chuỗi hoặc bảo đảm tài khoản game không bị thu hồi. Hash chỉ gắn với nội dung bằng chứng đã trao đổi. Cọc không phải bảo hiểm và **chưa có phạt xử sai**. Nếu trọng tài bỏ xử và hai bên không đồng ý, tiền có thể còn khóa. Upgrade authority và quyền của tổ chức phát hành USDC vẫn là yếu tố tin cậy.
 
 ## Công nghệ và phần tự xây
 
@@ -51,7 +51,7 @@ Chương trình: [kiến trúc](docs/architecture/README.md), [kiểm thử](doc
 
 ![Giao dịch escrow Devnet đã trả người bán](docs/evidence/screenshots/completed-vi.png)
 
-Đã kiểm 7 flow / 42 checks trên chương trình local và Devnet; 23 unit/IDL tests, 7 browser tests và CI web/program. Luồng ký qua website Vercel đã chạy với provider test, không gọi đó là kiểm Phantom extension thật. Xem bằng chứng bên dưới.
+v0.3: 6 flow / 38 kiểm tra chương trình local; 6 kịch bản Devnet đã đối chiếu receipt finalized và đúng số tiền chuyển từ vault. Web có 23 unit/IDL tests và 7 browser tests. Luồng ký trên website local đã chạy với provider test, không phải kiểm Phantom extension thật. Vercel/CI được kiểm sau push; xem phạm vi bằng chứng bên dưới.
 
 | Nội dung                 | Đường dẫn                                              |
 | ------------------------ | ------------------------------------------------------ |

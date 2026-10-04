@@ -1,7 +1,7 @@
 use anchor_lang::prelude::*;
 use anchor_spl::token::{self, Mint, Token, TokenAccount, TransferChecked};
 
-declare_id!("HwsHDnbuZbXZtVFvgGkZpzAVEAQN3SYJCfZzUa18Ho5V"); // replaced by scripts/devnet/bootstrap.ts
+declare_id!("4Xds5m5JtWR8HbNLdGeF7e3Qh3akKMHwMfjKsQeVXnrb"); // replaced by scripts/devnet/bootstrap.ts
 const INITIALIZER: Pubkey = pubkey!("DwTKmg68k39b8jZWt1CHypfoPs5JuJsuP88SfKcbW3uj");
 const MAX_SECONDS: i64 = 30 * 86400;
 
@@ -76,15 +76,9 @@ pub mod pipicachu_escrow {
         terms: String,
     ) -> Result<()> {
         let seller = ctx.accounts.seller.key();
-        let primary = ctx.accounts.primary.authority;
-        let backup = ctx.accounts.backup.authority;
+        let arbitrator = ctx.accounts.arbitrator.authority;
         require!(
-            buyer != seller
-                && buyer != primary
-                && buyer != backup
-                && seller != primary
-                && seller != backup
-                && primary != backup,
+            buyer != seller && buyer != arbitrator && seller != arbitrator,
             EscrowError::InvalidTerms
         );
         require!(
@@ -109,8 +103,7 @@ pub mod pipicachu_escrow {
         let d = &mut ctx.accounts.deal;
         d.seller = seller;
         d.buyer = buyer;
-        d.primary = primary;
-        d.backup = backup;
+        d.arbitrator = arbitrator;
         d.mint = ctx.accounts.mint.key();
         d.nonce = nonce;
         d.amount = amount;
@@ -134,13 +127,8 @@ pub mod pipicachu_escrow {
             d.state == State::Created && Clock::get()?.unix_timestamp < d.fund_by,
             EscrowError::WrongState
         );
-        if who == d.primary {
-            d.approvals |= 1;
-        } else if who == d.backup {
-            d.approvals |= 2;
-        } else {
-            return err!(EscrowError::Unauthorized);
-        }
+        require_keys_eq!(who, d.arbitrator, EscrowError::Unauthorized);
+        d.approvals = 1;
         Ok(())
     }
     pub fn cancel_deal(ctx: Context<Act>) -> Result<()> {
@@ -158,10 +146,10 @@ pub mod pipicachu_escrow {
         let now = Clock::get()?.unix_timestamp;
         require_keys_eq!(ctx.accounts.buyer.key(), d.buyer, EscrowError::Unauthorized);
         require!(
-            d.state == State::Created && now < d.fund_by && d.approvals == 3,
+            d.state == State::Created && now < d.fund_by && d.approvals == 1,
             EscrowError::WrongState
         );
-        for a in [&mut ctx.accounts.primary, &mut ctx.accounts.backup] {
+        for a in [&mut ctx.accounts.arbitrator] {
             require!(a.total - a.locked >= d.bond, EscrowError::InsufficientBond);
             a.locked = a.locked.checked_add(d.bond).ok_or(EscrowError::Overflow)?;
         }
@@ -220,7 +208,7 @@ pub mod pipicachu_escrow {
             ctx.accounts.deal.state == State::Delivered,
             EscrowError::WrongState
         );
-        settle(ctx, true, false)
+        settle(ctx, true)
     }
     pub fn finalize(ctx: Context<Settle>) -> Result<()> {
         let d = &ctx.accounts.deal;
@@ -228,7 +216,7 @@ pub mod pipicachu_escrow {
             d.state == State::Delivered && Clock::get()?.unix_timestamp >= d.review_by,
             EscrowError::WrongState
         );
-        settle(ctx, true, false)
+        settle(ctx, true)
     }
     pub fn refund_expired(ctx: Context<Settle>) -> Result<()> {
         let d = &ctx.accounts.deal;
@@ -236,32 +224,23 @@ pub mod pipicachu_escrow {
             d.state == State::Funded && Clock::get()?.unix_timestamp >= d.deliver_by,
             EscrowError::WrongState
         );
-        settle(ctx, false, false)
+        settle(ctx, false)
     }
     pub fn resolve(ctx: Context<Settle>, pay_seller: bool, reason_hash: [u8; 32]) -> Result<()> {
         let d = &mut ctx.accounts.deal;
         let now = Clock::get()?.unix_timestamp;
         let actor = ctx.accounts.actor.key();
         require!(d.state == State::Disputed, EscrowError::WrongState);
-        let is_backup = now >= d.arbitrate_by;
-        if is_backup {
-            require!(
-                now < d.arbitrate_by + d.arbitration_seconds,
-                EscrowError::WrongState
-            );
-            require_keys_eq!(actor, d.backup, EscrowError::Unauthorized);
-        } else {
-            require_keys_eq!(actor, d.primary, EscrowError::Unauthorized);
-        }
+        require!(now < d.arbitrate_by, EscrowError::WrongState);
+        require_keys_eq!(actor, d.arbitrator, EscrowError::Unauthorized);
         require!(reason_hash != [0; 32], EscrowError::InvalidTerms);
         d.resolution_hash = reason_hash;
-        settle(ctx, pay_seller, is_backup)
+        settle(ctx, pay_seller)
     }
     pub fn propose_settlement(ctx: Context<Act>, pay_seller: bool) -> Result<()> {
         let d = &mut ctx.accounts.deal;
         require!(
-            d.state == State::Disputed
-                && Clock::get()?.unix_timestamp >= d.arbitrate_by + d.arbitration_seconds,
+            d.state == State::Disputed && Clock::get()?.unix_timestamp >= d.arbitrate_by,
             EscrowError::WrongState
         );
         require_keys_eq!(ctx.accounts.actor.key(), d.buyer, EscrowError::Unauthorized);
@@ -273,7 +252,7 @@ pub mod pipicachu_escrow {
         require!(
             d.state == State::Disputed
                 && d.proposal != 0
-                && Clock::get()?.unix_timestamp >= d.arbitrate_by + d.arbitration_seconds,
+                && Clock::get()?.unix_timestamp >= d.arbitrate_by,
             EscrowError::WrongState
         );
         require_keys_eq!(
@@ -285,11 +264,11 @@ pub mod pipicachu_escrow {
             d.proposal == if pay_seller { 1 } else { 2 },
             EscrowError::WrongState
         );
-        settle(ctx, pay_seller, false)
+        settle(ctx, pay_seller)
     }
 }
 
-fn settle(ctx: Context<Settle>, pay_seller: bool, backup_fee: bool) -> Result<()> {
+fn settle(ctx: Context<Settle>, pay_seller: bool) -> Result<()> {
     let d = &ctx.accounts.deal;
     let seller = d.seller;
     let nonce = d.nonce.to_le_bytes();
@@ -311,11 +290,7 @@ fn settle(ctx: Context<Settle>, pay_seller: bool, backup_fee: bool) -> Result<()
         &[seeds],
     )?;
     if fee > 0 {
-        let fee_token = if backup_fee {
-            &ctx.accounts.backup_token
-        } else {
-            &ctx.accounts.primary_token
-        };
+        let fee_token = &ctx.accounts.arbitrator_token;
         transfer(
             &ctx.accounts.token_program,
             &ctx.accounts.vault,
@@ -326,7 +301,7 @@ fn settle(ctx: Context<Settle>, pay_seller: bool, backup_fee: bool) -> Result<()
             &[seeds],
         )?;
     }
-    for a in [&mut ctx.accounts.primary, &mut ctx.accounts.backup] {
+    for a in [&mut ctx.accounts.arbitrator] {
         a.locked = a.locked.checked_sub(d.bond).ok_or(EscrowError::Overflow)?;
     }
     ctx.accounts.deal.state = if pay_seller {
@@ -405,10 +380,8 @@ pub struct CreateDeal<'info> {
     pub config: Account<'info, Config>,
     pub mint: Box<Account<'info, Mint>>,
     #[account(has_one=mint)]
-    pub primary: Box<Account<'info, Arbitrator>>,
-    #[account(has_one=mint)]
-    pub backup: Box<Account<'info, Arbitrator>>,
-    #[account(init, payer=seller, space=8+900, seeds=[b"deal",seller.key().as_ref(), &nonce.to_le_bytes()], bump)]
+    pub arbitrator: Box<Account<'info, Arbitrator>>,
+    #[account(init, payer=seller, space=8+868, seeds=[b"deal",seller.key().as_ref(), &nonce.to_le_bytes()], bump)]
     pub deal: Box<Account<'info, Deal>>,
     #[account(init, payer=seller, seeds=[b"vault",deal.key().as_ref()], bump, token::mint=mint, token::authority=deal)]
     pub vault: Box<Account<'info, TokenAccount>>,
@@ -427,10 +400,8 @@ pub struct Fund<'info> {
     #[account(mut, seeds=[b"deal",deal.seller.as_ref(),&deal.nonce.to_le_bytes()], bump=deal.bump, has_one=mint)]
     pub deal: Box<Account<'info, Deal>>,
     pub mint: Box<Account<'info, Mint>>,
-    #[account(mut, seeds=[b"arb",deal.primary.as_ref()], bump=primary.bump, has_one=mint)]
-    pub primary: Box<Account<'info, Arbitrator>>,
-    #[account(mut, seeds=[b"arb",deal.backup.as_ref()], bump=backup.bump, has_one=mint)]
-    pub backup: Box<Account<'info, Arbitrator>>,
+    #[account(mut, seeds=[b"arb",deal.arbitrator.as_ref()], bump=arbitrator.bump, has_one=mint)]
+    pub arbitrator: Box<Account<'info, Arbitrator>>,
     #[account(mut, token::mint=mint, token::authority=buyer)]
     pub source: Box<Account<'info, TokenAccount>>,
     #[account(mut, seeds=[b"vault",deal.key().as_ref()], bump, token::mint=mint, token::authority=deal)]
@@ -443,20 +414,16 @@ pub struct Settle<'info> {
     #[account(mut, seeds=[b"deal",deal.seller.as_ref(),&deal.nonce.to_le_bytes()], bump=deal.bump, has_one=mint)]
     pub deal: Box<Account<'info, Deal>>,
     pub mint: Box<Account<'info, Mint>>,
-    #[account(mut, seeds=[b"arb",deal.primary.as_ref()], bump=primary.bump, has_one=mint)]
-    pub primary: Box<Account<'info, Arbitrator>>,
-    #[account(mut, seeds=[b"arb",deal.backup.as_ref()], bump=backup.bump, has_one=mint)]
-    pub backup: Box<Account<'info, Arbitrator>>,
+    #[account(mut, seeds=[b"arb",deal.arbitrator.as_ref()], bump=arbitrator.bump, has_one=mint)]
+    pub arbitrator: Box<Account<'info, Arbitrator>>,
     #[account(mut, seeds=[b"vault",deal.key().as_ref()], bump, token::mint=mint, token::authority=deal)]
     pub vault: Box<Account<'info, TokenAccount>>,
     #[account(mut, token::mint=mint, constraint=buyer_token.owner==deal.buyer @ EscrowError::Unauthorized)]
     pub buyer_token: Box<Account<'info, TokenAccount>>,
     #[account(mut, token::mint=mint, constraint=seller_token.owner==deal.seller @ EscrowError::Unauthorized)]
     pub seller_token: Box<Account<'info, TokenAccount>>,
-    #[account(mut, token::mint=mint, constraint=primary_token.owner==deal.primary @ EscrowError::Unauthorized)]
-    pub primary_token: Box<Account<'info, TokenAccount>>,
-    #[account(mut, token::mint=mint, constraint=backup_token.owner==deal.backup @ EscrowError::Unauthorized)]
-    pub backup_token: Box<Account<'info, TokenAccount>>,
+    #[account(mut, token::mint=mint, constraint=arbitrator_token.owner==deal.arbitrator @ EscrowError::Unauthorized)]
+    pub arbitrator_token: Box<Account<'info, TokenAccount>>,
     pub token_program: Program<'info, Token>,
 }
 #[account]
@@ -476,8 +443,7 @@ pub struct Arbitrator {
 pub struct Deal {
     pub seller: Pubkey,
     pub buyer: Pubkey,
-    pub primary: Pubkey,
-    pub backup: Pubkey,
+    pub arbitrator: Pubkey,
     pub mint: Pubkey,
     pub nonce: u64,
     pub amount: u64,

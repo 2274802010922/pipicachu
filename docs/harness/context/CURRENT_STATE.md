@@ -1,17 +1,9 @@
 # Trạng thái — 04/10/2026
 
-Đã chuyển scope sang escrow USDC Devnet, giữ thương hiệu/UI; tra cứu archived ở checkpoint 7315d42. Picachu cũ không sửa.
+User yêu cầu bỏ trọng tài phụ. v0.3 chỉ có buyer, seller, arbitrator; một cọc, một accept và một vòng xử tranh chấp. Hết hạn trọng tài: buyer đề nghị, seller đồng ý; không đồng thuận tiền vẫn khóa. Không phạt xử sai/keeper/Mainnet.
 
-Chương trình .so build thành công sau sửa stack allocation bằng Box; IDL sinh từ Rust. Bảy flow và 42 checks pass cả local validator lẫn Devnet USDC Circle. Có thêm destination/vault substitution và stale proposal acceptance. Program upgrade thành công, code dump khớp prefix .so, phần dư zero padding. Web: 23 unit/IDL tests, 7 browser tests, 10 routes build, lint/typecheck/links pass. Browser lần đầu có 2 lỗi locator route announcer đã sửa selector đúng vùng, không giảm assertion.
+ABI thay đổi: dùng Program ID mới 4Xds5m5JtWR8HbNLdGeF7e3Qh3akKMHwMfjKsQeVXnrb, không nâng cấp chương trình v0.2. Mint Circle Devnet không đổi. Đã kiểm không có active deal legacy, rút cọc hai ví test cũ về đúng ví gốc, giữ receipt/IDL tại docs/archive/v0.2-two-arbitrators.
 
-Đã kiểm script CI-like Linux/WSL với wallet mới, genesis Config/mint synthetic, không cần key maintainer: 42 checks pass. Devnet run đầu dừng vì seller thiếu SOL rent khi tạo deal thứ sáu; bổ sung SOL và chạy lại toàn bộ pass. RPC public có 429 và retry, ghi đúng giới hạn nguồn dữ liệu.
+Rust build/IDL, 6 flow/38 checks local pass. Program mới deploy Devnet, dump binary khớp byte-for-byte. Đã kiểm 6 kịch bản finalized qua RPC, đối chiếu exact transfer từ vault đến buyer/seller/trọng tài. Script full live-negative cycle gặp RPC 429, không gọi là 38 checks live pass; đã xử lý các test bị gián đoạn bằng đồng thuận hoàn tiền.
 
-Browser signer-to-program flow pass cả local website và https://pipicachu.vercel.app với provider test: create, accept hai trọng tài, fund, deliver, reject signature không đổi state, confirm, read completed, axe, VI/EN, storage privacy. Private key ở Node, không đưa vào browser; KHÔNG phải Phantom extension thực. Phantom popup thật vẫn chưa được kiểm bằng automation.
-
-Commit f707958 đã push main, CI Quality 37203335589 pass cả quality và escrow-program; Vercel health đúng SHA và smoke đọc deal finalized pass. Bản bàn giao tiếp theo bổ sung evidence, nhãn cọc/hoàn tiền theo trạng thái và guard không hiển thị deal cũ khi chuyển link. Các thay đổi cuối đã qua check/build/7 browser tests; CI và deployment cuối sẽ kiểm sau push.
-
-Deal-state audit Devnet: 9 completed, 7 refunded, 1 draft, 0 funded/delivered/disputed. Không còn principal test chờ xử lý hoặc cọc bị giữ bởi active deal. Cổng còn chưa kiểm là Phantom extension/popup thực; browser signing đã chạy bằng test provider trên Vercel. Không báo đây là audit bảo mật hoặc readiness Mainnet.
-
-Browser từng lỗi helper __name của tsx và dùng browser.newPage không tương thích axe; sửa harness, không giảm assertion. Một browser test gặp RPC send error, deal giữ funded; đã hoàn đủ principal theo refund_expired và lưu receipt. RPC proxy retry có giới hạn, wallet chỉ resend cùng signed bytes và theo dõi chữ ký; unknown không báo thành công.
-
-Không slide/video mới trong scope. Cọc/slashing/keeper/arb timeout ghi rõ. Chưa có audit độc lập, Mainnet hoặc kiểm chứng WTP. Production dependency audit còn 4 moderate, 0 high/critical; không gọi hệ thống đã audit an toàn.
+Web: 23 unit/IDL, 7 browser tests, build/lint/typecheck pass. Browser local ký bằng test provider đã pass create, một accept, fund, deliver, reject giữ nguyên state, confirm, axe/VI/EN/privacy. Phantom extension thật chưa kiểm. Bản một trọng tài đang chuẩn bị push/CI/Vercel.

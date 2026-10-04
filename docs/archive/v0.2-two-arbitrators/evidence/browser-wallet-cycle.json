@@ -1,17 +1,19 @@
 {
-  "at": "2026-10-04T13:47:49.353Z",
+  "at": "2026-10-04T12:56:32.376Z",
   "network": "devnet",
-  "baseURL": "http://127.0.0.1:3106",
-  "deal": "AJvnggm6a5uzD9A16dRqqrpeyoH6dSfG7pSBLsCjw5c6",
+  "baseURL": "https://pipicachu.vercel.app",
+  "deal": "DkHArb96UBodc3nS3kz6asdJsU8ZFskWcEHyn24STJ1A",
   "roles": {
     "seller": "BbftECvBKTHMm6t3Sejyz7E9HmBmcRp7NvEYnAnzb7F3",
     "buyer": "DwTKmg68k39b8jZWt1CHypfoPs5JuJsuP88SfKcbW3uj",
-    "arbitrator": "Ht5k38ysGyt2VKoddxbACCeLoVngQFojNeXzACGz9dEP"
+    "primary": "Ht5k38ysGyt2VKoddxbACCeLoVngQFojNeXzACGz9dEP",
+    "backup": "7KDt8uumw3APftajN6FpnNNWSqC2eKLQfprf7GXgd5Sh"
   },
   "signer": "Injected test provider; private keys stay in Node, not browser. NOT actual Phantom extension.",
   "confirmed": [
     "create",
-    "accept arbitrator",
+    "accept primary",
+    "accept backup",
     "fund",
     "deliver",
     "reject signature without state change",

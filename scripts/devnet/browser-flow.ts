@@ -5,7 +5,7 @@ import AxeBuilder from "@axe-core/playwright";
 import { Keypair, Transaction, Connection } from "@solana/web3.js";
 import { readDeal, PROGRAM_ID } from "../../src/escrow/client";
 const roles = Object.fromEntries(
-  ["seller", "buyer", "primary", "backup"].map((role) => [
+  ["seller", "buyer", "arbitrator"].map((role) => [
     role,
     Keypair.fromSecretKey(
       Uint8Array.from(
@@ -125,11 +125,8 @@ console.log(
 await page.getByRole("button", { name: /Ngắt/ }).waitFor();
 await page.getByLabel("Ví người mua", { exact: true }).fill(addresses.buyer);
 await page
-  .getByLabel("Ví trọng tài chính", { exact: true })
-  .fill(addresses.primary);
-await page
-  .getByLabel("Ví trọng tài dự phòng", { exact: true })
-  .fill(addresses.backup);
+  .getByLabel("Ví trọng tài", { exact: true })
+  .fill(addresses.arbitrator);
 await page.getByLabel("Số tiền USDC Devnet").fill("1");
 await page
   .getByLabel("Điều khoản công khai")
@@ -190,9 +187,7 @@ async function action(name: string) {
     .getByRole("button", { name: "Tải lại trạng thái", exact: true })
     .click();
 }
-await role("primary");
-await action("Chấp thuận làm trọng tài");
-await role("backup");
+await role("arbitrator");
 await action("Chấp thuận làm trọng tài");
 await role("buyer");
 await action("Nạp tiền vào ký quỹ");
@@ -253,8 +248,7 @@ fs.writeFileSync(
         "Injected test provider; private keys stay in Node, not browser. NOT actual Phantom extension.",
       confirmed: [
         "create",
-        "accept primary",
-        "accept backup",
+        "accept arbitrator",
         "fund",
         "deliver",
         "reject signature without state change",

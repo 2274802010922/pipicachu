@@ -1,6 +1,8 @@
 {
-  "programId": "HwsHDnbuZbXZtVFvgGkZpzAVEAQN3SYJCfZzUa18Ho5V",
+  "programId": "4Xds5m5JtWR8HbNLdGeF7e3Qh3akKMHwMfjKsQeVXnrb",
   "mint": "4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU",
   "cluster": "devnet",
+  "schemaVersion": 3,
+  "arbitratorCount": 1,
   "deployed": true
 }

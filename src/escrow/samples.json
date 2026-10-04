@@ -1,41 +1,35 @@
 {
-  "primary": "Ht5k38ysGyt2VKoddxbACCeLoVngQFojNeXzACGz9dEP",
-  "backup": "7KDt8uumw3APftajN6FpnNNWSqC2eKLQfprf7GXgd5Sh",
+  "arbitrator": "Ht5k38ysGyt2VKoddxbACCeLoVngQFojNeXzACGz9dEP",
   "deals": [
     {
-      "address": "SDVvPkXdNSx9ocy6eHEQx8YeqSsfQrAc7JGAYQjNmEz",
+      "address": "CaNbNkHr1JxCScnQBy4gdazGmi5NiKi3CHhVrh2163X2",
       "vi": "Buyer xác nhận → trả seller",
       "en": "Buyer confirms → seller paid"
     },
     {
-      "address": "DVus64MVLQV7PpNxAoNfVa9KSxia9VU14JSuVLSZ1Csz",
+      "address": "AXJj2qwZxxoNgCPH44jATs4WbNTLUfRsNvHzpWu8oFJY",
       "vi": "Hết hạn kiểm tra → giải ngân",
       "en": "Review deadline → release"
     },
     {
-      "address": "GBGop2MsJmXb3xLZUh78EEcEUxE8Rpf8d3wiPFRCCF6W",
+      "address": "4z9UYuPSp3yt2mncVLwUSEBeRwZcKDDE4UoMWVj8tGKv",
       "vi": "Không bàn giao → hoàn buyer",
-      "en": "Missed delivery → buyer refunded"
+      "en": "Missed delivery → refund"
     },
     {
-      "address": "631x9p35RKUsSSggqJn6KqwnYaxwxTqFpvbWvzhkH6g1",
+      "address": "GJWNFWw5DMB6fXLoJnwxqP32B7wuSR2zWCMFDAbRwvnu",
       "vi": "Tranh chấp → trọng tài trả seller",
-      "en": "Dispute → arbitrator pays seller"
+      "en": "Dispute → seller paid"
     },
     {
-      "address": "F8XcJmTqYW7kRwuy47951TuhUk396nevHY7SPURJwmBP",
+      "address": "AabDnwgz7iDVRVrHWJcMkXa5cehnbAbAkH4g1ww8Vr4k",
       "vi": "Tranh chấp → trọng tài hoàn buyer",
-      "en": "Dispute → arbitrator refunds buyer"
+      "en": "Dispute → buyer refunded"
     },
     {
-      "address": "BimiEzLhC5H8p3KyC1NSPdGiPuK2NXHraJu8zGsnsi7E",
-      "vi": "Trọng tài chính bỏ xử → dự phòng hoàn buyer",
-      "en": "Primary timeout → backup refunds buyer"
-    },
-    {
-      "address": "7bveqV41nh951ktWLm1vDme9ioFhR2xYG4QYprt5ADSS",
-      "vi": "Hai trọng tài hết hạn → hai bên đồng ý hoàn tiền",
-      "en": "Both arbitrators expire → mutual refund"
+      "address": "GqELXQne5Js1VPebu3szg7wuc5vioESnjTtUFz1BQ9fH",
+      "vi": "Trọng tài hết hạn → hai bên đồng ý hoàn tiền",
+      "en": "Arbitrator expires → mutual refund"
     }
   ]
 }

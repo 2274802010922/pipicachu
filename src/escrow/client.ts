@@ -32,8 +32,7 @@ export type Deal = {
   address: string;
   seller: string;
   buyer: string;
-  primary: string;
-  backup: string;
+  arbitrator: string;
   mint: string;
   nonce: bigint;
   amount: bigint;
@@ -185,8 +184,7 @@ export async function decodeDeal(address: string, data: Buffer): Promise<Deal> {
     address,
     seller: r.pub(),
     buyer: r.pub(),
-    primary: r.pub(),
-    backup: r.pub(),
+    arbitrator: r.pub(),
     mint: r.pub(),
     nonce: r.uint(),
     amount: r.uint(),
@@ -252,8 +250,7 @@ export async function act(
 export async function createDealIx(
   seller: PublicKey,
   buyer: PublicKey,
-  primary: PublicKey,
-  backup: PublicKey,
+  arbitrator: PublicKey,
   nonce: bigint,
   value: bigint,
   times: number[],
@@ -266,8 +263,7 @@ export async function createDealIx(
       key(seller, true, true),
       key(CONFIG),
       key(MINT),
-      key(arbAddress(primary)),
-      key(arbAddress(backup)),
+      key(arbAddress(arbitrator)),
       key(d, true),
       key(vaultAddress(d), true),
       key(TOKEN_PROGRAM_ID),
@@ -314,8 +310,7 @@ export async function fundIx(actor: PublicKey, d: Deal) {
     key(actor, false, true),
     key(new PublicKey(d.address), true),
     key(MINT),
-    key(arbAddress(new PublicKey(d.primary)), true),
-    key(arbAddress(new PublicKey(d.backup)), true),
+    key(arbAddress(new PublicKey(d.arbitrator)), true),
     key(getAssociatedTokenAddressSync(MINT, actor), true),
     key(vaultAddress(new PublicKey(d.address)), true),
     key(TOKEN_PROGRAM_ID),
@@ -329,7 +324,7 @@ export async function settleIxs(
 ) {
   if (name === "accept_settlement" && args === undefined)
     args = Buffer.from([d.proposal === 1 ? 1 : 0]);
-  const parties = [d.buyer, d.seller, d.primary, d.backup].map(
+  const parties = [d.buyer, d.seller, d.arbitrator].map(
     (p) => new PublicKey(p),
   );
   const atas = parties.map((p) => getAssociatedTokenAddressSync(MINT, p));
@@ -343,7 +338,6 @@ export async function settleIxs(
       key(new PublicKey(d.address), true),
       key(MINT),
       key(arbAddress(parties[2]), true),
-      key(arbAddress(parties[3]), true),
       key(vaultAddress(new PublicKey(d.address)), true),
       ...atas.map((p) => key(p, true)),
       key(TOKEN_PROGRAM_ID),

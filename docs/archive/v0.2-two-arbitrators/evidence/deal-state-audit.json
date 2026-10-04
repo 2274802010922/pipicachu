@@ -1,0 +1,10 @@
+{
+  "at": "2026-10-04T12:59:55.230Z",
+  "network": "devnet",
+  "totals": {
+    "completed": 9,
+    "refunded": 7,
+    "created": 1
+  },
+  "activeDealCount": 0
+}

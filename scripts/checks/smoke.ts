@@ -2,7 +2,10 @@ import fs from "node:fs";
 import { chromium } from "@playwright/test";
 import { Connection, PublicKey } from "@solana/web3.js";
 import { PROGRAM_ID, MINT, decodeDeal } from "../../src/escrow/client";
-import samples from "../../src/escrow/samples.json";
+import rawSamples from "../../src/escrow/samples.json";
+const samples = rawSamples as {
+  deals: { address: string; vi: string; en: string }[];
+};
 const site = process.env.SMOKE_URL || "https://pipicachu.vercel.app";
 const browser = await chromium.launch(),
   context = await browser.newContext(),

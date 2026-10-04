@@ -6,7 +6,7 @@ Program Linux/WSL: Node 24, Rust, Solana CLI 3.1.10. `npm ci`, `bash scripts/che
 
 CI không cần private key maintainer: Config được inject genesis (ghi rõ synthetic). Local run của maintainer và live Devnet còn kiểm initialize thật. Không gọi synthetic mint local là Circle issuance.
 
-Flow: buyer confirm, review timeout, missed delivery refund, primary seller payout/buyer refund, backup arbitration, mutual refund sau cả hai timeout. Kiểm số dư principal, phí, vault zero, cọc khóa/unlock, double settlement, wrong buyer/actor, thời hạn và tranh chấp. Negative assertions phải là program/transaction rejection, không chấp nhận RPC unavailable như test pass.
+Flow: buyer confirm, review timeout, missed delivery refund, trọng tài trả seller/hoàn buyer, đồng thuận hoàn tiền sau một deadline trọng tài. Kiểm số dư principal, phí, vault zero, cọc khóa/unlock, double settlement, wrong buyer/actor, thời hạn và tranh chấp. Negative assertions phải là program/transaction rejection, không chấp nhận RPC unavailable như test pass.
 
 Devnet: cần SOL + Circle USDC đúng mint cho ví pipicachu mới; `npm run demo:fixtures`. Script dùng 2 USDC/deal, tự phân bổ cọc nhỏ nếu thiếu; không dùng Mainnet. Receipt viết docs/evidence/devnet-escrow-cycle.json và samples.json. Account/terms/hash công khai, key chỉ work/private ignore.
 

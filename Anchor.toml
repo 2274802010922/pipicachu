@@ -12,4 +12,4 @@ wallet = "work/private/fixture-signer.json"
 
 
 [programs.devnet]
-pipicachu_escrow = "HwsHDnbuZbXZtVFvgGkZpzAVEAQN3SYJCfZzUa18Ho5V"
+pipicachu_escrow = "4Xds5m5JtWR8HbNLdGeF7e3Qh3akKMHwMfjKsQeVXnrb"

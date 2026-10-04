@@ -1,11 +1,10 @@
 {
   "network": "devnet",
-  "programId": "HwsHDnbuZbXZtVFvgGkZpzAVEAQN3SYJCfZzUa18Ho5V",
-  "buildSha256": "be0bf9e36122aacff7db398327d7d4c1fd4fcbe33af6aa60f631d685905b960a",
-  "buildBytes": 348416,
-  "dumpSha256": "f5be4c863212e06a119c0091762c05e8af94b4bc646026bc1c6d906cdcc2e7dc",
-  "dumpBytes": 357952,
-  "buildMatchesDumpPrefix": true,
-  "remainingDumpBytesAllZero": true,
+  "schemaVersion": 3,
+  "arbitratorCount": 1,
+  "programId": "4Xds5m5JtWR8HbNLdGeF7e3Qh3akKMHwMfjKsQeVXnrb",
+  "buildSha256": "4735c14468869d667b1963bf101745e6e5ee01466467a69bbe21717f2cfe038a",
+  "dumpSha256": "4735c14468869d667b1963bf101745e6e5ee01466467a69bbe21717f2cfe038a",
+  "exactBinaryMatch": true,
   "independentAudit": false
 }

@@ -34,8 +34,7 @@ import { actions } from "@/escrow/policy";
 import deployment from "@/escrow/deployment.json";
 import rawSamples from "@/escrow/samples.json";
 const samples = rawSamples as {
-  primary: string;
-  backup: string;
+  arbitrator: string;
   deals: { address: string; vi: string; en: string }[];
 };
 
@@ -203,7 +202,7 @@ export function Home() {
           )}
         </p>
         <div className="actions">
-          <Link className="button primary" href="/deals/new">
+          <Link className="button arbitrator" href="/deals/new">
             {t("Tạo giao dịch", "Create a deal")}
           </Link>
           <Link className="button" href="/demo">
@@ -301,8 +300,7 @@ export function CreateDeal() {
   const [created, setCreated] = useState("");
   const [form, setForm] = useState({
     buyer: "",
-    primary: "",
-    backup: "",
+    arbitrator: "",
     amount: "10",
     terms: "",
     funding: "600",
@@ -319,11 +317,9 @@ export function CreateDeal() {
     if (!who) return;
     try {
       const buyer = new PublicKey(form.buyer),
-        primary = new PublicKey(form.primary),
-        backup = new PublicKey(form.backup);
+        arbitrator = new PublicKey(form.arbitrator);
       if (
-        new Set([who, buyer, primary, backup].map((p) => p.toBase58())).size !==
-          4 ||
+        new Set([who, buyer, arbitrator].map((p) => p.toBase58())).size !== 3 ||
         Buffer.byteLength(form.terms) > 512
       )
         throw new Error("INVALID_TERMS");
@@ -344,8 +340,7 @@ export function CreateDeal() {
           await createDealIx(
             who,
             buyer,
-            primary,
-            backup,
+            arbitrator,
             nonce,
             value,
             times,
@@ -366,8 +361,8 @@ export function CreateDeal() {
       <h1>{t("Tạo giao dịch", "Create a deal")}</h1>
       <p className="lead">
         {t(
-          "Ví đang kết nối là người bán. Hai trọng tài cần chấp thuận trước khi người mua nạp tiền.",
-          "The connected wallet is the seller. Both arbitrators must accept before the buyer can fund.",
+          "Ví đang kết nối là người bán. Trọng tài cần chấp thuận trước khi người mua nạp tiền.",
+          "The connected wallet is the seller. The arbitrator must accept before the buyer can fund.",
         )}
       </p>
       {!who && (
@@ -400,19 +395,11 @@ export function CreateDeal() {
         </div>
         <div className="grid">
           <label>
-            {t("Ví trọng tài chính", "Primary arbitrator wallet")}
+            {t("Ví trọng tài", "Arbitrator wallet")}
             <input
               required
-              value={form.primary}
-              onChange={(e) => field("primary", e.target.value)}
-            />
-          </label>
-          <label>
-            {t("Ví trọng tài dự phòng", "Backup arbitrator wallet")}
-            <input
-              required
-              value={form.backup}
-              onChange={(e) => field("backup", e.target.value)}
+              value={form.arbitrator}
+              onChange={(e) => field("arbitrator", e.target.value)}
             />
           </label>
         </div>
@@ -469,8 +456,8 @@ export function CreateDeal() {
         </details>
         <Notice>
           {t(
-            "Phí trung gian 1% trừ từ khoản seller nhận nếu trả seller; hoàn buyer không thu phí. Mỗi trọng tài khóa cọc bằng 10% giá trị deal khi buyer nạp.",
-            "A 1% intermediary fee is deducted from seller payouts; refunds have no fee. Each arbitrator reserves 10% of the deal value when the buyer funds.",
+            "Phí trung gian 1% trừ từ khoản seller nhận nếu trả seller; hoàn buyer không thu phí. Trọng tài khóa cọc bằng 10% giá trị deal khi buyer nạp.",
+            "A 1% intermediary fee is deducted from seller payouts; refunds have no fee. The arbitrator reserves 10% of the deal value when the buyer funds.",
           )}
         </Notice>
         <label className="check">
@@ -481,13 +468,13 @@ export function CreateDeal() {
           />
           <span>
             {t(
-              "Tôi hiểu điều kiện không thể đơn phương sửa sau khi tạo. Nếu cả hai trọng tài bỏ xử và hai bên không đồng ý, tiền có thể bị khóa.",
-              "I understand these terms cannot be changed unilaterally. If both arbitrators abandon the case and the parties disagree, funds may remain locked.",
+              "Tôi hiểu điều kiện không thể đơn phương sửa sau khi tạo. Nếu trọng tài không xử lý và hai bên không đồng ý, tiền có thể bị khóa.",
+              "I understand these terms cannot be changed unilaterally. If the arbitrator does not rule and the parties disagree, funds may remain locked.",
             )}
           </span>
         </label>
         <div>
-          <button className="primary" disabled={!who || !ack || op.busy}>
+          <button className="arbitrator" disabled={!who || !ack || op.busy}>
             {t("Tạo và ký bằng ví", "Create and sign")}
           </button>
         </div>
@@ -788,11 +775,10 @@ export function DealView({ id }: { id: string }) {
           {deal.state === "created" && (
             <p>
               {t(
-                "Trọng tài chính và dự phòng chấp thuận trước khi buyer nạp.",
-                "Primary and backup arbitrators accept before the buyer funds.",
+                "Trọng tài chấp thuận trước khi người mua nạp.",
+                "The arbitrator accepts before the buyer funds.",
               )}{" "}
-              {deal.approvals & 1 ? "✓" : "—"} {t("Chính", "Primary")} ·{" "}
-              {deal.approvals & 2 ? "✓" : "—"} {t("Dự phòng", "Backup")}
+              {deal.approvals === 1 ? "✓" : "—"} {t("Trọng tài", "Arbitrator")}
             </p>
           )}
           {deal.state === "funded" && (
@@ -814,8 +800,8 @@ export function DealView({ id }: { id: string }) {
           {deal.state === "disputed" && (
             <Notice>
               {t(
-                "Tiền đang khóa. Trọng tài chính xử trước hạn; sau đó quyền chuyển sang trọng tài dự phòng. Nếu cả hai bỏ xử, cần sự đồng ý của hai bên để kết thúc.",
-                "Funds are locked. The primary arbitrator rules before the deadline, followed by the backup. If both abandon the case, both parties must agree to settle.",
+                "Tiền đang khóa. Trọng tài xử trước hạn; sau hạn, người mua đề nghị trả người bán hoặc hoàn tiền và người bán phải đồng ý.",
+                "Funds are locked. The arbitrator rules before the deadline; afterward, the buyer proposes payout/refund and the seller must accept.",
               )}
             </Notice>
           )}
@@ -897,7 +883,7 @@ export function DealView({ id }: { id: string }) {
                 {available.map((name) => (
                   <button
                     className={
-                      name === "fund" || name === "confirm" ? "primary" : ""
+                      name === "fund" || name === "confirm" ? "arbitrator" : ""
                     }
                     key={name}
                     disabled={!ack || op.busy}
@@ -928,8 +914,7 @@ export function DealView({ id }: { id: string }) {
             {[
               [t("Người mua", "Buyer"), deal.buyer],
               [t("Người bán", "Seller"), deal.seller],
-              [t("Trọng tài chính", "Primary arbitrator"), deal.primary],
-              [t("Trọng tài dự phòng", "Backup arbitrator"), deal.backup],
+              [t("Trọng tài", "Arbitrator"), deal.arbitrator],
               ["Mint", deal.mint],
               ["Deal", id],
               ["Vault", vaultAddressFor(id)],
@@ -993,14 +978,13 @@ export function Admin() {
         setBalance("—");
       }
       const infos = await c.getProgramAccounts(PROGRAM_ID, {
-        filters: [{ dataSize: 908 }],
+        filters: [{ dataSize: 876 }],
       });
       const result: Deal[] = [];
       for (const info of infos) {
         try {
           const d = await decodeDeal(info.pubkey.toBase58(), info.account.data);
-          if (d.primary === who.toBase58() || d.backup === who.toBase58())
-            result.push(d);
+          if (d.arbitrator === who.toBase58()) result.push(d);
         } catch {}
       }
       setDeals(result);
@@ -1096,7 +1080,7 @@ export function Admin() {
                   </label>
                   <div className="actions">
                     <button
-                      className="primary"
+                      className="arbitrator"
                       disabled={op.busy}
                       onClick={() =>
                         void op.run(
@@ -1177,8 +1161,8 @@ export function Demo() {
       <h1>{t("Thử trọn luồng ký quỹ", "Try the full escrow flow")}</h1>
       <p className="lead">
         {t(
-          "Bốn ví độc lập: seller, buyer, trọng tài chính và trọng tài dự phòng. SOL trả phí; USDC Devnet dùng cho deal và cọc.",
-          "Four separate wallets: seller, buyer, primary and backup arbitrators. SOL pays network fees; Devnet USDC funds deals and bonds.",
+          "Ba ví độc lập: người bán, người mua và trọng tài. SOL trả phí; USDC Devnet dùng cho deal và cọc.",
+          "Three separate wallets: seller, buyer and arbitrator. SOL pays network fees; Devnet USDC funds deals and bonds.",
         )}
       </p>
       <section className="panel">
@@ -1213,8 +1197,8 @@ export function Demo() {
           </li>
           <li>
             {t(
-              "Hai trọng tài đăng ký, nạp cọc. Seller tạo deal, cả hai trọng tài mở link và chấp thuận.",
-              "Both arbitrators register and deposit bond. The seller creates a deal; both arbitrators open its link and accept.",
+              "Trọng tài đăng ký, nạp cọc. Người bán tạo deal, trọng tài mở link và chấp thuận.",
+              "The arbitrator registers and deposits bond. The seller creates a deal; the arbitrator opens its link and accepts.",
             )}
           </li>
           <li>
@@ -1225,7 +1209,7 @@ export function Demo() {
           </li>
         </ol>
         <div className="actions">
-          <Link className="button primary" href="/deals/new">
+          <Link className="button arbitrator" href="/deals/new">
             {t("Tạo deal mới", "Create a new deal")}
           </Link>
           <Link className="button" href="/admin">
@@ -1281,15 +1265,9 @@ export function Demo() {
             </dd>
           </div>
           <div>
-            <dt>{t("Trọng tài mẫu chính", "Sample primary arbitrator")}</dt>
+            <dt>{t("Trọng tài mẫu", "Sample arbitrator")}</dt>
             <dd>
-              <Address value={samples.primary || "—"} />
-            </dd>
-          </div>
-          <div>
-            <dt>{t("Trọng tài mẫu dự phòng", "Sample backup arbitrator")}</dt>
-            <dd>
-              <Address value={samples.backup || "—"} />
+              <Address value={samples.arbitrator || "—"} />
             </dd>
           </div>
         </dl>
@@ -1362,8 +1340,8 @@ export function Guide({ privacy = false }: { privacy?: boolean }) {
             </p>
             <p>
               {t(
-                "Khi có tranh chấp, trọng tài chính xử trước, dự phòng xử sau. Nếu cả hai hết hạn, buyer đề nghị trả seller/hoàn buyer và seller phải ký đồng ý. Không đồng ý thì tiền còn khóa.",
-                "In a dispute, the primary rules first, then the backup. After both expire, the buyer proposes payout/refund and the seller must accept. Without agreement, funds remain locked.",
+                "Khi có tranh chấp, trọng tài xử trong thời hạn. Sau hạn, người mua đề nghị trả người bán hoặc hoàn tiền, người bán phải ký đồng ý. Không đồng ý thì tiền còn khóa.",
+                "In a dispute, the arbitrator rules within the deadline. Afterward, the buyer proposes payout/refund and the seller must accept. Without agreement, funds remain locked.",
               )}
             </p>
           </section>

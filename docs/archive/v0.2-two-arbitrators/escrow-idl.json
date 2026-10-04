@@ -1,8 +1,8 @@
 {
-  "address": "4Xds5m5JtWR8HbNLdGeF7e3Qh3akKMHwMfjKsQeVXnrb",
+  "address": "HwsHDnbuZbXZtVFvgGkZpzAVEAQN3SYJCfZzUa18Ho5V",
   "metadata": {
     "name": "pipicachu_escrow",
-    "version": "0.3.0",
+    "version": "0.2.0",
     "spec": "0.1.0"
   },
   "instructions": [
@@ -71,10 +71,10 @@
         },
         {
           "name": "mint",
-          "relations": ["deal", "arbitrator"]
+          "relations": ["deal", "primary", "backup"]
         },
         {
-          "name": "arbitrator",
+          "name": "primary",
           "writable": true,
           "pda": {
             "seeds": [
@@ -84,7 +84,24 @@
               },
               {
                 "kind": "account",
-                "path": "deal.arbitrator",
+                "path": "deal.primary",
+                "account": "Deal"
+              }
+            ]
+          }
+        },
+        {
+          "name": "backup",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [97, 114, 98]
+              },
+              {
+                "kind": "account",
+                "path": "deal.backup",
                 "account": "Deal"
               }
             ]
@@ -115,7 +132,11 @@
           "writable": true
         },
         {
-          "name": "arbitrator_token",
+          "name": "primary_token",
+          "writable": true
+        },
+        {
+          "name": "backup_token",
           "writable": true
         },
         {
@@ -195,10 +216,10 @@
         },
         {
           "name": "mint",
-          "relations": ["deal", "arbitrator"]
+          "relations": ["deal", "primary", "backup"]
         },
         {
-          "name": "arbitrator",
+          "name": "primary",
           "writable": true,
           "pda": {
             "seeds": [
@@ -208,7 +229,24 @@
               },
               {
                 "kind": "account",
-                "path": "deal.arbitrator",
+                "path": "deal.primary",
+                "account": "Deal"
+              }
+            ]
+          }
+        },
+        {
+          "name": "backup",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [97, 114, 98]
+              },
+              {
+                "kind": "account",
+                "path": "deal.backup",
                 "account": "Deal"
               }
             ]
@@ -239,7 +277,11 @@
           "writable": true
         },
         {
-          "name": "arbitrator_token",
+          "name": "primary_token",
+          "writable": true
+        },
+        {
+          "name": "backup_token",
           "writable": true
         },
         {
@@ -271,10 +313,13 @@
         },
         {
           "name": "mint",
-          "relations": ["config", "arbitrator"]
+          "relations": ["config", "primary", "backup"]
         },
         {
-          "name": "arbitrator"
+          "name": "primary"
+        },
+        {
+          "name": "backup"
         },
         {
           "name": "deal",
@@ -529,10 +574,10 @@
         },
         {
           "name": "mint",
-          "relations": ["deal", "arbitrator"]
+          "relations": ["deal", "primary", "backup"]
         },
         {
-          "name": "arbitrator",
+          "name": "primary",
           "writable": true,
           "pda": {
             "seeds": [
@@ -542,7 +587,24 @@
               },
               {
                 "kind": "account",
-                "path": "deal.arbitrator",
+                "path": "deal.primary",
+                "account": "Deal"
+              }
+            ]
+          }
+        },
+        {
+          "name": "backup",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [97, 114, 98]
+              },
+              {
+                "kind": "account",
+                "path": "deal.backup",
                 "account": "Deal"
               }
             ]
@@ -573,7 +635,11 @@
           "writable": true
         },
         {
-          "name": "arbitrator_token",
+          "name": "primary_token",
+          "writable": true
+        },
+        {
+          "name": "backup_token",
           "writable": true
         },
         {
@@ -615,10 +681,10 @@
         },
         {
           "name": "mint",
-          "relations": ["deal", "arbitrator"]
+          "relations": ["deal", "primary", "backup"]
         },
         {
-          "name": "arbitrator",
+          "name": "primary",
           "writable": true,
           "pda": {
             "seeds": [
@@ -628,7 +694,24 @@
               },
               {
                 "kind": "account",
-                "path": "deal.arbitrator",
+                "path": "deal.primary",
+                "account": "Deal"
+              }
+            ]
+          }
+        },
+        {
+          "name": "backup",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [97, 114, 98]
+              },
+              {
+                "kind": "account",
+                "path": "deal.backup",
                 "account": "Deal"
               }
             ]
@@ -762,10 +845,10 @@
         },
         {
           "name": "mint",
-          "relations": ["deal", "arbitrator"]
+          "relations": ["deal", "primary", "backup"]
         },
         {
-          "name": "arbitrator",
+          "name": "primary",
           "writable": true,
           "pda": {
             "seeds": [
@@ -775,7 +858,24 @@
               },
               {
                 "kind": "account",
-                "path": "deal.arbitrator",
+                "path": "deal.primary",
+                "account": "Deal"
+              }
+            ]
+          }
+        },
+        {
+          "name": "backup",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [97, 114, 98]
+              },
+              {
+                "kind": "account",
+                "path": "deal.backup",
                 "account": "Deal"
               }
             ]
@@ -806,7 +906,11 @@
           "writable": true
         },
         {
-          "name": "arbitrator_token",
+          "name": "primary_token",
+          "writable": true
+        },
+        {
+          "name": "backup_token",
           "writable": true
         },
         {
@@ -915,10 +1019,10 @@
         },
         {
           "name": "mint",
-          "relations": ["deal", "arbitrator"]
+          "relations": ["deal", "primary", "backup"]
         },
         {
-          "name": "arbitrator",
+          "name": "primary",
           "writable": true,
           "pda": {
             "seeds": [
@@ -928,7 +1032,24 @@
               },
               {
                 "kind": "account",
-                "path": "deal.arbitrator",
+                "path": "deal.primary",
+                "account": "Deal"
+              }
+            ]
+          }
+        },
+        {
+          "name": "backup",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [97, 114, 98]
+              },
+              {
+                "kind": "account",
+                "path": "deal.backup",
                 "account": "Deal"
               }
             ]
@@ -959,7 +1080,11 @@
           "writable": true
         },
         {
-          "name": "arbitrator_token",
+          "name": "primary_token",
+          "writable": true
+        },
+        {
+          "name": "backup_token",
           "writable": true
         },
         {
@@ -1147,7 +1272,11 @@
             "type": "pubkey"
           },
           {
-            "name": "arbitrator",
+            "name": "primary",
+            "type": "pubkey"
+          },
+          {
+            "name": "backup",
             "type": "pubkey"
           },
           {

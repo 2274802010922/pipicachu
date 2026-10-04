@@ -1,19 +1,17 @@
 {
-  "at": "2026-10-04T12:53:33.977Z",
+  "at": "2026-10-04T13:47:49.353Z",
   "network": "devnet",
   "baseURL": "http://127.0.0.1:3106",
-  "deal": "Aw7KiZUAVBtG6X6Zf2spGcWMZsHfkMP9NqffegzYQghD",
+  "deal": "AJvnggm6a5uzD9A16dRqqrpeyoH6dSfG7pSBLsCjw5c6",
   "roles": {
     "seller": "BbftECvBKTHMm6t3Sejyz7E9HmBmcRp7NvEYnAnzb7F3",
     "buyer": "DwTKmg68k39b8jZWt1CHypfoPs5JuJsuP88SfKcbW3uj",
-    "primary": "Ht5k38ysGyt2VKoddxbACCeLoVngQFojNeXzACGz9dEP",
-    "backup": "7KDt8uumw3APftajN6FpnNNWSqC2eKLQfprf7GXgd5Sh"
+    "arbitrator": "Ht5k38ysGyt2VKoddxbACCeLoVngQFojNeXzACGz9dEP"
   },
   "signer": "Injected test provider; private keys stay in Node, not browser. NOT actual Phantom extension.",
   "confirmed": [
     "create",
-    "accept primary",
-    "accept backup",
+    "accept arbitrator",
     "fund",
     "deliver",
     "reject signature without state change",

@@ -5,9 +5,9 @@ cargo build-sbf --manifest-path programs/pipicachu-escrow/Cargo.toml 2>&1 | tee 
 if grep -q 'Stack offset' /tmp/pipicachu-sbf-build.log; then echo 'Unsafe SBF stack frame'; exit 1; fi
 npx tsx scripts/devnet/prepare-local.ts
 solana-test-validator --reset --quiet --ledger work/validator/ledger --rpc-port 8897 --faucet-port 9907 \
- --bpf-program HwsHDnbuZbXZtVFvgGkZpzAVEAQN3SYJCfZzUa18Ho5V target/deploy/pipicachu_escrow.so \
+ --bpf-program 4Xds5m5JtWR8HbNLdGeF7e3Qh3akKMHwMfjKsQeVXnrb target/deploy/pipicachu_escrow.so \
  --account 4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU work/validator/mint.json \
- --account "$(node --input-type=module -e 'import {PublicKey} from "@solana/web3.js"; console.log(PublicKey.findProgramAddressSync([Buffer.from("config")],new PublicKey("HwsHDnbuZbXZtVFvgGkZpzAVEAQN3SYJCfZzUa18Ho5V"))[0].toBase58())')" work/validator/config.json > work/validator/validator.log 2>&1 &
+ --account "$(node --input-type=module -e 'import {PublicKey} from "@solana/web3.js"; console.log(PublicKey.findProgramAddressSync([Buffer.from("config")],new PublicKey("4Xds5m5JtWR8HbNLdGeF7e3Qh3akKMHwMfjKsQeVXnrb"))[0].toBase58())')" work/validator/config.json > work/validator/validator.log 2>&1 &
 validator_pid=$!
 trap 'kill "$validator_pid" 2>/dev/null || true' EXIT
 for attempt in $(seq 1 60); do
