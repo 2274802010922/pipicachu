@@ -1,0 +1,18 @@
+{
+  "at": "2026-10-04T15:46:21.355Z",
+  "network": "devnet",
+  "workflowRun": "https://github.com/2274802010922/pipicachu/actions/runs/37214074644",
+  "trigger": "workflow_dispatch (service test); recurring schedule configured separately",
+  "keeper": "CHSZY4SQiRX8EyGfeW7hkp2MqYWUcgC6rp9pwqmCaijc",
+  "payout": {
+    "deal": "AwWrHWtKhrgutvB75Tt6LjDjbVf32WmSYYShxWUhs2g4",
+    "signature": "5fWd5HQyr7jJSpvhgGPmt52Lcd6gdLWPJF812BaR8EH5iPTJ3m2iSiYR3T5SDgKqvy3i9htXZ72TzHp5AVzUhPkZ",
+    "state": "completed"
+  },
+  "sellerReceivedAtomic": "990000",
+  "arbitratorFeeAtomic": "10000",
+  "payerVerifiedAsKeeper": true,
+  "disputedDealUntouchedBeforeCleanup": "iuC9Rt86GbMv1DqMebGEvMLzt5bk1PYkYeqmgVdHJcv",
+  "scope": "No buyer confirmation or seller finalize; keeper signed the payout. Not actual Phantom or exact scheduling SLA.",
+  "disputeCleanupRefundSignature": "niRfwxxmAaMSZ6MryW7eyX2eTWKUUMMywxAuzjWobA3BaUg836WsGRcx5MPf54fbxqFBKcT1xXof5FfS8J8iZpf"
+}

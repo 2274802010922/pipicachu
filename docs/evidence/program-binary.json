@@ -1,10 +1,10 @@
 {
-  "network": "devnet",
-  "schemaVersion": 3,
-  "arbitratorCount": 1,
+  "at": "2026-10-04T19:52:12.885Z",
   "programId": "4Xds5m5JtWR8HbNLdGeF7e3Qh3akKMHwMfjKsQeVXnrb",
-  "buildSha256": "4735c14468869d667b1963bf101745e6e5ee01466467a69bbe21717f2cfe038a",
-  "dumpSha256": "4735c14468869d667b1963bf101745e6e5ee01466467a69bbe21717f2cfe038a",
-  "exactBinaryMatch": true,
-  "independentAudit": false
+  "network": "devnet",
+  "method": "solana program dump, cmp and sha256sum against built SBF",
+  "localSha256": "cefc482eeb4d2b7b3f6cece0e44a637ac7e7639d805abb21a6f977546166492e",
+  "deployedSha256": "cefc482eeb4d2b7b3f6cece0e44a637ac7e7639d805abb21a6f977546166492e",
+  "byteForByteMatch": true,
+  "upgradeSignature": "4r5J2gPXpkQDwhrkAWK2ByvR36PymM8YKmU128yYmu5f1u6h9A5yNs4gNsrdbphAYkwnkmb3bV6r74jkZN23qYdB"
 }

@@ -94,13 +94,15 @@ const report = {
   at: new Date().toISOString(),
   network: "devnet",
   workflowRun:
-    "https://github.com/2274802010922/pipicachu/actions/runs/37214074644",
+    process.env.KEEPER_PROOF_RUN_URL ||
+    "Not supplied; see downloaded service artifact",
   trigger:
     "workflow_dispatch (service test); recurring schedule configured separately",
   keeper: keeper.wallet,
   payout: receipt,
   sellerReceivedAtomic: (d.amount - d.fee - d.platformFee).toString(),
   platformFeeAtomic: d.platformFee.toString(),
+  platformTreasury: treasury.toBase58(),
   arbitratorFeeAtomic: "10000",
   payerVerifiedAsKeeper: true,
   disputedDealUntouchedBeforeCleanup: dispute.address,

@@ -20,7 +20,7 @@ Bond is not insurance. No wrongful-ruling slashing or appeal. Automatic Devnet p
 
 ## Build and review
 
-v0.3: 6 flows / 38 local program checks; 6 Devnet scenarios verified from finalized receipts and exact vault transfer amounts. Web has 23 unit/IDL tests and 7 browser tests. Local and Vercel website signing passed with a test provider, not the actual Phantom extension. Both CI jobs passed. See [evidence](docs/evidence/README.md).
+v0.4: 53 unit tests, 17 browser tests and 39 executable program checks; six live Devnet scenarios verified from finalized receipts and exact vault transfers. Website signing passed using a test provider, not the actual Phantom extension. See [evidence](docs/evidence/README.md).
 
 ```bash
 npm ci
@@ -32,3 +32,9 @@ npm run verify
 [Architecture](docs/architecture/README.md), [deployment](docs/deployment/README.md), [tests](docs/testing/README.md), [evidence](docs/evidence/README.md). Includes Anchor contract, generated IDL, transaction client and executable program tests. No server custody key, AI or account database.
 
 Code MIT; logo excluded. [Notices](THIRD_PARTY_NOTICES.md). Former explainer preserved at checkpoint `7315d42`. Previous Picachu project untouched.
+
+## Platform fees v1
+
+New deals: buyer deposits the principal; seller receives 98%, arbitrator 1%, pipicachu 1%. Refunds return the full principal without fees. Existing deals retain their original fee snapshot. Immutable Devnet treasury: `CXjKGEBNTTotzoF26nGPfAG4AFicGgP72SMqUQKY1pJN`. No additional environment variable or private key required.
+
+Current scope: 53 unit tests, 17 browser tests, 39 executable program checks and six live Devnet scenarios. [Evidence](docs/evidence/README.md) separates current fee validation from historical 1%-only receipts. Injected test-provider signing is not actual Phantom-extension verification.

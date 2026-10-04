@@ -1,57 +1,11 @@
-# Rollout phí hệ thống — 05/10/2026
+# Trạng thái — v0.4 phí hệ thống, 05/10/2026
 
-Owner đã chọn treasury CXjKGEBNTTotzoF26nGPfAG4AFicGgP72SMqUQKY1pJN. Chương trình cùng ID đã upgrade Devnet, dump khớp SHA256 cefc482eeb4d2b7b3f6cece0e44a637ac7e7639d805abb21a6f977546166492e. FeeConfig immutable đã initialize đúng treasury. Legacy funded/delivered trước upgrade đã confirm thành công sau upgrade, snapshot platformFee=0.
+Treasury owner: CXjKGEBNTTotzoF26nGPfAG4AFicGgP72SMqUQKY1pJN. FeeConfig immutable Devnet đã initialize đúng ví. Deal mới 1% trọng tài +1% hệ thống, seller net98%; refund zero fee. Legacy fee0 platform giữ nguyên. Không env/key Vercel mới.
 
-Đang rollout web/keeper lên main, tiếp tục kiểm số tiền live mới, refund, browser/CI/Vercel và keeper. Chưa nhận nghiệm thu end-to-end. Local checkpoint trước rollout: 39 program checks, native legacy max512, 53 unit/17 browser pass. Không cần env Vercel mới.
+Program cùng ID 4Xds5m5JtWR8HbNLdGeF7e3Qh3akKMHwMfjKsQeVXnrb, allocation876. Append9 bytes sau terms vào padding cũ; native legacy512 test và decoder pass. Create/settle account list mới; client cũ cần reload. Dump binary khớp cefc482eeb4d2b7b3f6cece0e44a637ac7e7639d805abb21a6f977546166492e. Legacy deal đã nạp trước upgrade được payout99% sau upgrade, finalized RPC kiểm đúng zero platform.
 
-## Ngữ cảnh trước rollout (lịch sử, không phải trạng thái hiện tại)
+53 unit,17 browser/responsive/axe,39 local program checks; full39 Devnet checks rerun pass. Lượt đầu thiếu USDC buyer test, tái phân bổ10 USDC từ seller test riêng rồi chạy lại. 6 receipt finalized đối chiếu exact transfers; refund nguyên principal. CI b6176d3 run37229653915 xanh cả web/program.
 
-# Trạng thái — 05/10/2026
+Keeper service run37230007638 finalized payout98/1/1, signer keeper đúng; dispute untouched rồi arb refund. Schedule tự nhiên run37225785710 đã success trước upgrade, không SLA đúng giờ. Vercel v0.4 health đúng treasury/schema4; browser signed flow+reject+VI/EN/axe pass bằng injected provider giữ key ởNode, không Phantom extension proof. Screenshot mới đã xem.
 
-## Phí hệ thống 1% — đang chuẩn bị, CHƯA DEPLOY/PUSH
-
-User duyệt thêm 1% hệ thống ngoài 1% arb. New deal: buyer principal unchanged, seller net 98%, arb 1%, platform 1%; refund zero fees. Bổ sung platform_fee/fee_version sau terms trong 28-byte padding hiện hữu (9 bytes), size/discriminator/PDA/Program ID giữ nguyên. Legacy fee_version=0/platform_fee=0, không đổi phí hồi tố. FeeConfig PDA platform_fee_v1 immutable, initializer pin; treasury không do seller/client chọn.
-
-Đã build SBF/IDL, 39 executable local checks gồm sai destination platform, số dư platform payout/refund; native Rust compatibility test legacy terms tối đa 512 bytes pass, client legacy decode pass. 53 unit +17 browser/build pass. Keeper/client/fee preview đã chuẩn bị cho fee config mới. Config account init là bước mới sau upgrade.
-
-ĐANG CHỜ địa chỉ ví công khai owner chọn nhận phí. Đã hỏi qua async, chưa có câu trả lời. Không được dùng placeholder/random treasury để deploy, không push code mới lên main khi production contract/config còn cũ. Production đang giữ commit a40277a, phí cũ 1%. Khi có địa chỉ: initialize fee config đúng ví, nâng cấp an toàn/kiểm bytes, rollout client+keeper đồng bộ; Devnet/browser/CI/Vercel nghiệm thu. Không nhận hoàn tất end-to-end trước đó.
-
-## UI gọn — 05/10/2026
-
-Tiến trình theo state/bond readiness, current lime + glow tĩnh + aria-current; dispute cam. Một action card với nút chính; complaint vẫn cạnh confirm. Điều kiện/địa chỉ/bằng chứng/rule thu gọn disclosure. Mobile summary Bước N/5; không glow nút payment khi chờ keeper hoặc terminal. Sửa class CTA primary bị lệch tên từ migration cũ, form preview phí gọn.
-
-48 unit, build/lint/typecheck, 16 browser tests pass (VI/EN, 375/768/1024/1440, axe, complaint visible, keeper no misleading CTA). Một lần chạy browser phụ quá sớm khi build chưa xong báo thiếu prerender manifest, không tính pass; lượt verify hoàn chỉnh đã pass. Visual desktop/mobile đã xem; browser ký Devnet qua local UI mới pass từ create đến completed, hủy ký không đổi state, axe/VI/EN/privacy. Provider test, không Phantom thật. Không đổi protocol, Program ID/mint/keeper/guard chữ ký. Đổi success copy thành “Đã xác nhận thao tác” để không nhầm với deal terminal.
-
-User yêu cầu bỏ trọng tài phụ. v0.3 chỉ có buyer, seller, arbitrator; một cọc, một accept và một vòng xử tranh chấp. Hết hạn trọng tài: buyer đề nghị, seller đồng ý; không đồng thuận tiền vẫn khóa. Không phạt xử sai/Mainnet. Keeper được bổ sung theo flow cuối ở bên dưới.
-
-ABI thay đổi: dùng Program ID mới 4Xds5m5JtWR8HbNLdGeF7e3Qh3akKMHwMfjKsQeVXnrb, không nâng cấp chương trình v0.2. Mint Circle Devnet không đổi. Đã kiểm không có active deal legacy, rút cọc hai ví test cũ về đúng ví gốc, giữ receipt/IDL tại docs/archive/v0.2-two-arbitrators.
-
-Rust build/IDL, 6 flow/38 checks local pass. Program mới deploy Devnet, dump binary khớp byte-for-byte. Đã kiểm 6 kịch bản finalized qua RPC, đối chiếu exact transfer từ vault đến buyer/seller/trọng tài. Script full live-negative cycle gặp RPC 429, không gọi là 38 checks live pass; đã xử lý các test bị gián đoạn bằng đồng thuận hoàn tiền.
-
-Web: 23 unit/IDL, 7 browser tests, build/lint/typecheck pass. Browser local và Vercel ký bằng test provider đã pass create, một accept, fund, deliver, reject giữ nguyên state, confirm, axe/VI/EN/privacy. Phantom extension thật chưa kiểm.
-
-Đã push main aa30d7c, giữ nguyên commit đổi tiêu đề README của owner (acfc39f). Vercel health đúng v0.3, schemaVersion 3/arbitratorCount 1/Program ID mới; smoke pass. CI 37207354325 pass cả quality và escrow-program. Evidence/handoff cuối được commit riêng; không đổi code tiền. Không cần env mới.
-
-## Sửa lỗi test thủ công
-
-## Hiển thị cọc ngay sau tạo link
-
-Sau seller tạo link, UI có lời dẫn bước tiếp theo cho trọng tài và số cọc của deal. Trang deal có thanh 5 bước; bước 2 hiển thị required / available / missing và trạng thái consent. Trọng tài nạp đúng phần thiếu + accept cùng transaction, hoặc dùng pool hiện có. Buyer chỉ thấy fund khi đọc được đủ cọc và đã accept. Không sửa Rust/ABI: cọc chỉ reserve khi buyer fund.
-
-Đọc lại profile trước ký, không tự tăng deposit vượt phần thiếu user đã xem; khác biệt bất lợi yêu cầu refresh. Lỗi đọc không biến thành available=0 hay ready. 48 unit/11 browser pass; fixture UI synthetic có nhãn riêng. Atomic top-up + accept thật Devnet đã kiểm với ví test mới, cọc chưa locked trước funding; receipt bond-preparation.json. Chưa gọi là Phantom extension test.
-
-## Flow cuối đã chốt và keeper
-
-Seller tạo link; buyer nạp USDC Devnet; seller giao hàng/đánh dấu đã giao; buyer xác nhận hoặc khiếu nại. Không seller cọc, không buyer tạo deal. Một trọng tài và cọc/consent trước funding giữ nguyên để không khóa cọc khi chưa nhận trách nhiệm.
-
-Thêm keeper service GitHub Actions lịch khoảng 5 phút, wallet riêng chỉ SOL Devnet, secret repo đã cấu hình. Không key custodial trên Vercel. Keeper chỉ finalize Delivered quá review deadline, không release dispute. UI chờ tự trả tiền và bỏ nút finalize khỏi flow thường.
-
-Đã nghiệm thu live service run 37214074644 bằng workflow_dispatch: keeper signed/finalized, seller nhận 990000 atomic USDC, arb fee 10000, buyer/seller không gửi confirm/finalize. Disputed fixture giữ principal 1000000 trong lượt scan và được arb refund sau kiểm. Workflow schedule active, chưa quan sát tick schedule tự nhiên; không hứa SLA. Receipt ở keeper-live.json. CI code 114df7b run 37214018306 pass, Vercel smoke đúng SHA/automaticKeeper true.
-
-45 unit tests và 8 browser tests/build pass trước test service. Không đổi Rust/IDL/Program ID; không hứa payout đúng giây, không phạt xử sai.
-
-Owner tạo deal khi trọng tài chưa đăng ký: đã tái hiện Anchor AccountNotInitialized/3012 trên account arbitrator, trước khi ký. Thêm precheck và thông báo riêng, hướng dẫn mở trang Trọng tài; không yêu cầu USDC/cọc ở bước tạo.
-
-Owner đăng ký gặp WALLET_CHANGED sau ký. Hai nguyên nhân trước đây gộp chung: đổi ví hoặc signed message khác. Phantom có hành vi thêm priority-fee instruction nếu dapp chưa khai báo compute budget (nguồn chính thức được ghi trong architecture). Fix khai báo 300.000 CU và 0 micro-lamports priority price cho Devnet trước simulate/sign; vẫn so sánh nguyên message và verify signature. Tách WALLET_CHANGED, TRANSACTION_CHANGED, INVALID_WALLET_SIGNATURE. Đây là mitigation khớp hành vi wallet, chưa có signed message trực tiếp từ extension owner để kết luận chắc chắn nguyên nhân.
-
-Regression tái hiện Phantom-like mutation, signed round-trip, chặn đổi ví/địa chỉ nhận/missing signature; browser chặn create trước ký nếu thiếu trọng tài. 37 unit và 8 browser tests, full verify pass. Fresh Devnet registration với explicit budget pass bằng CLI signer, receipt wallet-register-budget.json; không gọi là Phantom extension pass. Contract/IDL/Program ID không đổi, không cần env mới.
+Ngữ cảnh và bằng chứng đang được commit/push cùng samples mới. Xem docs/evidence/README.md; lịch sử1%-only đã archive. Picachu cũ nguyên trạng. Không Mainnet, audit, phạt xử sai/bảo hiểm/AI/off-ramp; trọng tài bỏ xử mà không đồng thuận vẫn có thể kẹt tiền. Upgrade authority còn giữ. Commit tiếng Việt, main.

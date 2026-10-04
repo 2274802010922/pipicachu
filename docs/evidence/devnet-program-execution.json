@@ -1,0 +1,12 @@
+{
+  "at": "2026-10-04T19:53:11.503Z",
+  "network": "devnet",
+  "command": "npx tsx scripts/devnet/cycle.ts",
+  "programId": "4Xds5m5JtWR8HbNLdGeF7e3Qh3akKMHwMfjKsQeVXnrb",
+  "checkCount": 39,
+  "scenarioCount": 6,
+  "result": "pass",
+  "method": "Recorded successful terminal execution summary; not a machine-exported per-assertion report. Independent finalized transfer receipts are in devnet-escrow-cycle.json. Future runs preserve raw results in devnet-program-checks.json.",
+  "previousAttempt": "Stopped before all scenarios because buyer test wallet had insufficient USDC. Recycled 10 USDC from own seller test wallet to own buyer test wallet, then reran successfully.",
+  "refillSignature": "463cE2PboHRTaCFmjff63SWrisjhLTraNjdRHF4KWL9fgQpFK6z4evY1VmwMouVFfC2EqRNnigYxp4wkH8qth9pF"
+}

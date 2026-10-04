@@ -1,17 +1,24 @@
 {
-  "at": "2026-10-04T15:44:39.444Z",
+  "at": "2026-10-04T19:56:31.923Z",
   "url": "https://pipicachu.vercel.app",
   "health": {
     "app": "pipicachu",
-    "version": "0.3.0",
+    "version": "0.4.0",
     "product": "escrow",
     "cluster": "devnet",
     "programId": "4Xds5m5JtWR8HbNLdGeF7e3Qh3akKMHwMfjKsQeVXnrb",
-    "schemaVersion": 3,
+    "schemaVersion": 4,
+    "feeVersion": 1,
+    "platformTreasury": "CXjKGEBNTTotzoF26nGPfAG4AFicGgP72SMqUQKY1pJN",
+    "fees": {
+      "arbitratorBps": 100,
+      "platformBps": 100,
+      "refundBps": 0
+    },
     "arbitratorCount": 1,
     "mint": "4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU",
     "deployed": true,
-    "commit": "114df7bd697f1f4d5c7a75c308a6812a4a6123ea",
+    "commit": "b6176d3c169c2e1bf68293b46ad8baa03c117e7d",
     "mainnetWrites": false,
     "serverCustody": false,
     "subjectiveSlashing": false,
@@ -26,15 +33,31 @@
     "limiter": "per-instance-best-effort",
     "upgradeAuthority": "retained-for-devnet-demo"
   },
-  "checks": [
-    "landing",
-    "demo link",
-    "real completed deal",
-    "VI/EN",
-    "375/768/1024/1440 overflow",
-    "RPC read finalized",
-    "executable program"
+  "routes": [
+    {
+      "path": "/",
+      "status": 200
+    },
+    {
+      "path": "/deals/new",
+      "status": 200
+    },
+    {
+      "path": "/admin",
+      "status": 200
+    },
+    {
+      "path": "/demo",
+      "status": 200
+    },
+    {
+      "path": "/guide",
+      "status": 200
+    },
+    {
+      "path": "/privacy",
+      "status": 200
+    }
   ],
-  "pageErrors": [],
-  "walletSigning": "not covered by read-only smoke"
+  "devnetGenesisVerified": true
 }

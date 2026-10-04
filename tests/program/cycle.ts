@@ -569,7 +569,7 @@ const report = {
 };
 fs.mkdirSync("docs/evidence", { recursive: true });
 fs.writeFileSync(
-  `docs/evidence/${live ? "devnet" : "local"}-escrow-cycle.json`,
+  `docs/evidence/${live ? "devnet-program-checks" : "local-escrow-cycle"}.json`,
   JSON.stringify(report, null, 2),
 );
 if (live)

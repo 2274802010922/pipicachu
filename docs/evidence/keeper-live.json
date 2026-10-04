@@ -1,18 +1,20 @@
 {
-  "at": "2026-10-04T15:46:21.355Z",
+  "at": "2026-10-04T19:55:21.746Z",
   "network": "devnet",
-  "workflowRun": "https://github.com/2274802010922/pipicachu/actions/runs/37214074644",
+  "workflowRun": "https://github.com/2274802010922/pipicachu/actions/runs/37230007638",
   "trigger": "workflow_dispatch (service test); recurring schedule configured separately",
   "keeper": "CHSZY4SQiRX8EyGfeW7hkp2MqYWUcgC6rp9pwqmCaijc",
   "payout": {
-    "deal": "AwWrHWtKhrgutvB75Tt6LjDjbVf32WmSYYShxWUhs2g4",
-    "signature": "5fWd5HQyr7jJSpvhgGPmt52Lcd6gdLWPJF812BaR8EH5iPTJ3m2iSiYR3T5SDgKqvy3i9htXZ72TzHp5AVzUhPkZ",
+    "deal": "HHw3ciYsN7UFAayBoSjMCUDJfMpQN65XWjmZH7i3oL8F",
+    "signature": "2T9QqcZeb2uLXDs1bPWvzBkpda4wgsnpWRxivCF1HYMD973ZnHjhudUnhGUqfRJrWuhcqgMPXFgiwijtCpmXqymM",
     "state": "completed"
   },
-  "sellerReceivedAtomic": "990000",
+  "sellerReceivedAtomic": "980000",
+  "platformFeeAtomic": "10000",
+  "platformTreasury": "CXjKGEBNTTotzoF26nGPfAG4AFicGgP72SMqUQKY1pJN",
   "arbitratorFeeAtomic": "10000",
   "payerVerifiedAsKeeper": true,
-  "disputedDealUntouchedBeforeCleanup": "iuC9Rt86GbMv1DqMebGEvMLzt5bk1PYkYeqmgVdHJcv",
+  "disputedDealUntouchedBeforeCleanup": "EqX4bvAbtpnrSVoUGa5GZK9TvWzbEw7nyhqJVYCj7Jdt",
   "scope": "No buyer confirmation or seller finalize; keeper signed the payout. Not actual Phantom or exact scheduling SLA.",
-  "disputeCleanupRefundSignature": "niRfwxxmAaMSZ6MryW7eyX2eTWKUUMMywxAuzjWobA3BaUg836WsGRcx5MPf54fbxqFBKcT1xXof5FfS8J8iZpf"
+  "disputeCleanupRefundSignature": "5sqHXtbzfTBSfD1wieSgPQ4K8W9UcUYjrJUyLcsMjtHyaBNrv9B4yu9PsUK8TDbBFVQNDPG9pq344xWsJMwT9Y7v"
 }

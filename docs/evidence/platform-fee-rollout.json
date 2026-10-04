@@ -150,5 +150,18 @@
   "legacyFeeVersion": 0,
   "legacySellerAtomic": "990000",
   "legacyArbitratorAtomic": "10000",
-  "legacyPlatformAtomic": "0"
+  "legacyPlatformAtomic": "0",
+  "independentlyVerifiedAt": "2026-10-04T19:52:12.885Z",
+  "legacyTransfers": [
+    {
+      "destination": "J87drs4SD6ZRG2pJZpft1sYSZqrGJ7TWgeFGvm8UyAEu",
+      "amount": "990000"
+    },
+    {
+      "destination": "CRGDNamp6qRG31RFmWxSxSoKeT3GaLzpzqro7vh9dNfu",
+      "amount": "10000"
+    }
+  ],
+  "binarySha256": "cefc482eeb4d2b7b3f6cece0e44a637ac7e7639d805abb21a6f977546166492e",
+  "upgradeSignature": "4r5J2gPXpkQDwhrkAWK2ByvR36PymM8YKmU128yYmu5f1u6h9A5yNs4gNsrdbphAYkwnkmb3bV6r74jkZN23qYdB"
 }

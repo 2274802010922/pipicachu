@@ -141,6 +141,11 @@ for (const [title, expected, vi, en] of cases) {
       assert.equal(moved.get(buyer), d.amount);
       assert.equal(moved.get(seller) || 0n, 0n);
       assert.equal(moved.get(arb) || 0n, 0n);
+      assert.equal(
+        moved.size,
+        1,
+        "Refund must only transfer principal to buyer",
+      );
     }
     receipt = {
       scenario: title,
@@ -148,6 +153,9 @@ for (const [title, expected, vi, en] of cases) {
       signature: sig.signature,
       state: d.state,
       principalAtomic: d.amount.toString(),
+      platformFeeAtomic:
+        expected === "completed" ? d.platformFee.toString() : "0",
+      feeVersion: d.feeVersion,
       transfers: [...moved].map(([destination, n]) => ({
         destination,
         amount: n.toString(),
@@ -172,13 +180,14 @@ fs.writeFileSync(
     {
       at: new Date().toISOString(),
       network: "devnet",
-      schemaVersion: 3,
+      schemaVersion: 4,
+      platformTreasury: treasury.toBase58(),
       arbitratorCount: 1,
       programId: PROGRAM_ID.toBase58(),
       method:
-        "Independent finalized RPC receipts, fixed expected scenarios and exact vault transfer amounts. Not a full uninterrupted live negative-test cycle.",
+        "Independent finalized RPC receipts, fixed expected scenarios and exact vault transfer amounts. This receipt verifier does not execute negative checks; see the separate program execution evidence.",
       liveScenarioCount: 6,
-      localProgramCheckCount: 38,
+      localProgramCheckCount: 39,
       receipts,
       activeDealCount: active.length,
     },

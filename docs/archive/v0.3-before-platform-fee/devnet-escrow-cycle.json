@@ -1,33 +1,26 @@
 {
-  "at": "2026-10-04T19:53:11.503Z",
+  "at": "2026-10-04T13:51:27.199Z",
   "network": "devnet",
-  "schemaVersion": 4,
-  "platformTreasury": "CXjKGEBNTTotzoF26nGPfAG4AFicGgP72SMqUQKY1pJN",
+  "schemaVersion": 3,
   "arbitratorCount": 1,
   "programId": "4Xds5m5JtWR8HbNLdGeF7e3Qh3akKMHwMfjKsQeVXnrb",
-  "method": "Independent finalized RPC receipts and exact vault transfer amounts. This verifier does not execute negative checks; see devnet-program-execution.json.",
+  "method": "Independent finalized RPC receipts, fixed expected scenarios and exact vault transfer amounts. Not a full uninterrupted live negative-test cycle.",
   "liveScenarioCount": 6,
-  "localProgramCheckCount": 39,
+  "localProgramCheckCount": 38,
   "receipts": [
     {
       "scenario": "buyer confirmation",
-      "deal": "5qwtsdycSpcoJzx5iFh85E7tSe9gbHBA27wJnrRVnMMg",
-      "signature": "5KvuaLdUXsvoxrRM8MhKkhaEA8i53kUEAhVqWRTY535Y4Jg4R13UPphtrzUwv9xTzBaEgPwDaYpb5KrPEAMkTc5w",
+      "deal": "CaNbNkHr1JxCScnQBy4gdazGmi5NiKi3CHhVrh2163X2",
+      "signature": "3b4ZqEnRnwGwA7S4kkC3jBNnJ55Ycw5iGRxSyqr7ZZ4vwMh1Q8ZEy7NdMGsBNAsDju3E1xfdtKsLjVXS951jDsLz",
       "state": "completed",
       "principalAtomic": "2000000",
-      "platformFeeAtomic": "20000",
-      "feeVersion": 1,
       "transfers": [
         {
           "destination": "J87drs4SD6ZRG2pJZpft1sYSZqrGJ7TWgeFGvm8UyAEu",
-          "amount": "1960000"
+          "amount": "1980000"
         },
         {
           "destination": "CRGDNamp6qRG31RFmWxSxSoKeT3GaLzpzqro7vh9dNfu",
-          "amount": "20000"
-        },
-        {
-          "destination": "8Sf4GdWLnY7eP6qAsewJPaWbNzDpkgTvpkrRAUNbRDks",
           "amount": "20000"
         }
       ],
@@ -35,23 +28,17 @@
     },
     {
       "scenario": "review timeout",
-      "deal": "AUUemvyniRxriwnJbLqntj9ko2Pe3bbYHHZd8Nb34Mzt",
-      "signature": "5ehAZ8nMFyfViXGVPkYfuohScz9uCE5pYbYTm92Vbp4zN3BmwezgGregVaCcG7Wn7eTFNCS8dYhFVrTr4Js5eAHZ",
+      "deal": "AXJj2qwZxxoNgCPH44jATs4WbNTLUfRsNvHzpWu8oFJY",
+      "signature": "4Lo3zndXzJFq8KiJDxm1xSbULdLiq2Hs43SJtP1Dw857iTBDq1VGK3jtgdnnNCsqLxmXoB4pqpQ2d1q4tYS15Ark",
       "state": "completed",
       "principalAtomic": "2000000",
-      "platformFeeAtomic": "20000",
-      "feeVersion": 1,
       "transfers": [
         {
           "destination": "J87drs4SD6ZRG2pJZpft1sYSZqrGJ7TWgeFGvm8UyAEu",
-          "amount": "1960000"
+          "amount": "1980000"
         },
         {
           "destination": "CRGDNamp6qRG31RFmWxSxSoKeT3GaLzpzqro7vh9dNfu",
-          "amount": "20000"
-        },
-        {
-          "destination": "8Sf4GdWLnY7eP6qAsewJPaWbNzDpkgTvpkrRAUNbRDks",
           "amount": "20000"
         }
       ],
@@ -59,12 +46,10 @@
     },
     {
       "scenario": "missed delivery",
-      "deal": "HgBn4kdV3Z4qFyHd1erigv5RztpdcVFj9kkrPrs6S4Yt",
-      "signature": "5m5yfw4eTUSTFqJjq3Q6k16iJXCrKiLBfw65eAUZ9X4biZsZTMJMgusFZ9F6dUdi3wfonHYg8HmeDpVEhJKoUq44",
+      "deal": "4z9UYuPSp3yt2mncVLwUSEBeRwZcKDDE4UoMWVj8tGKv",
+      "signature": "WgeHX2YQkVRWtPKz2gQnEmy2QzMRF1XXWaQhrwtNWd1v6L5p3WAeVTfpZpUybgUspJbGMzwM86CvjjozaBdk1A1",
       "state": "refunded",
       "principalAtomic": "2000000",
-      "platformFeeAtomic": "0",
-      "feeVersion": 1,
       "transfers": [
         {
           "destination": "533jfUJo7xPRaTa36e8F1wxWpqhtDsuYUc5cAyTuN1BT",
@@ -75,23 +60,17 @@
     },
     {
       "scenario": "arbitrator pays seller",
-      "deal": "J35tBtpvNPEco9cPy4tQSPdjxzi3b9GvySpn7cC1zQpd",
-      "signature": "4UrYPnKu1DSkWoFYPJgc9jc3HsCzFkFti3zw6fLJjvPpS2By88U9geeL5KQCJW17vQne2nFS9axDo27KEUQypRF7",
+      "deal": "GJWNFWw5DMB6fXLoJnwxqP32B7wuSR2zWCMFDAbRwvnu",
+      "signature": "4BY7Xxw299FfRbs999qwc9EtYPHREQJQK9YFgXAsSLZnVyYkZfcm82VSrroo7NPeTpcHzb4QmoNNX7mev8wbmKBz",
       "state": "completed",
       "principalAtomic": "2000000",
-      "platformFeeAtomic": "20000",
-      "feeVersion": 1,
       "transfers": [
         {
           "destination": "J87drs4SD6ZRG2pJZpft1sYSZqrGJ7TWgeFGvm8UyAEu",
-          "amount": "1960000"
+          "amount": "1980000"
         },
         {
           "destination": "CRGDNamp6qRG31RFmWxSxSoKeT3GaLzpzqro7vh9dNfu",
-          "amount": "20000"
-        },
-        {
-          "destination": "8Sf4GdWLnY7eP6qAsewJPaWbNzDpkgTvpkrRAUNbRDks",
           "amount": "20000"
         }
       ],
@@ -99,12 +78,10 @@
     },
     {
       "scenario": "arbitrator refunds buyer",
-      "deal": "5BFfMQBF1caR18JXwQQFCv9XMUJDw7oQAqyHJStg5oqY",
-      "signature": "5NdWnFHLX4xvKVPebpR3QUh58YfPWPLnWbwY7o9aE8dMB3TCLKAJE9WGdSZdKKtZHREh8cygxkJUKZa2p8PYQZJc",
+      "deal": "AabDnwgz7iDVRVrHWJcMkXa5cehnbAbAkH4g1ww8Vr4k",
+      "signature": "5x8n6enkz8hYDpbZUfWLdHQ4au3CgyuHXp9AQat446jeE1Rjq9Wbx73ex1whnwFA7NPM1QEQZ5wTRjW8juDbCodH",
       "state": "refunded",
       "principalAtomic": "2000000",
-      "platformFeeAtomic": "0",
-      "feeVersion": 1,
       "transfers": [
         {
           "destination": "533jfUJo7xPRaTa36e8F1wxWpqhtDsuYUc5cAyTuN1BT",
@@ -115,12 +92,10 @@
     },
     {
       "scenario": "mutual resolution after arbitration timeout",
-      "deal": "5Vhb3F52xc7bwfTPc9gt26fBgG3jcZ2rrbCzErYkUSSp",
-      "signature": "5jqhC11hUq6eHNrSG63z2Th7BpvwTfqSkrMNTpbwfkpHiYxifh3krWvHyuqiGkeRnAyUnn3cFjQHMurNp2wSsKWJ",
+      "deal": "GqELXQne5Js1VPebu3szg7wuc5vioESnjTtUFz1BQ9fH",
+      "signature": "5PmthoCsiQTCQUz6vEwdyG3mrKxB6CRkJ3iNScVsA2NzTBzpu5vrTxKz7RXoozvzcmhTMfkwKBWnzScK8HqVdzYW",
       "state": "refunded",
       "principalAtomic": "2000000",
-      "platformFeeAtomic": "0",
-      "feeVersion": 1,
       "transfers": [
         {
           "destination": "533jfUJo7xPRaTa36e8F1wxWpqhtDsuYUc5cAyTuN1BT",

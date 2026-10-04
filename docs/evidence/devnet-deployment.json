@@ -1,11 +1,12 @@
 {
-  "network": "devnet",
-  "schemaVersion": 3,
-  "arbitratorCount": 1,
   "programId": "4Xds5m5JtWR8HbNLdGeF7e3Qh3akKMHwMfjKsQeVXnrb",
+  "network": "devnet",
   "mint": "4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU",
-  "signature": "2nQbHoVdxz585ihbcNBVMiaTXfNNMhMgMm5bnAHu6RJstU58sHsiSoyaQBUfi56CAjfx65TQpEPwoH7zsjKKcyyS",
-  "upgradeAuthority": "DwTKmg68k39b8jZWt1CHypfoPs5JuJsuP88SfKcbW3uj",
-  "legacyProgramId": "HwsHDnbuZbXZtVFvgGkZpzAVEAQN3SYJCfZzUa18Ho5V",
-  "legacyProgramNotUpgraded": true
+  "schemaVersion": 4,
+  "feeVersion": 1,
+  "treasury": "CXjKGEBNTTotzoF26nGPfAG4AFicGgP72SMqUQKY1pJN",
+  "feeConfig": "4sXcPGCiZRcjmKzFxssk7duiRZKAF9MAhMJwB6jwdVRR",
+  "initializeSignature": "3SuQsp31vwT4821LiQiCca2iCmcSHxCoaYvuZfwkibFvUE8XAxEzXGWf1feSDWFitrX1yYESDwwCatDjwvjfjaNu",
+  "upgradeSignature": "4r5J2gPXpkQDwhrkAWK2ByvR36PymM8YKmU128yYmu5f1u6h9A5yNs4gNsrdbphAYkwnkmb3bV6r74jkZN23qYdB",
+  "upgradeAuthorityRetained": true
 }

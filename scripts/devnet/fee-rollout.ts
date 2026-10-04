@@ -9,16 +9,19 @@ import {
   Transaction,
   sendAndConfirmTransaction,
 } from "@solana/web3.js";
+import { getAssociatedTokenAddressSync } from "@solana/spl-token";
 import {
   act,
   createDealIx,
   dealAddress,
+  decodeDeal,
   digest,
   FEE_CONFIG,
   fundIx,
   instruction,
   key,
   PROGRAM_ID,
+  MINT,
   readDeal,
   readFeeTreasury,
   settleIxs,
@@ -164,4 +167,71 @@ if (phase === "legacy") {
     "Immutable treasury configured; legacy deal completed without platform fee",
     treasury.toBase58(),
   );
-} else throw new Error("Use legacy before upgrade, initialize after upgrade");
+} else if (phase === "verify") {
+  const report = JSON.parse(fs.readFileSync(path, "utf8"));
+  const tx = await c.getParsedTransaction(report.legacyPayoutSignature, {
+    commitment: "finalized",
+    maxSupportedTransactionVersion: 0,
+  });
+  assert.ok(tx?.meta && !tx.meta.err);
+  const moved = new Map<string, bigint>();
+  for (const inner of tx.meta.innerInstructions || [])
+    for (const ix of inner.instructions) {
+      if (!("parsed" in ix) || ix.parsed.type !== "transferChecked") continue;
+      const info = ix.parsed.info;
+      assert.equal(info.mint, MINT.toBase58());
+      moved.set(
+        info.destination,
+        (moved.get(info.destination) || 0n) + BigInt(info.tokenAmount.amount),
+      );
+    }
+  assert.equal(
+    moved.get(getAssociatedTokenAddressSync(MINT, seller.publicKey).toBase58()),
+    990_000n,
+  );
+  assert.equal(
+    moved.get(getAssociatedTokenAddressSync(MINT, arb.publicKey).toBase58()),
+    10_000n,
+  );
+  assert.equal(
+    moved.get(getAssociatedTokenAddressSync(MINT, treasury).toBase58()) || 0n,
+    0n,
+  );
+  const legacyAccounts = await c.getMultipleAccountsInfo(
+    report.legacySnapshot.map(
+      (before: { address: string }) => new PublicKey(before.address),
+    ),
+  );
+  for (let i = 0; i < report.legacySnapshot.length; i++) {
+    const before = report.legacySnapshot[i];
+    const account = legacyAccounts[i];
+    assert.ok(account);
+    assert.ok(account.owner.equals(PROGRAM_ID));
+    const d = await decodeDeal(before.address, account.data);
+    assert.equal(d.feeVersion, 0);
+    assert.equal(d.platformFee, 0n);
+  }
+  fs.writeFileSync(
+    path,
+    JSON.stringify(
+      {
+        ...report,
+        independentlyVerifiedAt: new Date().toISOString(),
+        legacyTransfers: [...moved].map(([destination, amount]) => ({
+          destination,
+          amount: amount.toString(),
+        })),
+        binarySha256:
+          "cefc482eeb4d2b7b3f6cece0e44a637ac7e7639d805abb21a6f977546166492e",
+        upgradeSignature:
+          "4r5J2gPXpkQDwhrkAWK2ByvR36PymM8YKmU128yYmu5f1u6h9A5yNs4gNsrdbphAYkwnkmb3bV6r74jkZN23qYdB",
+      },
+      null,
+      2,
+    ),
+  );
+  console.log("Legacy finalized transfers and all old fee snapshots verified");
+} else
+  throw new Error(
+    "Use legacy before upgrade, initialize after upgrade, verify for finalized evidence",
+  );

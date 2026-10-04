@@ -51,9 +51,9 @@ Chương trình: [kiến trúc](docs/architecture/README.md), [kiểm thử](doc
 
 ![Giao dịch escrow Devnet đã trả người bán](docs/evidence/screenshots/completed-vi.png)
 
-v0.3: 6 flow / 38 kiểm tra chương trình local; 6 kịch bản Devnet đã đối chiếu receipt finalized và đúng số tiền chuyển từ vault. Web có 23 unit/IDL tests và 7 browser tests. Luồng ký trên website local và Vercel đã chạy với provider test, không phải kiểm Phantom extension thật. CI web/chương trình đã xanh; xem phạm vi bằng chứng bên dưới.
+v0.4: deal mới chia 98% seller + 1% trọng tài + 1% hệ thống; refund nguyên principal. Deal cũ giữ phí 1%. Ví hệ thống: `CXjKGEBNTTotzoF26nGPfAG4AFicGgP72SMqUQKY1pJN` (USDC Devnet).
 
-Flow hiện tại có keeper tự trả tiền sau hạn không khiếu nại. [Bằng chứng service](docs/evidence/keeper-live.json) có signer keeper thật trên Devnet; không buyer/seller ký thêm, dispute không bị chi. Web hiện có 45 unit tests và 8 browser tests. Lịch khoảng 5 phút/lượt có thể bị trễ; run nghiệm thu được kích hoạt qua workflow_dispatch.
+53 unit tests, 17 browser tests và 39 executable program checks đã pass. Devnet đã chạy trọn 39 checks với 6 kịch bản; xem [bằng chứng](docs/evidence/README.md) cho receipt, chia phí, legacy compatibility, keeper và phạm vi browser. Provider test không phải Phantom extension thật. Không cam kết payout đúng giây.
 
 | Nội dung                 | Đường dẫn                                              |
 | ------------------------ | ------------------------------------------------------ |

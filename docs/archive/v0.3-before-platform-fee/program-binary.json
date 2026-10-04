@@ -1,0 +1,10 @@
+{
+  "network": "devnet",
+  "schemaVersion": 3,
+  "arbitratorCount": 1,
+  "programId": "4Xds5m5JtWR8HbNLdGeF7e3Qh3akKMHwMfjKsQeVXnrb",
+  "buildSha256": "4735c14468869d667b1963bf101745e6e5ee01466467a69bbe21717f2cfe038a",
+  "dumpSha256": "4735c14468869d667b1963bf101745e6e5ee01466467a69bbe21717f2cfe038a",
+  "exactBinaryMatch": true,
+  "independentAudit": false
+}

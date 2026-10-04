@@ -1,13 +1,14 @@
-# Bằng chứng v0.3 — một trọng tài
+# Bằng chứng v0.4 — phí hệ thống
 
-Chỉ dùng receipt/schema của Program ID 4Xds5m5JtWR8HbNLdGeF7e3Qh3akKMHwMfjKsQeVXnrb để đánh giá bản hiện tại.
+Deal mới: seller 98%, trọng tài 1%, hệ thống 1%; refund nguyên principal. Treasury `CXjKGEBNTTotzoF26nGPfAG4AFicGgP72SMqUQKY1pJN`. Chỉ Devnet.
 
-Local program: [6 flow / 38 checks](local-escrow-cycle.json) pass. Devnet: [6 kịch bản finalized, đối chiếu số tiền từ vault](devnet-escrow-cycle.json). Script negative-test live gặp RPC 429; không nhận đó là 38 checks live pass. [Browser local](local-browser-wallet-cycle.json), [browser Vercel](browser-wallet-cycle.json) ký flow bằng provider test, không phải Phantom thật. [Vercel smoke](vercel-smoke.json) pass; [CI 37207354325](https://github.com/2274802010922/pipicachu/actions/runs/37207354325) xanh cả web/program.
+- [Rollout và tương thích legacy](platform-fee-rollout.json): tạo/nạp/bàn giao deal trước upgrade, confirm sau upgrade; finalized transfer 990000 seller, 10000 arb, 0 platform. Toàn bộ fee snapshot cũ giữ nguyên.
+- [6 receipt finalized](devnet-escrow-cycle.json): buyer confirm, timeout, refund quá hạn giao, arb trả seller/hoàn buyer, đồng thuận hoàn buyer. Đối chiếu exact transfer từ vault, platform fee và refund chỉ một destination.
+- [39 checks Devnet](devnet-program-execution.json): rerun thành công sau khi bổ sung USDC giữa các ví test riêng. Summary terminal được ghi riêng; không giả là raw report từng assertion.
+- [Local executable checks](local-escrow-cycle.json): 39 checks, synthetic mint được ghi rõ. Native Rust kiểm layout legacy 512-byte terms; client kiểm decoder fee0.
+- [Keeper thật](keeper-live.json): service run 37230007638, signer keeper, 980000 seller +10000 arb +10000 hệ thống; disputed không bị chi, rồi được arb hoàn fixture. [Schedule run 37225785710](https://github.com/2274802010922/pipicachu/actions/runs/37225785710) đã chạy tự nhiên thành công trước upgrade. Không bảo đảm SLA đúng giây.
+- [Browser Vercel](browser-wallet-cycle.json): create → accept → fund → deliver → reject giữ state → confirm; axe, VI/EN, không localStorage. Injected provider, **không phải Phantom extension thật**. [Ảnh kết quả](screenshots/completed-vi.png) hiển thị 0,98 USDC nhận /0,02 phí.
+- [Smoke production](vercel-smoke.json): health, treasury, routes và genesis Devnet. [CI 37229653915](https://github.com/2274802010922/pipicachu/actions/runs/37229653915) pass web và program. Web 53 unit/17 browser, responsive 375/768/1024/1440.
+- [Binary](program-binary.json) dump/cmp/SHA256 khớp; [deployment](devnet-deployment.json) giữ Program ID, upgrade authority còn giữ cho demo.
 
-[Binary](program-binary.json) khớp byte-for-byte program mới, [deployment](devnet-deployment.json), [phục hồi test bị gián đoạn](interrupted-run-recovery.json), [rút cọc legacy](legacy-bond-recovery.json).
-
-[Keeper live](keeper-live.json): workflow service trên GitHub Actions ký finalize bằng ví keeper, payout finalized 0,99 USDC seller + 0,01 fee; buyer/seller không ký thêm. Deal disputed được giữ nguyên trong lượt scan, sau đó trọng tài hoàn fixture. Run dùng workflow_dispatch để nghiệm thu worker; lịch 5 phút đã active nhưng chưa nhận là đã quan sát tick schedule tự nhiên hoặc SLA đúng giờ.
-
-[Bond preparation](bond-preparation.json): top-up 0,1 USDC và accept trong cùng transaction Devnet, profile đủ cọc; chưa reserve trước buyer fund. CLI signer, không phải Phantom. UI test synthetic kiểm thiếu 0,5 USDC, đúng bước 2, đúng wallet, VI/EN/axe và buyer không fund khi thiếu cọc.
-
-Toàn bộ bằng chứng bản hai trọng tài nằm ở [archive v0.2](../archive/v0.2-two-arbitrators/README.md). Program cũ giữ nguyên để không đổi ABI các account cũ; cọc test đã rút về ví gốc, không có active deal trước migration.
+[Receipt v0.3 phí cũ](../archive/v0.3-before-platform-fee/README.md) và [v0.2 hai trọng tài](../archive/v0.2-two-arbitrators/README.md) là lịch sử; không dùng để khẳng định kiểm phí mới. Không có audit độc lập hoặc Mainnet nghiệm thu.

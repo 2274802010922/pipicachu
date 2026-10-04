@@ -2,32 +2,32 @@
   "arbitrator": "Ht5k38ysGyt2VKoddxbACCeLoVngQFojNeXzACGz9dEP",
   "deals": [
     {
-      "address": "CaNbNkHr1JxCScnQBy4gdazGmi5NiKi3CHhVrh2163X2",
+      "address": "5qwtsdycSpcoJzx5iFh85E7tSe9gbHBA27wJnrRVnMMg",
       "vi": "Buyer xác nhận → trả seller",
       "en": "Buyer confirms → seller paid"
     },
     {
-      "address": "AXJj2qwZxxoNgCPH44jATs4WbNTLUfRsNvHzpWu8oFJY",
+      "address": "AUUemvyniRxriwnJbLqntj9ko2Pe3bbYHHZd8Nb34Mzt",
       "vi": "Hết hạn kiểm tra → giải ngân",
       "en": "Review deadline → release"
     },
     {
-      "address": "4z9UYuPSp3yt2mncVLwUSEBeRwZcKDDE4UoMWVj8tGKv",
+      "address": "HgBn4kdV3Z4qFyHd1erigv5RztpdcVFj9kkrPrs6S4Yt",
       "vi": "Không bàn giao → hoàn buyer",
       "en": "Missed delivery → refund"
     },
     {
-      "address": "GJWNFWw5DMB6fXLoJnwxqP32B7wuSR2zWCMFDAbRwvnu",
+      "address": "J35tBtpvNPEco9cPy4tQSPdjxzi3b9GvySpn7cC1zQpd",
       "vi": "Tranh chấp → trọng tài trả seller",
       "en": "Dispute → seller paid"
     },
     {
-      "address": "AabDnwgz7iDVRVrHWJcMkXa5cehnbAbAkH4g1ww8Vr4k",
+      "address": "5BFfMQBF1caR18JXwQQFCv9XMUJDw7oQAqyHJStg5oqY",
       "vi": "Tranh chấp → trọng tài hoàn buyer",
       "en": "Dispute → buyer refunded"
     },
     {
-      "address": "GqELXQne5Js1VPebu3szg7wuc5vioESnjTtUFz1BQ9fH",
+      "address": "5Vhb3F52xc7bwfTPc9gt26fBgG3jcZ2rrbCzErYkUSSp",
       "vi": "Trọng tài hết hạn → hai bên đồng ý hoàn tiền",
       "en": "Arbitrator expires → mutual refund"
     }
