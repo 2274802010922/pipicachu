@@ -1,6 +1,6 @@
 # Trạng thái — 04/10/2026
 
-User yêu cầu bỏ trọng tài phụ. v0.3 chỉ có buyer, seller, arbitrator; một cọc, một accept và một vòng xử tranh chấp. Hết hạn trọng tài: buyer đề nghị, seller đồng ý; không đồng thuận tiền vẫn khóa. Không phạt xử sai/keeper/Mainnet.
+User yêu cầu bỏ trọng tài phụ. v0.3 chỉ có buyer, seller, arbitrator; một cọc, một accept và một vòng xử tranh chấp. Hết hạn trọng tài: buyer đề nghị, seller đồng ý; không đồng thuận tiền vẫn khóa. Không phạt xử sai/Mainnet. Keeper được bổ sung theo flow cuối ở bên dưới.
 
 ABI thay đổi: dùng Program ID mới 4Xds5m5JtWR8HbNLdGeF7e3Qh3akKMHwMfjKsQeVXnrb, không nâng cấp chương trình v0.2. Mint Circle Devnet không đổi. Đã kiểm không có active deal legacy, rút cọc hai ví test cũ về đúng ví gốc, giữ receipt/IDL tại docs/archive/v0.2-two-arbitrators.
 
@@ -16,7 +16,9 @@ Web: 23 unit/IDL, 7 browser tests, build/lint/typecheck pass. Browser local và 
 
 Seller tạo link; buyer nạp USDC Devnet; seller giao hàng/đánh dấu đã giao; buyer xác nhận hoặc khiếu nại. Không seller cọc, không buyer tạo deal. Một trọng tài và cọc/consent trước funding giữ nguyên để không khóa cọc khi chưa nhận trách nhiệm.
 
-Thêm keeper service GitHub Actions lịch khoảng 5 phút, wallet riêng chỉ SOL Devnet, secret repo đã cấu hình. Không key custodial trên Vercel. Keeper chỉ finalize Delivered quá review deadline, không release dispute. UI chờ tự trả tiền và bỏ nút finalize khỏi flow thường. Chưa nghiệm thu service live; đã chuẩn bị một deal expired undisputed và một disputed để kiểm.
+Thêm keeper service GitHub Actions lịch khoảng 5 phút, wallet riêng chỉ SOL Devnet, secret repo đã cấu hình. Không key custodial trên Vercel. Keeper chỉ finalize Delivered quá review deadline, không release dispute. UI chờ tự trả tiền và bỏ nút finalize khỏi flow thường.
+
+Đã nghiệm thu live service run 37214074644 bằng workflow_dispatch: keeper signed/finalized, seller nhận 990000 atomic USDC, arb fee 10000, buyer/seller không gửi confirm/finalize. Disputed fixture giữ principal 1000000 trong lượt scan và được arb refund sau kiểm. Workflow schedule active, chưa quan sát tick schedule tự nhiên; không hứa SLA. Receipt ở keeper-live.json. CI code 114df7b run 37214018306 pass, Vercel smoke đúng SHA/automaticKeeper true.
 
 45 unit tests và 8 browser tests/build pass trước test service. Không đổi Rust/IDL/Program ID; không hứa payout đúng giây, không phạt xử sai.
 

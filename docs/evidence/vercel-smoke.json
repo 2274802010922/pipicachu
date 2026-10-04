@@ -1,5 +1,5 @@
 {
-  "at": "2026-10-04T13:56:39.389Z",
+  "at": "2026-10-04T15:44:39.444Z",
   "url": "https://pipicachu.vercel.app",
   "health": {
     "app": "pipicachu",
@@ -11,11 +11,18 @@
     "arbitratorCount": 1,
     "mint": "4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU",
     "deployed": true,
-    "commit": "aa30d7c15d2d6d8b963ee807db8dfd82b6047be8",
+    "commit": "114df7bd697f1f4d5c7a75c308a6812a4a6123ea",
     "mainnetWrites": false,
     "serverCustody": false,
     "subjectiveSlashing": false,
-    "automaticKeeper": false,
+    "automaticKeeper": true,
+    "keeper": {
+      "configuration": "configured",
+      "intervalMinutes": 5,
+      "wallet": "CHSZY4SQiRX8EyGfeW7hkp2MqYWUcgC6rp9pwqmCaijc",
+      "workflowUrl": "https://github.com/2274802010922/pipicachu/actions/workflows/devnet-keeper.yml",
+      "exactDeadlineGuarantee": false
+    },
     "limiter": "per-instance-best-effort",
     "upgradeAuthority": "retained-for-devnet-demo"
   },

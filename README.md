@@ -53,6 +53,8 @@ Chương trình: [kiến trúc](docs/architecture/README.md), [kiểm thử](doc
 
 v0.3: 6 flow / 38 kiểm tra chương trình local; 6 kịch bản Devnet đã đối chiếu receipt finalized và đúng số tiền chuyển từ vault. Web có 23 unit/IDL tests và 7 browser tests. Luồng ký trên website local và Vercel đã chạy với provider test, không phải kiểm Phantom extension thật. CI web/chương trình đã xanh; xem phạm vi bằng chứng bên dưới.
 
+Flow hiện tại có keeper tự trả tiền sau hạn không khiếu nại. [Bằng chứng service](docs/evidence/keeper-live.json) có signer keeper thật trên Devnet; không buyer/seller ký thêm, dispute không bị chi. Web hiện có 45 unit tests và 8 browser tests. Lịch khoảng 5 phút/lượt có thể bị trễ; run nghiệm thu được kích hoạt qua workflow_dispatch.
+
 | Nội dung                 | Đường dẫn                                              |
 | ------------------------ | ------------------------------------------------------ |
 | Smart contract           | [lib.rs](programs/pipicachu-escrow/src/lib.rs)         |
