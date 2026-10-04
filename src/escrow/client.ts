@@ -19,6 +19,17 @@ export const CONFIG = PublicKey.findProgramAddressSync(
   [Buffer.from("config")],
   PROGRAM_ID,
 )[0];
+export const FEE_CONFIG = PublicKey.findProgramAddressSync(
+  [Buffer.from("platform_fee_v1")],
+  PROGRAM_ID,
+)[0];
+export async function readFeeTreasury(c: Connection): Promise<PublicKey> {
+  const info = await c.getAccountInfo(FEE_CONFIG, "confirmed");
+  if (!info || !info.owner.equals(PROGRAM_ID))
+    throw new Error("PLATFORM_FEE_NOT_CONFIGURED");
+  await assertAccount(info.data, "FeeConfig");
+  return new PublicKey(info.data.subarray(8, 40));
+}
 export const STATES = [
   "created",
   "funded",
@@ -38,6 +49,8 @@ export type Deal = {
   amount: bigint;
   bond: bigint;
   fee: bigint;
+  platformFee: bigint;
+  feeVersion: number;
   createdAt: number;
   fundBy: number;
   deliverySeconds: number;
@@ -206,9 +219,13 @@ export async function decodeDeal(address: string, data: Buffer): Promise<Deal> {
     disputeHash: r.hash(),
     resolutionHash: r.hash(),
     terms: r.text(),
+    platformFee: r.uint(),
+    feeVersion: r.byte(),
   };
   if (
     !d.state ||
+    d.feeVersion > 1 ||
+    (d.feeVersion === 0 && d.platformFee !== 0n) ||
     d.mint !== MINT.toBase58() ||
     dealAddress(new PublicKey(d.seller), d.nonce).toBase58() !== address
   )
@@ -268,6 +285,7 @@ export async function createDealIx(
       key(vaultAddress(d), true),
       key(TOKEN_PROGRAM_ID),
       key(SystemProgram.programId),
+      key(FEE_CONFIG),
     ],
     Buffer.concat([
       u64(nonce),
@@ -321,15 +339,31 @@ export async function settleIxs(
   actor: PublicKey,
   d: Deal,
   args?: Buffer,
+  connection?: Connection,
 ) {
   if (name === "accept_settlement" && args === undefined)
     args = Buffer.from([d.proposal === 1 ? 1 : 0]);
+  const treasury = await readFeeTreasury(
+    connection ||
+      new Connection(
+        process.env.SOLANA_DEVNET_RPC_URL || "https://api.devnet.solana.com",
+      ),
+  );
   const parties = [d.buyer, d.seller, d.arbitrator].map(
     (p) => new PublicKey(p),
   );
   const atas = parties.map((p) => getAssociatedTokenAddressSync(MINT, p));
   const creates = parties.map((p, i) =>
     createAssociatedTokenAccountIdempotentInstruction(actor, atas[i], p, MINT),
+  );
+  const platformAta = getAssociatedTokenAddressSync(MINT, treasury, true);
+  creates.push(
+    createAssociatedTokenAccountIdempotentInstruction(
+      actor,
+      platformAta,
+      treasury,
+      MINT,
+    ),
   );
   const ix = await instruction(
     name,
@@ -341,6 +375,8 @@ export async function settleIxs(
       key(vaultAddress(new PublicKey(d.address)), true),
       ...atas.map((p) => key(p, true)),
       key(TOKEN_PROGRAM_ID),
+      key(FEE_CONFIG),
+      key(platformAta, true),
     ],
     args,
   );

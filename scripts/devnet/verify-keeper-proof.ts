@@ -14,6 +14,7 @@ import {
   settleIxs,
   vaultAddress,
   digest,
+  readFeeTreasury,
 } from "../../src/escrow/client";
 import keeper from "../../src/escrow/keeper-config.json";
 const c = new Connection("https://api.devnet.solana.com", "finalized");
@@ -66,13 +67,19 @@ assert.equal(
   amounts.get(
     getAssociatedTokenAddressSync(MINT, new PublicKey(d.seller)).toBase58(),
   ),
-  990_000n,
+  d.amount - d.fee - d.platformFee,
 );
 assert.equal(
   amounts.get(
     getAssociatedTokenAddressSync(MINT, new PublicKey(d.arbitrator)).toBase58(),
   ),
   10_000n,
+);
+const treasury = await readFeeTreasury(c);
+assert.equal(
+  amounts.get(getAssociatedTokenAddressSync(MINT, treasury, true).toBase58()) ||
+    0n,
+  d.platformFee,
 );
 const dispute = await readDeal(c, contested.address);
 assert.equal(dispute.state, "disputed");
@@ -92,7 +99,8 @@ const report = {
     "workflow_dispatch (service test); recurring schedule configured separately",
   keeper: keeper.wallet,
   payout: receipt,
-  sellerReceivedAtomic: "990000",
+  sellerReceivedAtomic: (d.amount - d.fee - d.platformFee).toString(),
+  platformFeeAtomic: d.platformFee.toString(),
   arbitratorFeeAtomic: "10000",
   payerVerifiedAsKeeper: true,
   disputedDealUntouchedBeforeCleanup: dispute.address,

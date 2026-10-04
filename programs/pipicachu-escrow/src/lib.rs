@@ -8,6 +8,20 @@ const MAX_SECONDS: i64 = 30 * 86400;
 #[program]
 pub mod pipicachu_escrow {
     use super::*;
+    pub fn initialize_fee_config(
+        ctx: Context<InitializeFeeConfig>,
+        treasury: Pubkey,
+    ) -> Result<()> {
+        require_keys_eq!(
+            ctx.accounts.authority.key(),
+            INITIALIZER,
+            EscrowError::Unauthorized
+        );
+        require!(treasury != Pubkey::default(), EscrowError::InvalidTerms);
+        ctx.accounts.fee_config.treasury = treasury;
+        ctx.accounts.fee_config.bump = ctx.bumps.fee_config;
+        Ok(())
+    }
     pub fn initialize(ctx: Context<Initialize>) -> Result<()> {
         require_keys_eq!(
             ctx.accounts.authority.key(),
@@ -109,6 +123,8 @@ pub mod pipicachu_escrow {
         d.amount = amount;
         d.bond = amount.div_ceil(10);
         d.fee = amount / 100;
+        d.platform_fee = amount / 100;
+        d.fee_version = 1;
         d.created_at = Clock::get()?.unix_timestamp;
         d.fund_by = d.created_at + funding_seconds;
         d.delivery_seconds = delivery_seconds;
@@ -280,13 +296,23 @@ fn settle(ctx: Context<Settle>, pay_seller: bool) -> Result<()> {
         &ctx.accounts.buyer_token
     };
     let fee = if pay_seller { d.fee } else { 0 };
+    require!(
+        d.fee_version <= 1 && (d.fee_version != 0 || d.platform_fee == 0),
+        EscrowError::InvalidTerms
+    );
+    let platform_fee = if pay_seller { d.platform_fee } else { 0 };
+    let net = d
+        .amount
+        .checked_sub(fee)
+        .and_then(|value| value.checked_sub(platform_fee))
+        .ok_or(EscrowError::Overflow)?;
     transfer(
         &ctx.accounts.token_program,
         &ctx.accounts.vault,
         destination,
         d.to_account_info(),
         &ctx.accounts.mint,
-        d.amount - fee,
+        net,
         &[seeds],
     )?;
     if fee > 0 {
@@ -302,6 +328,17 @@ fn settle(ctx: Context<Settle>, pay_seller: bool) -> Result<()> {
         )?;
     }
     for a in [&mut ctx.accounts.arbitrator] {
+        if platform_fee > 0 {
+            transfer(
+                &ctx.accounts.token_program,
+                &ctx.accounts.vault,
+                &ctx.accounts.platform_token,
+                d.to_account_info(),
+                &ctx.accounts.mint,
+                platform_fee,
+                &[seeds],
+            )?;
+        }
         a.locked = a.locked.checked_sub(d.bond).ok_or(EscrowError::Overflow)?;
     }
     ctx.accounts.deal.state = if pay_seller {
@@ -387,6 +424,8 @@ pub struct CreateDeal<'info> {
     pub vault: Box<Account<'info, TokenAccount>>,
     pub token_program: Program<'info, Token>,
     pub system_program: Program<'info, System>,
+    #[account(seeds=[b"platform_fee_v1"],bump=fee_config.bump)]
+    pub fee_config: Account<'info, FeeConfig>,
 }
 #[derive(Accounts)]
 pub struct Act<'info> {
@@ -425,11 +464,28 @@ pub struct Settle<'info> {
     #[account(mut, token::mint=mint, constraint=arbitrator_token.owner==deal.arbitrator @ EscrowError::Unauthorized)]
     pub arbitrator_token: Box<Account<'info, TokenAccount>>,
     pub token_program: Program<'info, Token>,
+    #[account(seeds=[b"platform_fee_v1"],bump=fee_config.bump)]
+    pub fee_config: Account<'info, FeeConfig>,
+    #[account(mut,token::mint=mint,constraint=platform_token.owner==fee_config.treasury @ EscrowError::Unauthorized)]
+    pub platform_token: Box<Account<'info, TokenAccount>>,
 }
 #[account]
 pub struct Config {
     pub mint: Pubkey,
     pub bump: u8,
+}
+#[account]
+pub struct FeeConfig {
+    pub treasury: Pubkey,
+    pub bump: u8,
+}
+#[derive(Accounts)]
+pub struct InitializeFeeConfig<'info> {
+    #[account(mut)]
+    pub authority: Signer<'info>,
+    #[account(init,payer=authority,space=8+33,seeds=[b"platform_fee_v1"],bump)]
+    pub fee_config: Account<'info, FeeConfig>,
+    pub system_program: Program<'info, System>,
 }
 #[account]
 pub struct Arbitrator {
@@ -465,6 +521,9 @@ pub struct Deal {
     pub dispute_hash: [u8; 32],
     pub resolution_hash: [u8; 32],
     pub terms: String,
+    // Appended inside existing minimum 28-byte padding; legacy accounts retain zero fee/version.
+    pub platform_fee: u64,
+    pub fee_version: u8,
 }
 #[derive(AnchorSerialize, AnchorDeserialize, Clone, PartialEq, Eq)]
 pub enum State {
@@ -490,4 +549,24 @@ pub enum EscrowError {
     InsufficientBond,
     #[msg("Arithmetic overflow")]
     Overflow,
+}
+
+#[cfg(test)]
+mod compatibility_tests {
+    use super::*;
+    #[test]
+    fn legacy_maximum_terms_decode_without_platform_fee() {
+        let mut legacy=Vec::new();
+        legacy.extend_from_slice(Deal::DISCRIMINATOR);
+        for _ in 0..4 { legacy.extend_from_slice(Pubkey::default().as_ref()); }
+        for value in [42u64,100_000_000,10_000_000,1_000_000] {legacy.extend_from_slice(&value.to_le_bytes());}
+        for value in [1i64,600,300,120,120,0,0,0] {legacy.extend_from_slice(&value.to_le_bytes());}
+        legacy.extend_from_slice(&[0,0,255,0]);legacy.extend_from_slice(&[0u8;96]);
+        legacy.extend_from_slice(&512u32.to_le_bytes());legacy.extend_from_slice(&[b'x';512]);
+        assert_eq!(legacy.len(),848);
+        legacy.resize(876,0);
+        let account=Deal::try_deserialize(&mut &legacy[..]).unwrap();
+        assert_eq!(account.platform_fee,0);assert_eq!(account.fee_version,0);
+        assert_eq!(account.terms.len(),512);assert_eq!(account.amount-account.fee,99_000_000);
+    }
 }

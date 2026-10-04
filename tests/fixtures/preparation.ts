@@ -50,6 +50,7 @@ export function preparationFixture(
   total = 1_500_000n,
   locked = 1_000_000n,
   state = 0,
+  platformFee = 0n,
 ) {
   const terms = Buffer.from(
     "Synthetic browser fixture: 10 USDC deal, 1 USDC bond.",
@@ -79,6 +80,8 @@ export function preparationFixture(
     Buffer.alloc(96),
     len,
     terms,
+    integer(platformFee),
+    Buffer.from([platformFee > 0n ? 1 : 0]),
   ]);
   const padded = Buffer.alloc(876);
   bytes.copy(padded);

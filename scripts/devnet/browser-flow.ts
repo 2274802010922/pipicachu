@@ -131,7 +131,7 @@ await page.getByLabel("Số tiền USDC Devnet").fill("1");
 await page
   .getByLabel("Điều khoản công khai")
   .fill(
-    "Devnet browser test. Deliver a permitted test digital file through the agreed channel; no personal credentials. Buyer pays 1 USDC; seller payout 0.99; intermediary fee 0.01.",
+    "Devnet browser test. Deliver a permitted test digital file through the agreed channel; no personal credentials. Buyer pays 1 USDC; seller payout 0.98; arbitrator fee 0.01; platform fee 0.01.",
   );
 await page.getByRole("checkbox").check();
 await page.getByRole("button", { name: "Tạo và ký bằng ví" }).click();

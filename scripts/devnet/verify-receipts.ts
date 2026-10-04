@@ -7,6 +7,7 @@ import {
   PROGRAM_ID,
   MINT,
   vaultAddress,
+  readFeeTreasury,
 } from "../../src/escrow/client";
 const c = new Connection(
   process.env.SOLANA_DEVNET_RPC_URL || "https://api.devnet.solana.com",
@@ -30,6 +31,7 @@ assert.equal(
 const all = await retry(() =>
   c.getProgramAccounts(PROGRAM_ID, { filters: [{ dataSize: 876 }] }),
 );
+const treasury = await retry(() => readFeeTreasury(c));
 const decoded = await Promise.all(
   all.map((a) => decodeDeal(a.pubkey.toBase58(), a.account.data)),
 );
@@ -118,9 +120,23 @@ for (const [title, expected, vi, en] of cases) {
         new PublicKey(d.arbitrator),
       ).toBase58();
     if (expected === "completed") {
-      assert.equal(moved.get(seller), d.amount - d.fee);
-      assert.equal(moved.get(arb), d.fee);
-      assert.equal(moved.get(buyer) || 0n, 0n);
+      const expectedTransfers = new Map<string, bigint>();
+      for (const [destination, quantity] of [
+        [seller, d.amount - d.fee - d.platformFee],
+        [arb, d.fee],
+        [
+          getAssociatedTokenAddressSync(MINT, treasury, true).toBase58(),
+          d.platformFee,
+        ],
+      ] as [string, bigint][]) {
+        expectedTransfers.set(
+          destination,
+          (expectedTransfers.get(destination) || 0n) + quantity,
+        );
+      }
+      for (const [destination, quantity] of expectedTransfers)
+        assert.equal(moved.get(destination) || 0n, quantity);
+      assert.equal(moved.get(buyer) || 0n, expectedTransfers.get(buyer) || 0n);
     } else {
       assert.equal(moved.get(buyer), d.amount);
       assert.equal(moved.get(seller) || 0n, 0n);

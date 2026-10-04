@@ -30,7 +30,8 @@ import {
   readArbitrator,
   readDeal,
   registerIx,
-  settleIxs,
+  settleIxs as clientSettleIxs,
+  readFeeTreasury,
   vaultAddress,
   PROGRAM_ID,
   amount,
@@ -45,6 +46,13 @@ const connection = new Connection(
     : "http://127.0.0.1:8897",
   "confirmed",
 );
+const settleIxs = (
+  name: string,
+  actor: PublicKey,
+  d: Awaited<ReturnType<typeof readDeal>>,
+  args?: Buffer,
+) => clientSettleIxs(name, actor, d, args, connection);
+const treasury = await readFeeTreasury(connection);
 const genesis = await connection.getGenesisHash();
 if (live) assert.equal(genesis, "EtWTRABZaYq6iMfeYKouRu166VU2xqa1wcaWoxPkrZBG");
 fs.mkdirSync("work/private", { recursive: true });
@@ -158,7 +166,7 @@ async function create(
       n,
       principal,
       times,
-      `Devnet test: ${title}. Buyer pays ${amount(principal)} USDC; seller receives ${amount(principal - principal / 100n)}; fee ${amount(principal / 100n)}. Off-chain test delivery.`,
+      `Devnet test: ${title}. Buyer pays ${amount(principal)} USDC; seller receives ${amount(principal - (principal / 100n) * 2n)}; fee ${amount(principal / 100n)}. Off-chain test delivery.`,
     ),
   ]);
   await expectReject(
@@ -260,6 +268,15 @@ async function settle(
       ).address,
     )
   ).amount;
+  const treasuryAta = await getOrCreateAssociatedTokenAccount(
+    connection,
+    buyer,
+    MINT,
+    treasury,
+    true,
+  );
+  const beforeTreasury = (await getAccount(connection, treasuryAta.address))
+    .amount;
   const sig = await send(
     actor,
     await settleIxs(name, actor.publicKey, d, args),
@@ -297,11 +314,36 @@ async function settle(
     )
   ).amount;
   if (state.state === "completed") {
-    assert.equal(afterSeller - beforeSeller, principal - principal / 100n);
-    assert.equal(afterBuyer - beforeBuyer, 0n);
+    assert.equal(
+      afterSeller - beforeSeller,
+      principal -
+        d.fee -
+        d.platformFee +
+        (treasury.equals(seller.publicKey) ? d.platformFee : 0n),
+    );
+    assert.equal(
+      afterBuyer - beforeBuyer,
+      treasury.equals(buyer.publicKey) ? d.platformFee : 0n,
+    );
+    if (
+      !treasury.equals(buyer.publicKey) &&
+      !treasury.equals(seller.publicKey) &&
+      !treasury.equals(arbitrator.publicKey)
+    )
+      assert.equal(
+        (await getAccount(connection, treasuryAta.address)).amount -
+          beforeTreasury,
+        d.platformFee,
+      );
   } else {
     assert.equal(afterBuyer - beforeBuyer, principal);
     assert.equal(afterSeller - beforeSeller, 0n);
+    if (!treasury.equals(buyer.publicKey) && !treasury.equals(seller.publicKey))
+      assert.equal(
+        (await getAccount(connection, treasuryAta.address)).amount -
+          beforeTreasury,
+        0n,
+      );
   }
   results.push({ scenario: name, signature: sig, detail: state.state });
   console.log("PASS settled", name, state.state);
@@ -333,6 +375,18 @@ redirectedFee.at(-1)!.keys[7].pubkey = getAssociatedTokenAddressSync(
 );
 await expectReject("fee destination cannot be redirected", async () =>
   send(buyer, redirectedFee),
+);
+const redirectedPlatform = await settleIxs(
+  "confirm",
+  buyer.publicKey,
+  deliveredDeal,
+);
+redirectedPlatform.at(-1)!.keys[10].pubkey = getAssociatedTokenAddressSync(
+  MINT,
+  buyer.publicKey,
+);
+await expectReject("platform fee destination cannot be redirected", async () =>
+  send(buyer, redirectedPlatform),
 );
 const wrongVault = await settleIxs("confirm", buyer.publicKey, deliveredDeal);
 wrongVault.at(-1)!.keys[4].pubkey = getAssociatedTokenAddressSync(

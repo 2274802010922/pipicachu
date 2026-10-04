@@ -1,7 +1,13 @@
 import fs from "node:fs";
 import { Keypair, PublicKey } from "@solana/web3.js";
 import { MintLayout, TOKEN_PROGRAM_ID } from "@solana/spl-token";
-import { CONFIG, digest, MINT, PROGRAM_ID } from "../../src/escrow/client";
+import {
+  CONFIG,
+  digest,
+  MINT,
+  PROGRAM_ID,
+  FEE_CONFIG,
+} from "../../src/escrow/client";
 fs.mkdirSync("work/private", { recursive: true });
 fs.mkdirSync("work/validator", { recursive: true });
 const file = "work/private/fixture-signer.json";
@@ -9,6 +15,15 @@ if (!fs.existsSync(file))
   fs.writeFileSync(file, JSON.stringify([...Keypair.generate().secretKey]));
 const buyer = Keypair.fromSecretKey(
   Uint8Array.from(JSON.parse(fs.readFileSync(file, "utf8"))),
+);
+const treasuryFile = "work/private/local-treasury.json";
+if (!fs.existsSync(treasuryFile))
+  fs.writeFileSync(
+    treasuryFile,
+    JSON.stringify([...Keypair.generate().secretKey]),
+  );
+const treasury = Keypair.fromSecretKey(
+  Uint8Array.from(JSON.parse(fs.readFileSync(treasuryFile, "utf8"))),
 );
 const mint = Buffer.alloc(82);
 MintLayout.encode(
@@ -66,4 +81,24 @@ fs.writeFileSync(
 );
 console.log(
   "Synthetic local mint/config written. No mainnet or devnet issuance.",
+);
+fs.writeFileSync(
+  "work/validator/fee-config.json",
+  JSON.stringify(
+    account(
+      FEE_CONFIG,
+      PROGRAM_ID,
+      Buffer.concat([
+        (await digest("account:FeeConfig")).subarray(0, 8),
+        treasury.publicKey.toBuffer(),
+        Buffer.from([
+          PublicKey.findProgramAddressSync(
+            [Buffer.from("platform_fee_v1")],
+            PROGRAM_ID,
+          )[1],
+        ]),
+      ]),
+      1176240,
+    ),
+  ),
 );

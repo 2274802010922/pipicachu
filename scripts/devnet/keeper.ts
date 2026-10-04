@@ -98,7 +98,9 @@ for (const cached of targets.slice(0, 5)) {
     continue;
   }
   const tx = prepareDevnetWalletTransaction(
-    new Transaction().add(...(await settleIxs("finalize", key.publicKey, d))),
+    new Transaction().add(
+      ...(await settleIxs("finalize", key.publicKey, d, undefined, c)),
+    ),
   );
   tx.feePayer = key.publicKey;
   tx.recentBlockhash = (await retry(() => c.getLatestBlockhash())).blockhash;

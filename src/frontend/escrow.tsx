@@ -34,6 +34,7 @@ import { actions } from "@/escrow/policy";
 import deployment from "@/escrow/deployment.json";
 import keeperConfig from "@/escrow/keeper-config.json";
 import { eligibleForAutomaticRelease } from "@/escrow/keeper";
+import { feeBreakdown } from "@/escrow/fees";
 import { bondReadiness } from "@/escrow/bond";
 import { BondStep } from "./components/bond-step";
 import { DealProgress, currentDealStep } from "./components/deal-progress";
@@ -522,14 +523,20 @@ export function CreateDeal() {
         <Notice>
           {preview
             ? t(
-                `Buyer nạp ${amount(preview)} USDC · Seller nhận ${amount(preview - preview / 100n)} · Phí ${amount(preview / 100n)}`,
-                `Buyer pays ${amount(preview)} USDC · Seller gets ${amount(preview - preview / 100n)} · Fee ${amount(preview / 100n)}`,
+                `Buyer nạp ${amount(preview)} USDC · Seller nhận ${amount(preview - (preview / 100n) * 2n)} · Phí ${amount((preview / 100n) * 2n)}`,
+                `Buyer pays ${amount(preview)} USDC · Seller gets ${amount(preview - (preview / 100n) * 2n)} · Fee ${amount((preview / 100n) * 2n)}`,
               )
             : t(
-                "Phí 1% khi trả seller; hoàn tiền không thu phí.",
-                "1% fee on seller payout; refunds have no fee.",
+                "Phí trọng tài 1% + hệ thống 1%; hoàn tiền không thu phí.",
+                "1% arbitrator + 1% platform fee; refunds have no fee.",
               )}
         </Notice>
+        <p className="small">
+          {t(
+            "Phí trọng tài 1% + phí hệ thống 1%",
+            "Arbitrator 1% + platform 1%",
+          )}
+        </p>
         <details>
           <summary>{t("Lưu ý trước khi ký", "Before signing")}</summary>
           <p className="small">
@@ -737,6 +744,7 @@ export function DealView({ id }: { id: string }) {
             Buffer.from([name === "resolve_seller" ? 1 : 0]),
             await digest(evidence),
           ]),
+          connection(),
         );
       }
       if (name.startsWith("propose_"))
@@ -753,7 +761,7 @@ export function DealView({ id }: { id: string }) {
           name,
         )
       )
-        return settleIxs(name, actor, deal);
+        return settleIxs(name, actor, deal, undefined, connection());
       return [await act(name, actor, d)];
     }, refresh);
     setAck(false);
@@ -778,6 +786,7 @@ export function DealView({ id }: { id: string }) {
         <button onClick={() => void refresh()}>{t("Thử lại", "Retry")}</button>
       </>
     );
+  const fees = feeBreakdown(deal.amount, deal.fee, deal.platformFee);
   const readiness = readAt ? bondReadiness(deal.bond, arbitratorProfile) : null;
   const bondReady = !!readiness?.ready;
   const step = currentDealStep(deal, bondReady);
@@ -926,8 +935,8 @@ export function DealView({ id }: { id: string }) {
             : deal.state === "cancelled"
               ? t("Chưa nạp tiền", "No funds deposited")
               : t(
-                  `Người bán nhận ${amount(deal.amount - deal.fee)} · Phí ${amount(deal.fee)}`,
-                  `Seller gets ${amount(deal.amount - deal.fee)} · Fee ${amount(deal.fee)}`,
+                  `Người bán nhận ${amount(fees.sellerNet)} · Phí ${amount(fees.totalFee)}`,
+                  `Seller gets ${amount(fees.sellerNet)} · Fee ${amount(fees.totalFee)}`,
                 )}
         </span>
         {!terminal && deadline > 0 && readAt > 0 && (
@@ -982,7 +991,7 @@ export function DealView({ id }: { id: string }) {
           {terminal ? (
             <p className="result-amount">
               {deal.state === "completed"
-                ? `${amount(deal.amount - deal.fee)} USDC`
+                ? `${amount(fees.sellerNet)} USDC`
                 : deal.state === "refunded"
                   ? `${amount(deal.amount)} USDC`
                   : t("Chưa nạp tiền", "No funds deposited")}{" "}
@@ -1141,12 +1150,34 @@ export function DealView({ id }: { id: string }) {
             <dd>{amount(deal.amount)} USDC</dd>
           </div>
           <div>
-            <dt>{t("Phí trung gian", "Intermediary fee")}</dt>
+            <dt>{t("Tổng phí dịch vụ", "Total service fees")}</dt>
+            <dd>
+              {amount(
+                ["refunded", "cancelled"].includes(deal.state)
+                  ? 0n
+                  : fees.totalFee,
+              )}{" "}
+              USDC
+            </dd>
+          </div>
+          <div>
+            <dt>{t("Phí trọng tài", "Arbitrator fee")}</dt>
             <dd>
               {amount(
                 ["refunded", "cancelled"].includes(deal.state) ? 0n : deal.fee,
               )}{" "}
-              USDC
+              USDC (1%)
+            </dd>
+          </div>
+          <div>
+            <dt>{t("Phí hệ thống pipicachu", "pipicachu platform fee")}</dt>
+            <dd>
+              {amount(
+                ["refunded", "cancelled"].includes(deal.state)
+                  ? 0n
+                  : deal.platformFee,
+              )}{" "}
+              USDC ({deal.feeVersion === 0 ? "0" : "1"}%)
             </dd>
           </div>
           <div>

@@ -1,5 +1,7 @@
 # Bàn giao v0.3 — một trọng tài
 
+Fee-platform WIP: user duyệt tổng 2% (1 arb +1 platform), refund zero. Local code/IDL/UI/keeper/tests đã chuẩn bị, 39 program checks + native legacy-512 compatibility +53 unit/17 browser pass. CHƯA deploy/push; đang cần public treasury wallet user chọn. Không tự chọn treasury hoặc deploy placeholder. Giữ Program ID/layout876, append9 bytes fee/version vào padding; legacy snapshot0 không hồi tố. FeeConfig immutable v1 cần initializer. Xem CURRENT_STATE trước tiếp tục; production hiện vẫn1%.
+
 Đọc CURRENT_STATE, product, architecture và evidence. Không dùng kết quả v0.2 để nhận v0.3 hoàn tất.
 
 Program mới do thay ABI; mint USDC Circle Devnet giữ nguyên. Key riêng work/private/escrow-single-program.json; wallet trọng tài test escrow-arbitrator.json là ví mới của pipicachu từ trước, không phải key Picachu cũ. Private key không đưa Git/Vercel/browser.

@@ -109,3 +109,30 @@ test("keeper wait has no misleading glowing payment button", async ({
   ).toBeVisible();
   await expect(page.locator("main .action-current")).toHaveCount(0);
 });
+test("new fee version shows 98 percent seller net and separate platform fee", async ({
+  page,
+}) => {
+  const fixtures = preparationFixture(1, 2_000_000n, 0n, 4, 100_000n);
+  await page.route("**/api/rpc", async (route) => {
+    const b = route.request().postDataJSON();
+    const result =
+      b.method === "getAccountInfo"
+        ? { context: { slot: 1 }, value: fixtures.deal }
+        : b.method === "getSlot"
+          ? 1
+          : b.method === "getBlockTime"
+            ? fixtureTime
+            : [];
+    await route.fulfill({ json: { jsonrpc: "2.0", id: b.id, result } });
+  });
+  await page.goto(`/deals/${preparationAddress}`);
+  await expect(
+    page.getByRole("heading", { level: 1, name: "Đã trả người bán" }),
+  ).toBeVisible();
+  await expect(page.locator(".result-amount")).toContainText("9.8 USDC");
+  await expect(page.locator(".deal-summary")).toContainText("Phí 0.2");
+  await page.getByText("Điều kiện giao dịch", { exact: true }).click();
+  await expect(
+    page.getByText("Phí hệ thống pipicachu", { exact: true }),
+  ).toBeVisible();
+});

@@ -121,6 +121,24 @@
         {
           "name": "token_program",
           "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "name": "fee_config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112, 108, 97, 116, 102, 111, 114, 109, 95, 102, 101, 101, 95,
+                  118, 49
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "platform_token",
+          "writable": true
         }
       ],
       "args": [
@@ -245,6 +263,24 @@
         {
           "name": "token_program",
           "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "name": "fee_config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112, 108, 97, 116, 102, 111, 114, 109, 95, 102, 101, 101, 95,
+                  118, 49
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "platform_token",
+          "writable": true
         }
       ],
       "args": []
@@ -319,6 +355,20 @@
         {
           "name": "system_program",
           "address": "11111111111111111111111111111111"
+        },
+        {
+          "name": "fee_config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112, 108, 97, 116, 102, 111, 114, 109, 95, 102, 101, 101, 95,
+                  118, 49
+                ]
+              }
+            ]
+          }
         }
       ],
       "args": [
@@ -579,6 +629,24 @@
         {
           "name": "token_program",
           "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "name": "fee_config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112, 108, 97, 116, 102, 111, 114, 109, 95, 102, 101, 101, 95,
+                  118, 49
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "platform_token",
+          "writable": true
         }
       ],
       "args": []
@@ -691,6 +759,42 @@
         }
       ],
       "args": []
+    },
+    {
+      "name": "initialize_fee_config",
+      "discriminator": [62, 162, 20, 133, 121, 65, 145, 27],
+      "accounts": [
+        {
+          "name": "authority",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "fee_config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112, 108, 97, 116, 102, 111, 114, 109, 95, 102, 101, 101, 95,
+                  118, 49
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "treasury",
+          "type": "pubkey"
+        }
+      ]
     },
     {
       "name": "propose_settlement",
@@ -812,6 +916,24 @@
         {
           "name": "token_program",
           "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "name": "fee_config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112, 108, 97, 116, 102, 111, 114, 109, 95, 102, 101, 101, 95,
+                  118, 49
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "platform_token",
+          "writable": true
         }
       ],
       "args": []
@@ -965,6 +1087,24 @@
         {
           "name": "token_program",
           "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "name": "fee_config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112, 108, 97, 116, 102, 111, 114, 109, 95, 102, 101, 101, 95,
+                  118, 49
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "platform_token",
+          "writable": true
         }
       ],
       "args": [
@@ -1054,6 +1194,10 @@
     {
       "name": "Deal",
       "discriminator": [125, 223, 160, 234, 71, 162, 182, 219]
+    },
+    {
+      "name": "FeeConfig",
+      "discriminator": [143, 52, 146, 187, 219, 123, 76, 155]
     }
   ],
   "errors": [
@@ -1243,6 +1387,30 @@
           {
             "name": "terms",
             "type": "string"
+          },
+          {
+            "name": "platform_fee",
+            "type": "u64"
+          },
+          {
+            "name": "fee_version",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "FeeConfig",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "treasury",
+            "type": "pubkey"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
           }
         ]
       }

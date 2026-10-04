@@ -50,7 +50,7 @@ for (const kind of ["undisputed", "disputed"] as const) {
       n,
       1_000_000n,
       [600, 300, kind === "disputed" ? 120 : 20, 1800],
-      `Keeper proof: ${kind}. Seller creates; buyer pays 1 USDC; seller delivers. Review timeout pays seller 0.99 USDC + 0.01 arbitrator fee. Dispute must block automatic payout.`,
+      `Keeper proof: ${kind}. Seller creates; buyer pays 1 USDC; seller delivers. Review timeout pays seller 0.98 USDC + 0.01 arbitrator fee + 0.01 platform fee. Dispute must block automatic payout.`,
     ),
   ]);
   await send(arb, [await act("accept_deal", arb.publicKey, address)]);

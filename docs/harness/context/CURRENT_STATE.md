@@ -1,5 +1,13 @@
 # Trạng thái — 05/10/2026
 
+## Phí hệ thống 1% — đang chuẩn bị, CHƯA DEPLOY/PUSH
+
+User duyệt thêm 1% hệ thống ngoài 1% arb. New deal: buyer principal unchanged, seller net 98%, arb 1%, platform 1%; refund zero fees. Bổ sung platform_fee/fee_version sau terms trong 28-byte padding hiện hữu (9 bytes), size/discriminator/PDA/Program ID giữ nguyên. Legacy fee_version=0/platform_fee=0, không đổi phí hồi tố. FeeConfig PDA platform_fee_v1 immutable, initializer pin; treasury không do seller/client chọn.
+
+Đã build SBF/IDL, 39 executable local checks gồm sai destination platform, số dư platform payout/refund; native Rust compatibility test legacy terms tối đa 512 bytes pass, client legacy decode pass. 53 unit +17 browser/build pass. Keeper/client/fee preview đã chuẩn bị cho fee config mới. Config account init là bước mới sau upgrade.
+
+ĐANG CHỜ địa chỉ ví công khai owner chọn nhận phí. Đã hỏi qua async, chưa có câu trả lời. Không được dùng placeholder/random treasury để deploy, không push code mới lên main khi production contract/config còn cũ. Production đang giữ commit a40277a, phí cũ 1%. Khi có địa chỉ: initialize fee config đúng ví, nâng cấp an toàn/kiểm bytes, rollout client+keeper đồng bộ; Devnet/browser/CI/Vercel nghiệm thu. Không nhận hoàn tất end-to-end trước đó.
+
 ## UI gọn — 05/10/2026
 
 Tiến trình theo state/bond readiness, current lime + glow tĩnh + aria-current; dispute cam. Một action card với nút chính; complaint vẫn cạnh confirm. Điều kiện/địa chỉ/bằng chứng/rule thu gọn disclosure. Mobile summary Bước N/5; không glow nút payment khi chờ keeper hoặc terminal. Sửa class CTA primary bị lệch tên từ migration cũ, form preview phí gọn.
