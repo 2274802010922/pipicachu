@@ -24,7 +24,7 @@ Bản **v0.5 trên Devnet**, UI đã cập nhật tại [checkpoint visual](http
 | Đăng ký trọng tài bằng ví người dùng | **Chưa triển khai** luồng riêng đăng ký → duyệt → nạp cọc → bật nhận trên UI                                                                 |
 | Ví trọng tài hiện tại                | `7PpWKXsjxR6f7Zu8Se11h2nWkEyaaNVxLLd6XF9K39CG` do owner cung cấp, đã duyệt; cần chủ ví nạp cọc và bật nhận. Demo A cũ đã ngừng nhận deal mới |
 | Payout khi seller trùng ví hệ thống  | **Lỗi 2040 đã biết, chưa sửa**; xem phần giới hạn bên dưới                                                                                   |
-| Phantom extension thực               | Chưa có bằng chứng kiểm lại; browser signed-flow dùng injected test provider                                                                 |
+| Phantom extension thực               | Video owner quay có ký Phantom thật và payout 2 USDC; không thay thế kiểm mọi trường hợp                                                     |
 
 ## UI showcase
 
@@ -56,6 +56,10 @@ Admin trung gian giao dịch hàng/dịch vụ số qua cộng đồng, cùng ng
 Đây là MVP kỹ thuật. Chưa có nghiên cứu người dùng, doanh thu hoặc mức sẵn sàng trả phí được kiểm chứng. Sản phẩm hiện dùng **USDC Devnet**, chưa triển khai USDT hay giao dịch P2P VND.
 
 ## Xem sản phẩm chạy thật
+
+[![Xem video demo tiếng Việt](docs/demo/video-vi-2026-10-05/thumbnail-vi.png)](https://www.youtube.com/watch?v=mTY3e3qX_4k)
+
+[**Xem video trên YouTube →**](https://www.youtube.com/watch?v=mTY3e3qX_4k) · 2 phút 56 giây · giọng nam và phụ đề Việt. Seller bên trái, buyer bên phải; demo 2 USDC Devnet, seller nhận 1,96 USDC. Persona mở đầu là minh họa; clip không quay việc giao file, tranh chấp hoặc keeper. [Kịch bản và phạm vi kiểm](docs/demo/video-vi-2026-10-05/README.md). Bản EN chờ footage UI tiếng Anh riêng.
 
 [**Mở phòng demo →**](https://pipicachu.vercel.app/demo) Bộ mẫu hiện có 7 link: một deal cọc trước của flow mới và 6 kịch bản phí/legacy đã có receipt finalized. Các giao dịch nghiệm thu dùng ví test; không chứng minh mọi tổ hợp ví đều hoạt động.
 
@@ -179,7 +183,7 @@ Program tests cần Linux/WSL, Solana CLI 3.1.10 và Rust: xem [hướng dẫn h
 - **Lỗi xác nhận 2040:** đã tái hiện `ConstraintDuplicateMutableAccount` ở `platform_token` khi seller dùng cùng ví với treasury. Buyer có SOL; không nên xử lý bằng cách nạp thêm tiền hoặc đổi ví để né lỗi. Payout/keeper của trường hợp này có thể bị chặn. Contract chưa có fix cho alias này; bộ kiểm đã pass không bao gồm ca này.
 - **Nhãn bước ký quỹ:** workflow mới vẫn có chỗ ghi “Chờ trọng tài” thay vì “Chờ người mua nạp tiền vào quỹ”. Đây là lỗi UI đã biết, chưa sửa trong visual refresh.
 - **Onboarding trọng tài:** plan riêng đăng ký bằng ví của người dùng → quản trị duyệt → nạp cọc riêng → bật nhận deal. Registry hiện được thiết lập bằng công cụ maintainer; không trình bày Demo A như tổ chức người dùng đăng ký.
-- **Bằng chứng Phantom/video:** chưa có video escrow hoàn chỉnh hoặc kiểm lại extension Phantom thật. Không dùng video Picachu cũ để thay thế.
+- **Bằng chứng Phantom/video:** đã có video escrow do owner quay bằng Phantom thật cho happy-path 2 USDC; chưa quay tranh chấp/keeper hoặc kiểm mọi tổ hợp ví. Không dùng video Picachu cũ để thay thế.
 
 Flow tạo deal giữ nguyên trong plan tiếp theo; không coi việc chuẩn hóa visual là đã sửa các vấn đề trên.
 

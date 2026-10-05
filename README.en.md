@@ -24,7 +24,7 @@
 | User-wallet arbitrator onboarding | **Not implemented** as a separate registration → approval → deposit → enable UI flow                                                               |
 | Current arbitrator                | Owner-supplied `7PpWKXsjxR6f7Zu8Se11h2nWkEyaaNVxLLd6XF9K39CG`, approved; its owner must deposit and enable. Previous Demo A disabled for new deals |
 | Seller equals platform treasury   | **Known error 2040, not fixed**; see outstanding work below                                                                                        |
-| Actual Phantom extension          | Not reverified; signed browser-flow evidence uses an injected test provider                                                                        |
+| Actual Phantom extension          | Owner recording shows actual Phantom signing and a 2 USDC payout; not testing every case                                                           |
 
 ## UI showcase
 
@@ -56,6 +56,10 @@ Community intermediaries handling digital goods/services, and their buyers and s
 This is a technical MVP. User research, revenue and willingness to pay have not been validated. It currently uses **Devnet USDC**, with no USDT or VND P2P flow.
 
 ## See it running
+
+[![Watch the Vietnamese demo](docs/demo/video-vi-2026-10-05/thumbnail-vi.png)](https://www.youtube.com/watch?v=mTY3e3qX_4k)
+
+[**Watch on YouTube →**](https://www.youtube.com/watch?v=mTY3e3qX_4k) · 2:56 · Vietnamese male narration and subtitles. Seller left, buyer right; 2 USDC Devnet, seller receives 1.96 USDC. Intro personas are fictional; file delivery, dispute and keeper are not shown. [Script and review scope](docs/demo/video-vi-2026-10-05/README.md). English video awaits separate English-UI footage.
 
 [**Open the demo lab →**](https://pipicachu.vercel.app/demo) Seven sample links: one prepaid-organization deal plus six historical fee/legacy scenarios with finalized receipts. Test-wallet transactions do not establish correctness for every wallet combination.
 
@@ -179,7 +183,7 @@ Program tests require Linux/WSL, Solana CLI 3.1.10 and Rust; see [testing](docs/
 - **Confirmation error 2040:** `ConstraintDuplicateMutableAccount` at `platform_token` was reproduced when the seller equals the platform treasury. Buyer SOL was sufficient. This alias can block seller payout/keeper; adding funds or swapping wallets is not the fix. No contract fix is deployed; the passing suite does not cover this case.
 - **Funding-state wording:** a new-workflow screen still says “Waiting for the arbitrator” instead of “Waiting for the buyer to fund escrow”. This known UI issue was not changed by the visual refresh.
 - **Arbitrator onboarding:** user-wallet registration → manager approval → separate bond deposit → enable deals is planned. Current registry setup uses maintainer tooling; Demo A is not presented as user registration or a real partner.
-- **Phantom/video evidence:** no completed escrow video or fresh actual-extension verification yet. Previous Picachu videos are not escrow evidence.
+- **Phantom/video evidence:** owner-recorded actual Phantom happy path for 2 USDC is available; dispute/keeper and every wallet combination are not covered. Previous Picachu videos are not escrow evidence.
 
 The create-deal flow stays unchanged in the next plan. Visual cleanup does not resolve these outstanding items.
 

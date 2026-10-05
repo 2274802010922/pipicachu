@@ -1,3 +1,7 @@
+# Video escrow VI đã lên YouTube · 05/10/2026
+
+Owner upload và cung cấp https://www.youtube.com/watch?v=mTY3e3qX_4k. Đã nối README VI/EN và trang Demo, kèm poster/kịch bản/script dựng. Footage owner: seller trái, buyer phải, Phantom thật, 2 USDC → seller1,96 + arb0,02 + platform0,02. Persona minh họa; không quay giao file/tranh chấp/keeper. EN chờ footage riêng. Không sửa contract, không nâng bằng chứng thành full Phantom QA; lỗi2040/onboarding còn nguyên. MP4/build ignored, Picachu cũ nguyên trạng.
+
 # Bàn giao v0.5
 
 Đọc CURRENT_STATE, docs/product/organization-flow.md và evidence/README. Implementation3a1c4e7 đã deploy Devnet/Vercel, CI web/program pass. Final docs/samples/copy checkpoint giữ nguyên logic tiền.

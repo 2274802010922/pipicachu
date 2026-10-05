@@ -1,0 +1,59 @@
+{
+  "language": "vi",
+  "voice": "vi-VN-NamMinhNeural",
+  "rate": "-5%",
+  "pitch": "-2Hz",
+  "source": "video demo 1.mp4",
+  "site": "https://pipicachu.vercel.app",
+  "repo": "https://github.com/2274802010922/pipicachu",
+  "scenes": [
+    {
+      "id": "problem",
+      "duration": 35,
+      "title": "Ai giao trước, ai trả trước?",
+      "narration": "Linh bán một gói tài nguyên thiết kế trong nhóm cộng đồng quốc tế. Alex đã có ví Solana và muốn mua bằng USDC. Nhưng hai người chưa từng giao dịch. Linh muốn nhận tiền trước khi gửi file. Alex lại muốn kiểm tra hàng trước khi trả tiền. Nhờ một người trung gian giữ tiền có thể giúp, nhưng cả hai vẫn phải tin vào người đang giữ tiền. Vậy làm sao để chốt giao dịch rõ ràng hơn?"
+    },
+    {
+      "id": "solution",
+      "duration": 20,
+      "title": "Một link. Điều kiện rõ ràng.",
+      "narration": "pipicachu là công cụ ký quỹ dành cho những người mua bán sản phẩm số bằng USDC. Người bán tạo link, các bên chốt điều kiện và người mua nạp tiền vào vault của chương trình. Tiền được giải ngân theo xác nhận hoặc điều kiện đã thỏa thuận; khi có tranh chấp, trọng tài xử lý."
+    },
+    {
+      "id": "create",
+      "duration": 20,
+      "title": "01 · Người bán tạo deal",
+      "narration": "Để minh họa luồng tiền này, chúng ta dùng một giao dịch hai USDC Devnet. Bên trái là người bán, bên phải là người mua. Người bán tạo link và ký chốt thông tin giao dịch."
+    },
+    {
+      "id": "fund",
+      "duration": 25,
+      "title": "02 · Người mua nạp vào quỹ",
+      "narration": "Người mua kiểm tra thông tin rồi ký nạp hai USDC vào quỹ. Tiền chưa được trả cho người bán. Sau khi xác nhận, cả hai bên cùng thấy giao dịch chuyển sang bước bàn giao."
+    },
+    {
+      "id": "deliver",
+      "duration": 20,
+      "title": "03 · Người bán đánh dấu bàn giao",
+      "narration": "Hàng hoặc file được trao qua kênh hai bên đã thống nhất, ngoài pipicachu. Người bán đánh dấu đã bàn giao. Clip này ghi lại thao tác trên ứng dụng, chưa quay việc chuyển file thực tế."
+    },
+    {
+      "id": "confirm",
+      "duration": 25,
+      "title": "04 · Người mua xác nhận",
+      "narration": "Người mua xác nhận nhận hàng. Người bán nhận một phẩy chín sáu USDC; trọng tài và hệ thống mỗi bên nhận không phẩy không hai. Tổng phí là hai phần trăm."
+    },
+    {
+      "id": "limits",
+      "duration": 20,
+      "title": "Kết quả rõ. Giới hạn cũng rõ.",
+      "narration": "pipicachu giúp người mua và người bán theo dõi cùng một giao dịch, với tiền được giữ và giải ngân theo điều kiện đã chốt. Ứng dụng không tự kiểm chứng chất lượng hàng. Đây là bản thử nghiệm Devnet, chưa được kiểm toán bảo mật độc lập và còn quyền nâng cấp."
+    },
+    {
+      "id": "closing",
+      "duration": 10,
+      "title": "Một link giao dịch. Kết quả có thể đối chiếu.",
+      "narration": "pipicachu: một link giao dịch, điều kiện rõ ràng, kết quả có thể đối chiếu. Hãy thử sản phẩm và xem mã nguồn tại đây."
+    }
+  ]
+}

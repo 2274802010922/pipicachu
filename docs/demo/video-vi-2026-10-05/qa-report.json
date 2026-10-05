@@ -1,0 +1,24 @@
+{
+  "duration": "175.633333",
+  "codec": "H.264/AAC",
+  "resolution": "1920x1080",
+  "fps": 30,
+  "subtitles": 35,
+  "fullDecode": "pass",
+  "subtitleIntervals": "pass",
+  "qr": "https://pipicachu.vercel.app",
+  "loudness": {
+    "input_i": "-14.71",
+    "input_tp": "-2.85",
+    "input_lra": "5.40",
+    "input_thresh": "-27.26",
+    "output_i": "-15.93",
+    "output_tp": "-2.52",
+    "output_lra": "5.30",
+    "output_thresh": "-28.47",
+    "normalization_type": "dynamic",
+    "target_offset": "-0.07"
+  },
+  "sha256": "d0cca7c132149767cba43742367955b83f7a63ab516269c0711e5a053a37159c",
+  "reviewScope": "Automated export checks + representative frames; not full listening."
+}

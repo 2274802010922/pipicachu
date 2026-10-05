@@ -1605,6 +1605,29 @@ export function Demo() {
         )}
       </p>
       <section className="panel">
+        <h2>{t("Xem video demo", "Watch the demo video")}</h2>
+        <p>
+          {t(
+            "2 phút 56 giây · giọng nam và phụ đề Việt. Người bán tạo link, người mua nạp 2 USDC Devnet rồi xác nhận; người bán nhận 1,96 USDC.",
+            "2:56 · Vietnamese narration and subtitles. The seller creates a link, the buyer deposits 2 Devnet USDC and confirms; the seller receives 1.96 USDC.",
+          )}
+        </p>
+        <a
+          className="button primary"
+          href="https://www.youtube.com/watch?v=mTY3e3qX_4k"
+          target="_blank"
+          rel="noreferrer"
+        >
+          {t("Xem trên YouTube ↗", "Watch on YouTube ↗")}
+        </a>
+        <p className="small">
+          {t(
+            "Mở đầu là tình huống minh họa. Clip chưa quay việc giao file, tranh chấp hoặc keeper; bản tiếng Anh chờ footage riêng.",
+            "The opening is illustrative. File delivery, dispute and keeper are not shown; an English version awaits separate footage.",
+          )}
+        </p>
+      </section>
+      <section className="panel">
         <h2>{t("Chuẩn bị", "Prepare")}</h2>
         <ol>
           <li>

@@ -1,3 +1,7 @@
+# Video escrow VI đã lên YouTube · 05/10/2026
+
+Owner upload và cung cấp https://www.youtube.com/watch?v=mTY3e3qX_4k. Đã nối README VI/EN và trang Demo, kèm poster/kịch bản/script dựng. Footage owner: seller trái, buyer phải, Phantom thật, 2 USDC → seller1,96 + arb0,02 + platform0,02. Persona minh họa; không quay giao file/tranh chấp/keeper. EN chờ footage riêng. Không sửa contract, không nâng bằng chứng thành full Phantom QA; lỗi2040/onboarding còn nguyên. MP4/build ignored, Picachu cũ nguyên trạng.
+
 # Thay ví test bằng ví user — 05/10/2026
 
 User làm rõ yêu cầu là thay Demo A, không thêm song song. Đã initializer revoke approval củaHt5k38ysGyt2VKoddxbACCeLoVngQFojNeXzACGz9dEP, acceptingfalse; transaction2gKX6Sy2EGhA4uGAGjmhdWxXov9uWTMydCWy4ooh1uKZdMbviU2VDQee64o69UyCa39LZ7BbPAQMNfYmZ4DCK2hD finalized. Cọc của ví cũ (total/locked) không đổi; không sửa participant hoặc rút tiền deal cũ. New registry selection chỉ có7PpWKXsjxR6f7Zu8Se11h2nWkEyaaNVxLLd6XF9K39CG approved, đangchờuser nạp min1USDC và ký accepting.
