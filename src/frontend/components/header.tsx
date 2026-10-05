@@ -1,10 +1,12 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { useLanguage } from "../i18n/provider";
 import { WalletButton } from "../wallet";
 export function Header() {
   const { locale, setLocale, t } = useLanguage();
+  const pathname = usePathname();
   return (
     <>
       <a className="skip" href="#main">
@@ -26,7 +28,14 @@ export function Header() {
           </Link>
           <div className="header-actions">
             <nav aria-label={t("Điều hướng chính", "Main navigation")}>
-              <Link href="/admin">{t("Trọng tài", "Arbitrator")}</Link>
+              <Link
+                className="workspace-entry"
+                href="/admin"
+                aria-current={pathname === "/admin" ? "page" : undefined}
+                title={t("Mở workspace trọng tài", "Open arbitrator workspace")}
+              >
+                {t("Trọng tài", "Arbitrator")}
+              </Link>
               <Link href="/demo">Demo</Link>
               <Link href="/guide">{t("Hướng dẫn", "Guide")}</Link>
             </nav>

@@ -1,3 +1,11 @@
+# Phân tách workspace trọng tài — 05/10/2026
+
+User xác nhận flow tạo deal giữ nguyên; đăng ký → hệ thống duyệt → nạp cọc riêng → bật nhận là luồng riêng cho role trọng tài. Lượt này chỉ làm mục Trọng tài trên header thành thẻ đậm, viền xanh, min44px và active state; route/admin hiện có. Không sửa flow tạo/deal/contract.
+
+Plan onboarding còn CHƯA IMPLEMENT: đăng ký bằng ví người dùng, quản trị duyệt riêng, nạp cọc riêng; không tự chọn Demo A. Demo A hiện là fixture agent từ nghiệm thu, không phải ví user cung cấp. User đã chọn giữ hệ thống duyệt, không permissionless staking.
+
+Lỗi manual đã tái hiện bằng unsigned simulate (không broadcast): deal BZXdtrci9wJEEVeaZYdyF2D2z7STPssaTAKTBEvDoKN9, buyer7PpWKXsjxR6f7Zu8Se11h2nWkEyaaNVxLLd6XF9K39CG có4.99SOL, sellerCXjK trùng treasuryCXjK. Confirm lỗi2040 ConstraintDuplicateMutableAccount ở platform_token. Cần cho phép alias token recipient có chủ đích với guard mint/owner/vault và kiểm gộp payout. Chưa sửa contract hoặc ký deal user. Nhãn primaryOwner workflow1 bước2 hiện sai Chờ trọng tài; cần sửa state/actor-driven trong plan tiếp theo.
+
 # Trạng thái v0.5 — 05/10/2026
 
 Flow mới đã triển khai: registry do initializer duyệt, tổ chức nạp quỹ và ký bật nhận trước theo policy. CreateOrganizationDeal tự consent; buyer fund reserve atomically. Không một lượt ký nhận cho mỗi deal mới. Đang nhận/còn nghĩa vụ thì không rút cọc. Pause chặn funding workflow1 nhưng settlement funded vẫn hoạt động. Không bảo hiểm/slashing/KYC tự động.
