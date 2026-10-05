@@ -7,11 +7,47 @@
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-Apache_2.0-2456E6?style=flat-square" alt="Apache 2.0"></a>
   <a href="https://pipicachu.vercel.app/demo"><img src="https://img.shields.io/badge/Solana-Devnet-B7F34D?style=flat-square&amp;labelColor=091426" alt="Solana Devnet"></a>
 </p>
-<p align="center"><a href="https://pipicachu.vercel.app"><strong>Open product</strong></a> · <a href="https://pipicachu.vercel.app/demo">Explore 6 scenarios</a> · <a href="docs/evidence/README.md">Inspect evidence</a> · <a href="README.md">Tiếng Việt</a></p>
+<p align="center"><a href="https://pipicachu.vercel.app"><strong>Open product</strong></a> · <a href="https://pipicachu.vercel.app/demo">Explore demo scenarios</a> · <a href="docs/evidence/README.md">Inspect evidence</a> · <a href="README.md">Tiếng Việt</a></p>
 
 ![A deal link, clear rules: create → fund USDC → deliver → confirm or dispute](docs/assets/readme-banner.svg)
 
 > **Devnet demo.** Test USDC has no real value. Upgrade authority is retained; there is no independent audit. Do not use real assets.
+
+## Current status · 5 October 2026
+
+**v0.5, Devnet only**, with the UI deployed at the [visual checkpoint](https://github.com/2274802010922/pipicachu/commit/4530c03). This is an evolving MVP, **not a complete implementation of every flow or edge case**.
+
+| Area                              | Current status                                                                             |
+| --------------------------------- | ------------------------------------------------------------------------------------------ |
+| Light terminal VI/EN UI           | Deployed: 44px header controls, two-row mobile header/menu, consistent buttons and spacing |
+| Create / fund / deliver           | Existing flow preserved; prepaid organization registry implemented on-chain                |
+| User-wallet arbitrator onboarding | **Not implemented** as a separate registration → approval → deposit → enable UI flow       |
+| Demo Arbitrator A                 | Maintainer test wallet, not a user-supplied arbitrator or corporate partner                |
+| Seller equals platform treasury   | **Known error 2040, not fixed**; see outstanding work below                                |
+| Actual Phantom extension          | Not reverified; signed browser-flow evidence uses an injected test provider                |
+
+## UI showcase
+
+Screenshots from the **deployed website**, captured on 5 October 2026, not mockups. These screens show the disconnected-wallet state.
+
+![Desktop homepage with consistent header controls](docs/assets/showcase/home-desktop-vi.png)
+
+<table>
+<tr><th>Mobile · Vietnamese</th><th>Create form · English</th></tr>
+<tr>
+<td><img src="docs/assets/showcase/home-mobile-vi.png" width="280" alt="Vietnamese mobile homepage with a two-row header and visible arbitrator entry"></td>
+<td><img src="docs/assets/showcase/create-mobile-en.png" width="280" alt="English mobile create form from the current deployment"></td>
+</tr>
+</table>
+
+<details>
+<summary>View the mobile menu</summary>
+
+<img src="docs/assets/showcase/menu-mobile-en.png" width="320" alt="English mobile menu with close, keyboard focus and Demo/Guide links">
+
+</details>
+
+The arbitrator workspace has its own header entry. Separate registration/approval/deposit onboarding is still pending. [Design system](docs/design/system.md) · [Capture scope](docs/assets/showcase/README.md).
 
 ## Who is it for?
 
@@ -21,7 +57,7 @@ This is a technical MVP. User research, revenue and willingness to pay have not 
 
 ## See it running
 
-[**Open the demo lab →**](https://pipicachu.vercel.app/demo) Six finalized deal scenarios: buyer confirmation, review timeout, missed-delivery refund, arbitrator seller payout, arbitrator buyer refund and mutual settlement after arbitration expires.
+[**Open the demo lab →**](https://pipicachu.vercel.app/demo) Seven sample links: one prepaid-organization deal plus six historical fee/legacy scenarios with finalized receipts. Test-wallet transactions do not establish correctness for every wallet combination.
 
 ![Real 1 USDC deal: seller receives 0.98 USDC, total fees 0.02 USDC](docs/evidence/screenshots/completed-en.png)
 
@@ -62,12 +98,12 @@ Without agreement after the arbitrator expires, funds may remain locked. A **10%
 
 ## Transparent fees
 
-For a **new 100 USDC deal**, the buyer deposits exactly 100 USDC:
+For a **new 1 USDC deal**, the buyer deposits exactly 1 USDC:
 
-| Outcome       | Buyer refund | Seller receives | Arbitrator | Platform |
-| ------------- | ------------ | --------------- | ---------- | -------- |
-| Seller payout | —            | 98 USDC         | 1 USDC     | 1 USDC   |
-| Buyer refund  | 100 USDC     | 0               | 0          | 0        |
+| Outcome       | Buyer refund | Seller receives | Arbitrator | Platform  |
+| ------------- | ------------ | --------------- | ---------- | --------- |
+| Seller payout | —            | 0.98 USDC       | 0.01 USDC  | 0.01 USDC |
+| Buyer refund  | 1 USDC       | 0               | 0          | 0         |
 
 Legacy deals keep their original fee snapshot. Each 1% fee rounds down to atomic USDC units; the seller keeps any remainder. SOL network fees and the arbitrator bond are separate.
 
@@ -86,17 +122,17 @@ The immutable FeeConfig defines the treasury; UI/env cannot select the recipient
 
 ## Evidence, with scope
 
-| Verified scope           | Result / source                                                                        |
-| ------------------------ | -------------------------------------------------------------------------------------- |
-| Unit and IDL             | **55 tests**                                                                           |
-| Browser                  | **21 tests** · VI/EN · 375/768/1024/1440px · axe                                       |
-| Local smart contract     | **39 executable checks** · labelled synthetic mint                                     |
-| Devnet                   | **39 checks**, **6 scenarios** with finalized vault-transfer receipts                  |
-| Legacy fee compatibility | Pre-upgrade funded deal pays 99% seller, 0% platform                                   |
-| Keeper service           | Real keeper signer; 98/1/1 payout; disputed deal untouched                             |
-| Deployed website         | Signing and rejection using a test provider, not actual Phantom-extension verification |
+| Verified scope           | Result / source                                                                         |
+| ------------------------ | --------------------------------------------------------------------------------------- |
+| Unit and IDL             | **55 tests**                                                                            |
+| Browser                  | **26 tests** · VI/EN · 375/768/1024/1440px · axe                                        |
+| Local smart contract     | **52 executable checks** · 39 legacy + 13 organization checks · labelled synthetic mint |
+| Devnet                   | **39 checks**, **6 scenarios** with finalized vault-transfer receipts                   |
+| Legacy fee compatibility | Pre-upgrade funded deal pays 99% seller, 0% platform                                    |
+| Keeper service           | Real keeper signer; 98/1/1 payout; disputed deal untouched                              |
+| Deployed website         | Signing and rejection using a test provider, not actual Phantom-extension verification  |
 
-[Evidence index](docs/evidence/README.md) separates live receipts, synthetic fixtures and browser scope. The CI badge shows the latest run; counts above are a v0.4 snapshot. Keeper runs approximately every five minutes and may be delayed; there is no exact payout-time guarantee.
+[Evidence index](docs/evidence/README.md) separates live receipts, synthetic fixtures and browser scope. The CI badge shows the latest run; web test counts are the 5 October 2026 visual-checkpoint snapshot; historical receipts retain their own dates and scope. Keeper runs approximately every five minutes and may be delayed; there is no exact payout-time guarantee.
 
 ## Architecture and original work
 
@@ -137,6 +173,15 @@ npm run check:live   # verify Devnet program, mint and treasury
 ```
 
 Program tests require Linux/WSL, Solana CLI 3.1.10 and Rust; see [testing](docs/testing/README.md). Forks need separate keys, program and keeper before deployment; see [deployment](docs/deployment/README.md).
+
+## Outstanding fixes and work
+
+- **Confirmation error 2040:** `ConstraintDuplicateMutableAccount` at `platform_token` was reproduced when the seller equals the platform treasury. Buyer SOL was sufficient. This alias can block seller payout/keeper; adding funds or swapping wallets is not the fix. No contract fix is deployed; the passing suite does not cover this case.
+- **Funding-state wording:** a new-workflow screen still says “Waiting for the arbitrator” instead of “Waiting for the buyer to fund escrow”. This known UI issue was not changed by the visual refresh.
+- **Arbitrator onboarding:** user-wallet registration → manager approval → separate bond deposit → enable deals is planned. Current registry setup uses maintainer tooling; Demo A is not presented as user registration or a real partner.
+- **Phantom/video evidence:** no completed escrow video or fresh actual-extension verification yet. Previous Picachu videos are not escrow evidence.
+
+The create-deal flow stays unchanged in the next plan. Visual cleanup does not resolve these outstanding items.
 
 ## Limits
 

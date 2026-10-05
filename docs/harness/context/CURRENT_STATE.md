@@ -1,3 +1,9 @@
+# README và showcase trạng thái thực — 05/10/2026
+
+User yêu cầu README khớp bản đang deploy. Đã đồng bộ VI/EN: trạng thái UI/contract hiện có, onboarding riêng chưa triển khai, Demo A là ví fixture, nhãn funding sai và lỗi2040 alias seller=treasury chưa sửa, Phantom extension/video chưa có bằng chứng mới. Counts55unit26browser52program; sample7 gồm1workflow mới+6legacy. Ví dụ phí1USDC khớp demo thay100 vượt policyDemoA.
+
+Showcase4ảnh từ production4530c03, không mockup, không ký/broadcast: desktop1440×1000, mobile375×1000, formEN375×1400 sau registry loaded. Ảnh và provenance ở docs/assets/showcase, không chứa secret. Link/format và GitHub rendered images cần kiểm trước bàn giao. Không đổi runtime hoặc contract.
+
 # Visual thống nhất — 05/10/2026
 
 User duyệt chỉnh visual end-to-end, giữ flow tạo deal/contract. Đã tách tokens/controls/header styles, xóa các override header/nút/shadow cũ; header44px, desktop1 hàng/tablet2/mobile2 với menu. Workspace luôn thấy; menu focus trap/Escape/nav/resize và keyed slots giữ kết nối. Formspacing, container/card và primary/secondary nhất quán; step lime-soft bỏ glow.

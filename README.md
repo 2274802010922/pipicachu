@@ -13,6 +13,42 @@
 
 > **Demo Devnet.** USDC thử nghiệm không có giá trị thật. Chương trình còn quyền nâng cấp và chưa audit độc lập. Không dùng tài sản thật.
 
+## Trạng thái hiện tại · 05/10/2026
+
+Bản **v0.5 trên Devnet**, UI đã cập nhật tại [checkpoint visual](https://github.com/2274802010922/pipicachu/commit/4530c03). Đây là MVP đang phát triển, **chưa hoàn tất mọi luồng và trường hợp**.
+
+| Hạng mục                             | Trạng thái hiện tại                                                                |
+| ------------------------------------ | ---------------------------------------------------------------------------------- |
+| UI light terminal VI/EN              | Đã deploy: header 44px, mobile hai hàng/menu, nút và spacing thống nhất            |
+| Tạo deal / ký quỹ / bàn giao         | Flow hiện tại giữ nguyên; registry cọc trước đã có trên contract                   |
+| Đăng ký trọng tài bằng ví người dùng | **Chưa triển khai** luồng riêng đăng ký → duyệt → nạp cọc → bật nhận trên UI       |
+| Trọng tài Demo A                     | Ví test từ nghiệm thu, không phải ví người dùng cung cấp hoặc đối tác công ty thật |
+| Payout khi seller trùng ví hệ thống  | **Lỗi 2040 đã biết, chưa sửa**; xem phần giới hạn bên dưới                         |
+| Phantom extension thực               | Chưa có bằng chứng kiểm lại; browser signed-flow dùng injected test provider       |
+
+## UI showcase
+
+Ảnh chụp **website đang deploy**, ngày 05/10/2026, không phải mockup. Các màn hình dưới đây ở trạng thái chưa kết nối ví.
+
+![Trang chủ desktop — header và controls đồng bộ](docs/assets/showcase/home-desktop-vi.png)
+
+<table>
+<tr><th>Mobile · Tiếng Việt</th><th>Form tạo deal · English</th></tr>
+<tr>
+<td><img src="docs/assets/showcase/home-mobile-vi.png" width="280" alt="Trang chủ mobile tiếng Việt, hai hàng header và nút Trọng tài luôn thấy"></td>
+<td><img src="docs/assets/showcase/create-mobile-en.png" width="280" alt="Form tạo deal mobile tiếng Anh trên bản deploy hiện tại"></td>
+</tr>
+</table>
+
+<details>
+<summary>Xem menu mobile</summary>
+
+<img src="docs/assets/showcase/menu-mobile-en.png" width="320" alt="Menu mobile tiếng Anh, có đóng, focus bàn phím và liên kết Demo/Guide">
+
+</details>
+
+Workspace trọng tài được mở riêng từ header; flow đăng ký/duyệt/nạp cọc riêng chưa triển khai. [Design system](docs/design/system.md) · [Phạm vi ảnh](docs/assets/showcase/README.md).
+
 ## Dành cho ai, giải quyết việc gì?
 
 Admin trung gian giao dịch hàng/dịch vụ số qua cộng đồng, cùng người mua và người bán của họ. Thay vì gửi tiền vào ví cá nhân của admin, người mua nạp vào vault do chương trình Solana quản lý. Các bên xem cùng một trạng thái và receipt; trọng tài xử tranh chấp theo quyền đã chốt.
@@ -21,7 +57,7 @@ Admin trung gian giao dịch hàng/dịch vụ số qua cộng đồng, cùng ng
 
 ## Xem sản phẩm chạy thật
 
-[**Mở phòng demo →**](https://pipicachu.vercel.app/demo) Chọn một trong 6 deal có receipt finalized: xác nhận nhận hàng, hết hạn kiểm tra, hoàn tiền khi không giao, trọng tài trả người bán, trọng tài hoàn người mua và đồng thuận sau hạn trọng tài.
+[**Mở phòng demo →**](https://pipicachu.vercel.app/demo) Bộ mẫu hiện có 7 link: một deal cọc trước của flow mới và 6 kịch bản phí/legacy đã có receipt finalized. Các giao dịch nghiệm thu dùng ví test; không chứng minh mọi tổ hợp ví đều hoạt động.
 
 ![Kết quả thật: deal 1 USDC, người bán nhận 0,98 USDC, tổng phí 0,02 USDC](docs/evidence/screenshots/completed-vi.png)
 
@@ -38,7 +74,7 @@ Admin trung gian giao dịch hàng/dịch vụ số qua cộng đồng, cùng ng
 
 ## Trọng tài cọc trước — flow mới
 
-Trọng tài được initializer duyệt, nạp quỹ và ký bật nhận theo policy một lần. Seller chọn từ registry; buyer fund tự bảo lưu cọc. Không có lượt ký accept cho mỗi deal mới. UI4 bước, bỏ checkbox lặp và nhập ví trọng tài/thời hạn thủ công. Deal cũ giữ cách chấp thuận cũ. [Policy và tương thích](docs/product/organization-flow.md), [13 ca Devnet](docs/evidence/devnet-organization-checks.json). Demo A là tổ chức thử nghiệm, không phải đối tác công ty thật.
+Trọng tài được initializer duyệt, nạp quỹ và ký bật nhận theo policy một lần. Seller chọn từ registry; buyer fund tự bảo lưu cọc. Không có lượt ký accept cho mỗi deal mới. UI 4 bước, bỏ checkbox lặp và nhập ví trọng tài/thời hạn thủ công. Deal cũ giữ cách chấp thuận cũ. [Policy và tương thích](docs/product/organization-flow.md), [13 ca Devnet](docs/evidence/devnet-organization-checks.json). Demo A là tổ chức thử nghiệm, không phải đối tác công ty thật.
 
 ## Luồng giao dịch
 
@@ -62,12 +98,12 @@ Nếu trọng tài quá hạn và hai bên không đồng thuận, tiền có th
 
 ## Phí minh bạch
 
-Ví dụ **deal mới 100 USDC**; buyer nạp đúng 100 USDC, không cộng phí vào principal:
+Ví dụ **deal mới 1 USDC**; buyer nạp đúng 1 USDC, không cộng phí vào principal:
 
-| Kết quả        | Người mua nhận lại | Người bán nhận | Trọng tài | Hệ thống |
-| -------------- | ------------------ | -------------- | --------- | -------- |
-| Trả người bán  | —                  | 98 USDC        | 1 USDC    | 1 USDC   |
-| Hoàn người mua | 100 USDC           | 0              | 0         | 0        |
+| Kết quả        | Người mua nhận lại | Người bán nhận | Trọng tài | Hệ thống  |
+| -------------- | ------------------ | -------------- | --------- | --------- |
+| Trả người bán  | —                  | 0,98 USDC      | 0,01 USDC | 0,01 USDC |
+| Hoàn người mua | 1 USDC             | 0              | 0         | 0         |
 
 Deal cũ giữ snapshot phí đã chốt, không thu thêm phí hệ thống hồi tố. Mỗi phí 1% làm tròn xuống đơn vị nguyên USDC, phần dư thuộc seller. Phí mạng SOL và cọc trọng tài tách khỏi bảng này.
 
@@ -86,17 +122,17 @@ Treasury lưu trong FeeConfig immutable; không chọn recipient bằng UI hoặ
 
 ## Bằng chứng thay cho lời hứa
 
-| Phạm vi đã kiểm      | Kết quả / nguồn                                                                |
-| -------------------- | ------------------------------------------------------------------------------ |
-| Unit và IDL          | **55 tests**                                                                   |
-| Browser              | **21 tests** · VI/EN · 375/768/1024/1440px · axe                               |
-| Smart contract local | **39 executable checks** · mint synthetic có nhãn                              |
-| Devnet               | **39 checks**, **6 kịch bản** có receipt finalized đối chiếu số tiền           |
-| Tương thích phí cũ   | Deal nạp trước upgrade vẫn trả seller 99%, platform 0%                         |
-| Keeper               | Signer service thật; chia 98/1/1; dispute không bị chi                         |
-| Website đã deploy    | Signed flow và từ chối ký bằng test provider; chưa kiểm extension Phantom thật |
+| Phạm vi đã kiểm      | Kết quả / nguồn                                                                       |
+| -------------------- | ------------------------------------------------------------------------------------- |
+| Unit và IDL          | **55 tests**                                                                          |
+| Browser              | **26 tests** · VI/EN · 375/768/1024/1440px · axe                                      |
+| Smart contract local | **52 executable checks** · 39 legacy + 13 registry cọc trước · mint synthetic có nhãn |
+| Devnet               | **39 checks**, **6 kịch bản** có receipt finalized đối chiếu số tiền                  |
+| Tương thích phí cũ   | Deal nạp trước upgrade vẫn trả seller 99%, platform 0%                                |
+| Keeper               | Signer service thật; chia 98/1/1; dispute không bị chi                                |
+| Website đã deploy    | Signed flow và từ chối ký bằng test provider; chưa kiểm extension Phantom thật        |
 
-Đọc [bộ bằng chứng](docs/evidence/README.md) để phân biệt receipt thật, synthetic fixture và phạm vi kiểm. Badge CI ở đầu phản ánh lượt chạy mới nhất; số test là snapshot của v0.4. Keeper khoảng 5 phút/lượt có thể trễ, không cam kết payout đúng giây.
+Đọc [bộ bằng chứng](docs/evidence/README.md) để phân biệt receipt thật, synthetic fixture và phạm vi kiểm. Badge CI ở đầu phản ánh lượt chạy mới nhất; số test web là snapshot của checkpoint visual05/10/2026; các receipt cũ giữ ngày/phạm vi riêng. Keeper khoảng 5 phút/lượt có thể trễ, không cam kết payout đúng giây.
 
 ## Kiến trúc và phần tự xây
 
@@ -137,6 +173,15 @@ npm run check:live   # kiểm program, mint và treasury Devnet
 ```
 
 Program tests cần Linux/WSL, Solana CLI 3.1.10 và Rust: xem [hướng dẫn harness](docs/testing/README.md). Fork phải dùng key/program/keeper riêng trước khi deploy, theo [deployment](docs/deployment/README.md).
+
+## Việc còn chờ sửa / triển khai
+
+- **Lỗi xác nhận 2040:** đã tái hiện `ConstraintDuplicateMutableAccount` ở `platform_token` khi seller dùng cùng ví với treasury. Buyer có SOL; không nên xử lý bằng cách nạp thêm tiền hoặc đổi ví để né lỗi. Payout/keeper của trường hợp này có thể bị chặn. Contract chưa có fix cho alias này; bộ kiểm đã pass không bao gồm ca này.
+- **Nhãn bước ký quỹ:** workflow mới vẫn có chỗ ghi “Chờ trọng tài” thay vì “Chờ người mua nạp tiền vào quỹ”. Đây là lỗi UI đã biết, chưa sửa trong visual refresh.
+- **Onboarding trọng tài:** plan riêng đăng ký bằng ví của người dùng → quản trị duyệt → nạp cọc riêng → bật nhận deal. Registry hiện được thiết lập bằng công cụ maintainer; không trình bày Demo A như tổ chức người dùng đăng ký.
+- **Bằng chứng Phantom/video:** chưa có video escrow hoàn chỉnh hoặc kiểm lại extension Phantom thật. Không dùng video Picachu cũ để thay thế.
+
+Flow tạo deal giữ nguyên trong plan tiếp theo; không coi việc chuẩn hóa visual là đã sửa các vấn đề trên.
 
 ## Giới hạn cần hiểu
 
