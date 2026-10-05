@@ -13,3 +13,9 @@ Một bước hiện tại, một hành động chính. Tiến trình có curren
 Trang deal: tiến trình → tóm tắt tiền/phí/thời gian → thẻ hành động → Điều kiện / Ví & bằng chứng / Cách hoạt động (mặc định đóng). Khiếu nại ở cạnh xác nhận, không giấu. Mobile <=768: summary Bước N/5, mở ra xem list; CTA rộng thẻ. Trạng thái RPC cũ khóa thao tác, không báo ready.
 
 Form tạo giữ 4 trường chính; time nâng cao, preview tiền nhận/phí và consent ngắn. Điều khoản/rủi ro trước ký có disclosure, không bỏ thông tin tiền quan trọng. Không đổi ví/backend/contract.
+
+## Chuẩn visual thống nhất — 05/10/2026
+
+Token ở src/frontend/styles/tokens.css; controls.css là nguồn nút/form; header.css quản lý shell responsive, không patch global nav. Header controls44px/14px/line-height1.4/radius8, gaps8 trong nhóm và16 giữa nhóm. Desktop>=1024 một hàng; tablet768–1023 hai hàng; mobile<768 hai hàng có Menu, workspace luôn thấy. Native dialog menu có Tab loop, Escape/close/outside, trả focus và tự đóng khi lên desktop. Keyed slots giữ WalletButton khi reorder breakpoint; không reset kết nối.
+
+Container max1200, desktoppadding32/mobile16; cardpadding24/mobile16, radius12. Primary lime, secondarywhite/blue outline, active step lime-soft không glow; không heavy shadow cho controls. Heading/content giữ light terminal, body16 và helper14. Flow/API/contract không thay đổi. Onboarding trọng tài và lỗi2040 còn pending riêng.

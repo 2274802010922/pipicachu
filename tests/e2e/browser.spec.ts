@@ -62,6 +62,10 @@ for (const width of [375, 768, 1024, 1440])
         () => document.documentElement.scrollWidth <= innerWidth,
       ),
     ).toBe(true);
+    if (width < 768)
+      await page
+        .getByRole("button", { name: "Open menu", exact: true })
+        .click();
     await page.getByRole("link", { name: "Guide", exact: true }).click();
     await expect(page.getByRole("heading", { level: 1 })).toHaveText(
       "How does escrow work?",

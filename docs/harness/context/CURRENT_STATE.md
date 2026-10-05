@@ -1,3 +1,11 @@
+# Visual thống nhất — 05/10/2026
+
+User duyệt chỉnh visual end-to-end, giữ flow tạo deal/contract. Đã tách tokens/controls/header styles, xóa các override header/nút/shadow cũ; header44px, desktop1 hàng/tablet2/mobile2 với menu. Workspace luôn thấy; menu focus trap/Escape/nav/resize và keyed slots giữ kết nối. Formspacing, container/card và primary/secondary nhất quán; step lime-soft bỏ glow.
+
+55 unit và26 browser pass, đã capture32route/locale/viewport checks cho4trang ×VI/EN×375/768/1024/1440, không overflow; đã xem representative desktop/tablet/mobile, create và menu. Lượt đầu menu Tab đi ra body; đã bổ sung explicit focus wrap và rerun26 pass. Home CTA primary/formgap đã sửa và full verify rerun pass55 unit26 browser/build. CI kiểm tiếp trên push main; production visual smoke sau deploy.
+
+Plan đăng ký → duyệt → cọc riêng → bật nhận của role trọng tài và lỗi2040 alias seller=treasury vẫn CHƯA IMPLEMENT. Không auto-set ví demo mới hoặc thay treasury. Xem phần ngữ cảnh trước dưới đây; không coi visual refresh là sửa lỗi tiền.
+
 # Phân tách workspace trọng tài — 05/10/2026
 
 User xác nhận flow tạo deal giữ nguyên; đăng ký → hệ thống duyệt → nạp cọc riêng → bật nhận là luồng riêng cho role trọng tài. Lượt này chỉ làm mục Trọng tài trên header thành thẻ đậm, viền xanh, min44px và active state; route/admin hiện có. Không sửa flow tạo/deal/contract.

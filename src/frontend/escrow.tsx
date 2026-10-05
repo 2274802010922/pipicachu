@@ -249,7 +249,7 @@ export function Home() {
           )}
         </p>
         <div className="actions">
-          <Link className="button arbitrator" href="/deals/new">
+          <Link className="button primary" href="/deals/new">
             {t("Tạo giao dịch", "Create a deal")}
           </Link>
           <Link className="button" href="/demo">
@@ -1647,7 +1647,7 @@ export function Demo() {
           </li>
         </ol>
         <div className="actions">
-          <Link className="button arbitrator" href="/deals/new">
+          <Link className="button primary" href="/deals/new">
             {t("Tạo deal mới", "Create a new deal")}
           </Link>
           <Link className="button" href="/admin">

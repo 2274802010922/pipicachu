@@ -1,0 +1,77 @@
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+button,
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: var(--control-height);
+  padding: 10px 16px;
+  border: 1px solid var(--blue);
+  border-radius: var(--control-radius);
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 14px;
+  line-height: 1.4;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  box-shadow: none;
+}
+button:hover,
+.button:hover {
+  background: var(--surface-soft);
+}
+.primary,
+button.primary,
+.button.primary {
+  background: var(--lime);
+  border-color: #376700;
+  color: var(--ink);
+  font-weight: 700;
+}
+.primary:hover,
+button.primary:hover,
+.button.primary:hover {
+  background: #a9e63d;
+}
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+:focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: 3px;
+}
+input,
+select,
+textarea {
+  min-height: var(--control-height);
+  border: 1px solid #8795a9;
+  border-radius: var(--control-radius);
+  padding: 10px 12px;
+  background: var(--surface);
+  color: var(--ink);
+  max-width: 100%;
+  line-height: 1.5;
+}
+input,
+textarea {
+  width: 100%;
+}
+select {
+  font-size: 14px;
+}
+textarea {
+  resize: vertical;
+}
+.wallet-connected {
+  background: var(--surface-soft);
+  border-color: var(--blue);
+}

@@ -1,0 +1,207 @@
+.header {
+  border-bottom: 1px solid var(--line);
+  background: var(--canvas);
+}
+.header-inner {
+  max-width: 1200px;
+  margin: auto;
+  padding: 16px 32px;
+  display: grid;
+  grid-template-areas: "brand navigation tools wallet";
+  grid-template-columns: minmax(200px, 1fr) auto auto auto;
+  gap: 16px;
+  align-items: center;
+}
+.brand {
+  grid-area: brand;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: var(--ink);
+  font-size: 24px;
+  line-height: 1.2;
+  font-weight: 700;
+  min-width: 0;
+}
+.brand img {
+  border-radius: 4px;
+  flex: none;
+}
+.brand small {
+  display: block;
+  font:
+    11px/1.5 ui-monospace,
+    monospace;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  margin-top: 4px;
+}
+.header-nav {
+  grid-area: navigation;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.header-nav a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  color: var(--ink);
+  font-size: 14px;
+  line-height: 1.4;
+  font-weight: 500;
+  white-space: nowrap;
+  text-decoration: none;
+}
+.header-nav a:hover,
+.header-nav a[aria-current="page"] {
+  background: var(--surface-soft);
+  border-color: var(--blue);
+}
+.header-nav .workspace-entry {
+  font-weight: 700;
+  background: var(--surface-soft);
+  border-color: var(--blue);
+}
+.header-nav .workspace-entry[aria-current="page"] {
+  background: var(--lime-soft);
+}
+.header-tools {
+  grid-area: tools;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.header-tools select {
+  width: 64px;
+  height: 44px;
+  min-height: 44px;
+  padding: 8px;
+  font-size: 14px;
+  line-height: 1.4;
+}
+.header-menu-button {
+  display: none;
+}
+.header-wallet {
+  grid-area: wallet;
+  min-width: 0;
+}
+.wallet-control {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+  max-width: 260px;
+}
+.wallet-control button {
+  height: 44px;
+  white-space: nowrap;
+}
+.wallet-control [role="alert"] {
+  max-width: 240px;
+  overflow-wrap: anywhere;
+}
+.mobile-menu-dialog {
+  width: min(420px, calc(100vw - 32px));
+  padding: 24px;
+  border: 1px solid var(--blue);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--ink);
+}
+.mobile-menu-dialog::backdrop {
+  background: #09142666;
+}
+.mobile-menu-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+.mobile-menu-heading h2 {
+  margin: 0;
+}
+.mobile-menu-close {
+  width: 44px;
+  padding: 8px;
+}
+.mobile-menu-nav {
+  display: grid;
+  gap: 8px;
+}
+.mobile-menu-nav a {
+  justify-content: flex-start;
+}
+@media (min-width: 768px) and (max-width: 1023px) {
+  .header-inner {
+    grid-template-areas: "brand tools wallet" "navigation navigation navigation";
+    grid-template-columns: minmax(0, 1fr) 64px auto;
+    padding: 16px;
+    gap: 8px 16px;
+  }
+}
+@media (max-width: 767px) {
+  .header-inner {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    grid-template-areas: none;
+    gap: 8px 0;
+    padding: 12px 16px;
+  }
+  .brand {
+    grid-area: auto;
+    grid-row: 1;
+    grid-column: 1/8;
+    font-size: 22px;
+    gap: 8px;
+  }
+  .brand img {
+    width: 40px;
+    height: 30px;
+  }
+  .brand small {
+    display: none;
+  }
+  .header-tools {
+    grid-area: auto;
+    grid-row: 1;
+    grid-column: 8/13;
+    justify-content: flex-end;
+  }
+  .header-menu-button {
+    display: inline-flex;
+    width: 44px;
+    padding: 8px;
+  }
+  .header-nav {
+    grid-area: auto;
+    grid-row: 2;
+    grid-column: 1/6;
+    margin-right: 8px;
+  }
+  .header-nav .nav-secondary {
+    display: none;
+  }
+  .header-nav .workspace-entry {
+    width: 100%;
+    padding: 10px 8px;
+  }
+  .header-wallet {
+    grid-area: auto;
+    grid-row: 2;
+    grid-column: 6/13;
+  }
+  .wallet-control {
+    max-width: none;
+  }
+  .wallet-control button {
+    width: 100%;
+    padding: 10px 8px;
+    font-size: 14px;
+  }
+}

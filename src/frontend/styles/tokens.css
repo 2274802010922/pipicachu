@@ -1,0 +1,19 @@
+:root {
+  --canvas: #f7f6f1;
+  --surface: #fff;
+  --surface-soft: #edf2ff;
+  --ink: #091426;
+  --muted: #526174;
+  --line: #d7dce3;
+  --blue: #2456e6;
+  --lime: #b7f34d;
+  --lime-soft: #effad7;
+  --error: #a92323;
+  --control-height: 44px;
+  --control-radius: 8px;
+  --card-radius: 12px;
+  --space-xs: 8px;
+  --space-sm: 16px;
+  --space-md: 24px;
+  --space-lg: 32px;
+}
