@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="380" viewBox="0 0 1200 380" role="img" aria-labelledby="title desc">
+  <title id="title">pipicachu — a deal link, clear rules</title>
+  <desc id="desc">Solana Devnet escrow: create a link, fund USDC, deliver, then settle according to agreed conditions.</desc>
+  <rect x="1" y="1" width="1198" height="378" rx="24" fill="#F7F6F1" stroke="#D7DFE8" stroke-width="2"/>
+  <g font-family="Arial, Helvetica, sans-serif" fill="#091426">
+    <rect x="48" y="36" width="205" height="32" rx="16" fill="#EAF0FF"/>
+    <text x="65" y="58" font-size="14" font-weight="700" fill="#2456E6" letter-spacing="1">SOLANA / DEVNET</text>
+    <text x="48" y="128" font-size="52" font-weight="700" letter-spacing="-1">A deal link. Clear rules.</text>
+    <text x="48" y="167" font-size="22" fill="#526174">USDC held on-chain. Delivery agreed off-chain.</text>
+    <rect x="918" y="42" width="234" height="122" rx="16" fill="#B7F34D"/>
+    <text x="942" y="78" font-size="14" font-weight="700" letter-spacing="1">NEW SELLER PAYOUT</text>
+    <text x="942" y="117" font-size="28" font-weight="700">98% / 1% / 1%</text>
+    <text x="942" y="143" font-size="15">seller / arbitrator / platform</text>
+    <path d="M293 259H339 M567 259H613 M841 259H887" stroke="#2456E6" stroke-width="3" fill="none"/>
+    <path d="m332 252 7 7-7 7 m274-14 7 7-7 7 m274-14 7 7-7 7" stroke="#2456E6" stroke-width="3" fill="none"/>
+    <g fill="#FFFFFF" stroke="#D7DFE8" stroke-width="2">
+      <rect x="48" y="210" width="245" height="100" rx="16"/>
+      <rect x="339" y="210" width="228" height="100" rx="16"/>
+      <rect x="613" y="210" width="228" height="100" rx="16"/>
+      <rect x="887" y="210" width="265" height="100" rx="16"/>
+    </g>
+    <g font-size="13" font-weight="700" fill="#2456E6" letter-spacing="1">
+      <text x="70" y="239">01 / SELLER</text><text x="361" y="239">02 / BUYER</text>
+      <text x="635" y="239">03 / DELIVERY</text><text x="909" y="239">04 / SETTLEMENT</text>
+    </g>
+    <g font-size="24" font-weight="700">
+      <text x="70" y="278">Create a link</text><text x="361" y="278">Fund USDC</text>
+      <text x="635" y="278">Deliver goods</text><text x="909" y="278">Confirm or dispute</text>
+    </g>
+    <text x="48" y="345" font-size="16" fill="#526174">One arbitrator · Fixed payout destinations · Full-principal refunds · Verifiable receipts</text>
+  </g>
+</svg>

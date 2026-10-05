@@ -8,3 +8,5 @@
 - [Vercel/Devnet](deployment/README.md)
 - [Trạng thái](harness/context/CURRENT_STATE.md), [bàn giao](harness/context/HANDOFF.md)
 - [Ý tưởng cũ](archive/README.md)
+
+- [Giấy phép và ghi công](legal/README.md)

@@ -18,13 +18,19 @@ const files = [
   "README.en.md",
   "AGENTS.md",
   "THIRD_PARTY_NOTICES.md",
+  ".github/CONTRIBUTING.md",
+  ".github/SECURITY.md",
 ]
   .map((f) => path.join(root, f))
   .filter((f) => fs.existsSync(f))
   .concat(fs.existsSync("docs") ? walk(path.join(root, "docs")) : []);
 for (const file of files) {
   const text = fs.readFileSync(file, "utf8");
-  for (const match of text.matchAll(/\]\(([^)]+)\)/g)) {
+  const matches = [
+    ...text.matchAll(/\]\(([^)]+)\)/g),
+    ...text.matchAll(/(?:src|href)="([^"]+)"/g),
+  ];
+  for (const match of matches) {
     const link = match[1].split("#")[0];
     if (!link || /^(https?:|mailto:|data:|#)/.test(link)) continue;
     if (

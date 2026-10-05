@@ -1,3 +1,11 @@
+# README và Apache-2.0 — 05/10/2026
+
+User yêu cầu decor repo và thêm Apache. README VI/EN cùng bố cục: banner SVG light terminal, live CI/Apache/Devnet badges, demo screenshot thật, strengths có source, Mermaid flow, fee table100→98/1/1, evidence và source map. Không thêm claim traction/audit/Mainnet. About/topics/homepage đã cập nhật trên GitHub.
+
+LICENSE nguyên văn Apache2.0 từ ASF, NOTICE giữ copyright O Bao Tri. package.json/lock root/Cargo manifest Apache-2.0. Logo excluded; OFL/ISC/Feather MIT/historical MIT reference giữ nguyên upstream notices. Không viết lại lịch sử. Bổ sung docs/legal, CONTRIBUTING/SECURITY, bật private vulnerability reporting (GET enabled=true).
+
+Đã render/xem banner, kiểm bounds không cắt chữ, npm run verify pass53 unit17 browser/build/lint/typecheck/docs. Docs checker bổ sung local HTML asset links và community Markdown. CI kiểm trên mỗi push main; badge đầu README dẫn đến trạng thái lượt mới nhất. GitHub license detection được kiểm sau push. Không cần env mới, không đổi logic escrow/treasury/program và không deploy lại contract chỉ vì license metadata.
+
 # Trạng thái — v0.4 phí hệ thống, 05/10/2026
 
 Treasury owner: CXjKGEBNTTotzoF26nGPfAG4AFicGgP72SMqUQKY1pJN. FeeConfig immutable Devnet đã initialize đúng ví. Deal mới 1% trọng tài +1% hệ thống, seller net98%; refund zero fee. Legacy fee0 platform giữ nguyên. Không env/key Vercel mới.

@@ -1,40 +1,153 @@
-# pipicachu · Escrow deals
+<p align="center"><img src="public/brand/picachu-logo.jpg" width="88" alt="pipicachu logo"></p>
+<h1 align="center">pipicachu · Escrow deals</h1>
+<p align="center">A deal link for community intermediaries and their customers.<br>Buyers deposit USDC, sellers deliver, funds settle under agreed conditions.</p>
 
-[Website](https://pipicachu.vercel.app) · [Devnet demo](https://pipicachu.vercel.app/demo) · [Tiếng Việt](README.md)
+<p align="center">
+  <a href="https://github.com/2274802010922/pipicachu/actions/workflows/quality.yml"><img src="https://github.com/2274802010922/pipicachu/actions/workflows/quality.yml/badge.svg?branch=main" alt="Quality CI"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-Apache_2.0-2456E6?style=flat-square" alt="Apache 2.0"></a>
+  <a href="https://pipicachu.vercel.app/demo"><img src="https://img.shields.io/badge/Solana-Devnet-B7F34D?style=flat-square&amp;labelColor=091426" alt="Solana Devnet"></a>
+</p>
+<p align="center"><a href="https://pipicachu.vercel.app"><strong>Open product</strong></a> · <a href="https://pipicachu.vercel.app/demo">Explore 6 scenarios</a> · <a href="docs/evidence/README.md">Inspect evidence</a> · <a href="README.md">Tiếng Việt</a></p>
 
-A small escrow tool for community intermediaries and their customers. Sellers create a deal link, one arbitrator accepts, buyers deposit Devnet USDC, and delivery is followed by confirmation, timeout release or dispute resolution.
+![A deal link, clear rules: create → fund USDC → deliver → confirm or dispute](docs/assets/readme-banner.svg)
 
-**Devnet only. Test tokens have no real value. No independent audit; upgrade authority is retained.**
+> **Devnet demo.** Test USDC has no real value. Upgrade authority is retained; there is no independent audit. Do not use real assets.
 
-## Flow
+## Who is it for?
 
-- Immutable participants, mint, amount, deadlines and fee.
-- Program-controlled token vault holds the principal.
-- Missed delivery allows a buyer refund; delivery opens the review window.
-- Buyer confirmation or an undisputed review deadline allows seller payout.
-- Disputes stop timeout payout. The sole arbitrator rules before the deadline.
-- If the arbitrator expires, a buyer proposal requires seller acceptance. Without agreement, funds may remain locked.
-- The arbitrator reserves 10% of deal value. New deals charge 1% arbitrator + 1% platform (98% seller net); refunds have no fee. Legacy deals keep their original 1% arbitrator fee.
+Community intermediaries handling digital goods/services, and their buyers and sellers. Buyers deposit into a Solana program vault instead of the intermediary's personal wallet. All parties share the same deal state and receipts; an arbitrator handles disputes under fixed permissions.
 
-Bond is not insurance. No wrongful-ruling slashing or appeal. Automatic Devnet payout uses a keeper on an approximately 5-minute schedule, with possible service delays. Off-chain goods and game-account ownership are not verified. No validated willingness to pay or traction is claimed.
+This is a technical MVP. User research, revenue and willingness to pay have not been validated. It currently uses **Devnet USDC**, with no USDT or VND P2P flow.
 
-## Build and review
+## See it running
 
-v0.4: 53 unit tests, 17 browser tests and 39 executable program checks; six live Devnet scenarios verified from finalized receipts and exact vault transfers. Website signing passed using a test provider, not the actual Phantom extension. See [evidence](docs/evidence/README.md).
+[**Open the demo lab →**](https://pipicachu.vercel.app/demo) Six finalized deal scenarios: buyer confirmation, review timeout, missed-delivery refund, arbitrator seller payout, arbitrator buyer refund and mutual settlement after arbitration expires.
+
+![Real 1 USDC deal: seller receives 0.98 USDC, total fees 0.02 USDC](docs/evidence/screenshots/completed-en.png)
+
+## What the current build does well
+
+| Strength                                                 | Implementation                                                                   | Inspect                                            |
+| -------------------------------------------------------- | -------------------------------------------------------------------------------- | -------------------------------------------------- |
+| Principal stays outside the arbitrator's personal wallet | Program-controlled vault; arbitrator can only pay seller or refund buyer         | [Rust](programs/pipicachu-escrow/src/lib.rs)       |
+| Clear terms before funding                               | Fixed participants, mint, amount, fees and deadlines                             | [Policy](docs/product/README.md)                   |
+| Atomic settlement                                        | Payout, both fees and bond unlock together; reject redirects and repeated payout | [Program tests](tests/program/cycle.ts)            |
+| Fee-free refunds                                         | Full principal to buyer; arbitrator bond is separate                             | [Receipts](docs/evidence/devnet-escrow-cycle.json) |
+| Timeout payout without another seller signature          | Keeper submits finalize; disputes block automatic payout                         | [Live keeper](docs/evidence/keeper-live.json)      |
+| A readable next step                                     | Consistent VI/EN UI, highlighted current step, one primary action                | [Design](docs/design/system.md)                    |
+
+## Deal flow
+
+```mermaid
+flowchart TD
+  A[Seller creates deal link] --> B[Arbitrator prepares bond and accepts]
+  B --> C[Buyer deposits USDC into vault]
+  C --> D{Delivery before deadline?}
+  D -->|No| E[Full buyer refund]
+  D -->|Yes| F{Buyer reviews}
+  F -->|Confirms| G[Seller payout and fee split]
+  F -->|Deadline, no dispute| H[Keeper submits finalize]
+  H --> G
+  F -->|Disputes| I[Arbitrator rules]
+  I -->|Pay seller| G
+  I -->|Refund buyer| E
+  I -->|Deadline expires| J[Buyer proposes, seller accepts]
+  J --> K[Settle by agreement]
+```
+
+Without agreement after the arbitrator expires, funds may remain locked. A **10% arbitrator bond** locks when the buyer funds and unlocks at settlement. It is not insurance or a wrongful-ruling penalty.
+
+## Transparent fees
+
+For a **new 100 USDC deal**, the buyer deposits exactly 100 USDC:
+
+| Outcome       | Buyer refund | Seller receives | Arbitrator | Platform |
+| ------------- | ------------ | --------------- | ---------- | -------- |
+| Seller payout | —            | 98 USDC         | 1 USDC     | 1 USDC   |
+| Buyer refund  | 100 USDC     | 0               | 0          | 0        |
+
+Legacy deals keep their original fee snapshot. Each 1% fee rounds down to atomic USDC units; the seller keeps any remainder. SOL network fees and the arbitrator bond are separate.
+
+<details>
+<summary>Public Devnet addresses</summary>
+
+| Component               | Address                                        |
+| ----------------------- | ---------------------------------------------- |
+| Program                 | `4Xds5m5JtWR8HbNLdGeF7e3Qh3akKMHwMfjKsQeVXnrb` |
+| Circle Devnet USDC mint | `4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU` |
+| Platform treasury       | `CXjKGEBNTTotzoF26nGPfAG4AFicGgP72SMqUQKY1pJN` |
+
+The immutable FeeConfig defines the treasury; UI/env cannot select the recipient. [Health](https://pipicachu.vercel.app/api/health), [deployment source](src/escrow/deployment.json), [legacy rollout](docs/evidence/platform-fee-rollout.json).
+
+</details>
+
+## Evidence, with scope
+
+| Verified scope           | Result / source                                                                        |
+| ------------------------ | -------------------------------------------------------------------------------------- |
+| Unit and IDL             | **53 tests**                                                                           |
+| Browser                  | **17 tests** · VI/EN · 375/768/1024/1440px · axe                                       |
+| Local smart contract     | **39 executable checks** · labelled synthetic mint                                     |
+| Devnet                   | **39 checks**, **6 scenarios** with finalized vault-transfer receipts                  |
+| Legacy fee compatibility | Pre-upgrade funded deal pays 99% seller, 0% platform                                   |
+| Keeper service           | Real keeper signer; 98/1/1 payout; disputed deal untouched                             |
+| Deployed website         | Signing and rejection using a test provider, not actual Phantom-extension verification |
+
+[Evidence index](docs/evidence/README.md) separates live receipts, synthetic fixtures and browser scope. The CI badge shows the latest run; counts above are a v0.4 snapshot. Keeper runs approximately every five minutes and may be delayed; there is no exact payout-time guarantee.
+
+## Architecture and original work
+
+```text
+Next.js UI + Phantom → Devnet RPC proxy → Rust / Anchor
+                                        ├─ Deal + USDC vault
+                                        ├─ Arbitrator + bond vault
+                                        └─ Immutable mint / fee config
+GitHub Actions keeper ─────────────────→ finalize after deadline
+```
+
+Original work: state machine, account constraints, vault/bond handling, transaction client, keeper, VI/EN UI and harness. Anchor/SPL provide serialization and token CPI. The backend holds no withdrawal signing key; the dedicated keeper wallet uses Devnet SOL for fees. This project does not claim to invent escrow.
+
+| Review area            | Source                                                                                              |
+| ---------------------- | --------------------------------------------------------------------------------------------------- |
+| Smart contract / IDL   | [lib.rs](programs/pipicachu-escrow/src/lib.rs) · [escrow.json](client/idl/escrow.json)              |
+| Client / state         | [client.ts](src/escrow/client.ts)                                                                   |
+| Architecture / policy  | [Architecture](docs/architecture/README.md) · [Product](docs/product/README.md)                     |
+| Tests / evidence       | [Testing](docs/testing/README.md) · [Evidence](docs/evidence/README.md)                             |
+| Vercel / Devnet        | [Deployment](docs/deployment/README.md)                                                             |
+| Continuing development | [CURRENT_STATE](docs/harness/context/CURRENT_STATE.md) · [HANDOFF](docs/harness/context/HANDOFF.md) |
+
+## Run locally
+
+Use **Node.js 24**, npm and a Devnet RPC, from this repository's own checkout:
 
 ```bash
 npm ci
 cp .env.example .env.local
 npm run dev
-npm run verify
 ```
 
-[Architecture](docs/architecture/README.md), [deployment](docs/deployment/README.md), [tests](docs/testing/README.md), [evidence](docs/evidence/README.md). Includes Anchor contract, generated IDL, transaction client and executable program tests. No server custody key, AI or account database.
+PowerShell can use `Copy-Item .env.example .env.local`. The two variables in `.env.example` are sufficient for the web app; never put a private key on Vercel.
 
-Code MIT; logo excluded. [Notices](THIRD_PARTY_NOTICES.md). Former explainer preserved at checkpoint `7315d42`. Previous Picachu project untouched.
+```bash
+npm run verify       # format, lint, types, unit, build, browser, docs
+npm run check:live   # verify Devnet program, mint and treasury
+```
 
-## Platform fees v1
+Program tests require Linux/WSL, Solana CLI 3.1.10 and Rust; see [testing](docs/testing/README.md). Forks need separate keys, program and keeper before deployment; see [deployment](docs/deployment/README.md).
 
-New deals: buyer deposits the principal; seller receives 98%, arbitrator 1%, pipicachu 1%. Refunds return the full principal without fees. Existing deals retain their original fee snapshot. Immutable Devnet treasury: `CXjKGEBNTTotzoF26nGPfAG4AFicGgP72SMqUQKY1pJN`. No additional environment variable or private key required.
+## Limits
 
-Current scope: 53 unit tests, 17 browser tests, 39 executable program checks and six live Devnet scenarios. [Evidence](docs/evidence/README.md) separates current fee validation from historical 1%-only receipts. Injected test-provider signing is not actual Phantom-extension verification.
+Escrow does not verify off-chain goods, identities or whether a game account can be reclaimed. Hashes bind evidence exchanged separately. There is no wrongful-ruling slashing, appeal, insurance or independent audit. Upgrade authority and the USDC issuer remain trust assumptions. Mainnet, AI, marketplace and off-ramp are outside this MVP.
+
+## License and attribution
+
+Original project code and documentation use **[Apache License 2.0](LICENSE)**. [NOTICE](NOTICE), [third-party notices](THIRD_PARTY_NOTICES.md) and [license scope](docs/legal/README.md) retain upstream attribution and separate dependency/font licenses. The pixel logo is excluded; no third-party artwork, character or trademark rights are granted. Earlier revisions retain their historical notices.
+
+Author: **O Bao Tri · [@2274802010922](https://github.com/2274802010922)**. [Contributing](.github/CONTRIBUTING.md) · [Security reports](.github/SECURITY.md).
+
+<details>
+<summary>Project history</summary>
+
+The former transaction explainer remains at checkpoint `7315d42`. Receipts before platform fees and the two-arbitrator version are in [archive](docs/archive/README.md). The previous Picachu project is untouched; its videos are not presented as escrow demos.
+
+</details>
