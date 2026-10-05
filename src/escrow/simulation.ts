@@ -37,5 +37,7 @@ export function simulationFailureCode(
     return "ACTION_EXPIRED_OR_CHANGED";
   if (lines.some((line) => /Error Code: InvalidTerms\./.test(line)))
     return "INVALID_TERMS";
+  if (lines.some((line) => /Error Code: OrganizationUnavailable\./.test(line)))
+    return "ORGANIZATION_UNAVAILABLE";
   return "SIMULATION_FAILED";
 }

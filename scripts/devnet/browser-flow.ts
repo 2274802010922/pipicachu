@@ -125,26 +125,16 @@ console.log(
 await page.getByRole("button", { name: /Ngắt/ }).waitFor();
 await page.getByLabel("Ví người mua", { exact: true }).fill(addresses.buyer);
 await page
-  .getByLabel("Ví trọng tài", { exact: true })
-  .fill(addresses.arbitrator);
+  .getByLabel("Trọng tài", { exact: true })
+  .selectOption(addresses.arbitrator);
 await page.getByLabel("Số tiền USDC Devnet").fill("1");
 await page
-  .getByLabel("Điều khoản công khai")
+  .getByLabel("Bạn bán gì và điều kiện bàn giao?")
   .fill(
     "Devnet browser test. Deliver a permitted test digital file through the agreed channel; no personal credentials. Buyer pays 1 USDC; seller payout 0.98; arbitrator fee 0.01; platform fee 0.01.",
   );
-await page.getByRole("checkbox").check();
-await page.getByRole("button", { name: "Tạo và ký bằng ví" }).click();
-await page
-  .getByRole("link", { name: "Mở deal vừa tạo để sao chép link" })
-  .waitFor({ timeout: 120000 });
-await page
-  .getByRole("link", { name: "Mở deal vừa tạo để sao chép link" })
-  .click();
-await page
-  .getByRole("heading", { level: 1 })
-  .filter({ hasText: "Trọng tài chuẩn bị cọc" })
-  .waitFor();
+await page.getByRole("button", { name: "Tạo giao dịch và ký bằng ví" }).click();
+await page.waitForURL(/\/deals\/(?!new)[^/]+$/, { timeout: 120000 });
 const id = new URL(page.url()).pathname.split("/").at(-1)!;
 console.log("Created deal", id);
 fs.writeFileSync("work/escrow/browser-deal.json", JSON.stringify({ id }));
@@ -161,9 +151,11 @@ async function role(value: string) {
     .click();
 }
 async function action(name: string) {
-  const checkbox = page.getByRole("checkbox");
-  await checkbox.check();
   await page.getByRole("button", { name, exact: true }).click();
+  if (await page.getByRole("dialog").isVisible())
+    await page
+      .getByRole("button", { name: "Xác nhận và ký", exact: true })
+      .click();
   try {
     await page
       .locator("main")
@@ -187,8 +179,6 @@ async function action(name: string) {
     .getByRole("button", { name: "Tải lại trạng thái", exact: true })
     .click();
 }
-await role("arbitrator");
-await action("Nhận deal");
 await role("buyer");
 await action("Nạp 1 USDC");
 await page.screenshot({
@@ -201,7 +191,6 @@ await page
   .fill("Shared test file receipt through agreed channel.");
 await action("Đã giao hàng");
 await role("buyer");
-await page.getByRole("checkbox").check();
 await page.evaluate(() =>
   (window as unknown as { __rejectNext: () => void }).__rejectNext(),
 );
@@ -211,6 +200,7 @@ await page
     exact: true,
   })
   .click();
+await page.getByRole("button", { name: "Xác nhận và ký", exact: true }).click();
 await page
   .locator("main")
   .getByRole("alert")
@@ -248,7 +238,7 @@ fs.writeFileSync(
         "Injected test provider; private keys stay in Node, not browser. NOT actual Phantom extension.",
       confirmed: [
         "create",
-        "accept arbitrator",
+        "standing consent (no per-deal arbitrator signature)",
         "fund",
         "deliver",
         "reject signature without state change",

@@ -710,3 +710,70 @@ th {
   color: #633500;
   box-shadow: 0 0 0 3px #a6560015;
 }
+
+/* Prominent actions, static feedback, no decorative animation. */
+button,
+.button {
+  border-color: var(--blue);
+  font-weight: 700;
+  box-shadow: 0 2px 0 rgba(9, 20, 38, 0.06);
+}
+button.primary,
+.button.primary {
+  border: 2px solid #376700;
+  box-shadow: 0 3px 0 rgba(9, 20, 38, 0.12);
+  color: var(--ink);
+}
+button:disabled {
+  box-shadow: none;
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.wallet-connected {
+  border: 2px solid var(--blue);
+  background: #eaf0ff;
+  color: var(--ink);
+}
+.role-banner,
+.fee-preview {
+  padding: 12px 16px;
+  border: 1px solid #a9bde9;
+  border-radius: 10px;
+  background: #edf2ff;
+  color: var(--ink);
+}
+select {
+  min-height: 48px;
+  max-width: 100%;
+}
+.deal-flow {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+.deal-flow:has(li:nth-child(5)) {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+@media (max-width: 768px) {
+  .actions button,
+  .stack > button {
+    width: 100%;
+  }
+}
+
+.confirmation-dialog {
+  border: 2px solid var(--blue);
+  border-radius: 16px;
+  padding: 24px;
+  background: var(--surface);
+  color: var(--ink);
+  width: min(520px, calc(100vw - 32px));
+  box-shadow: 0 16px 64px #09142633;
+}
+.confirmation-dialog::backdrop {
+  background: #09142688;
+}
+@media (max-width: 768px) {
+  .progress-mobile .deal-flow,
+  .progress-mobile .deal-flow:has(li:nth-child(5)) {
+    grid-template-columns: 1fr;
+  }
+}

@@ -33,6 +33,83 @@ pub mod pipicachu_escrow {
         ctx.accounts.config.bump = ctx.bumps.config;
         Ok(())
     }
+    pub fn approve_organization(
+        ctx: Context<ApproveOrganization>,
+        minimum_deposit: u64,
+        maximum_deal: u64,
+        funding_seconds: i64,
+        delivery_seconds: i64,
+        review_seconds: i64,
+        arbitration_seconds: i64,
+    ) -> Result<()> {
+        require_keys_eq!(
+            ctx.accounts.manager.key(),
+            INITIALIZER,
+            EscrowError::Unauthorized
+        );
+        require!(
+            minimum_deposit >= 1_000_000
+                && maximum_deal >= 1_000_000
+                && maximum_deal <= 1_000_000_000_000,
+            EscrowError::InvalidTerms
+        );
+        for seconds in [
+            funding_seconds,
+            delivery_seconds,
+            review_seconds,
+            arbitration_seconds,
+        ] {
+            require!(
+                (10..=MAX_SECONDS).contains(&seconds),
+                EscrowError::InvalidTerms
+            );
+        }
+        let org = &mut ctx.accounts.organization;
+        org.authority = ctx.accounts.arbitrator.authority;
+        org.mint = ctx.accounts.mint.key();
+        org.approved = true;
+        org.accepting = false;
+        org.minimum_deposit = minimum_deposit;
+        org.maximum_deal = maximum_deal;
+        org.funding_seconds = funding_seconds;
+        org.delivery_seconds = delivery_seconds;
+        org.review_seconds = review_seconds;
+        org.arbitration_seconds = arbitration_seconds;
+        org.bump = ctx.bumps.organization;
+        Ok(())
+    }
+    pub fn set_organization_approval(
+        ctx: Context<ManageOrganization>,
+        approved: bool,
+    ) -> Result<()> {
+        require_keys_eq!(
+            ctx.accounts.manager.key(),
+            INITIALIZER,
+            EscrowError::Unauthorized
+        );
+        ctx.accounts.organization.approved = approved;
+        if !approved {
+            ctx.accounts.organization.accepting = false;
+        }
+        Ok(())
+    }
+    pub fn set_organization_accepting(
+        ctx: Context<OrganizationAction>,
+        accepting: bool,
+    ) -> Result<()> {
+        if accepting {
+            require!(
+                ctx.accounts.organization.approved,
+                EscrowError::OrganizationUnavailable
+            );
+            require!(
+                ctx.accounts.arbitrator.total >= ctx.accounts.organization.minimum_deposit,
+                EscrowError::InsufficientBond
+            );
+        }
+        ctx.accounts.organization.accepting = accepting;
+        Ok(())
+    }
     pub fn register(ctx: Context<Register>) -> Result<()> {
         let a = &mut ctx.accounts.arbitrator;
         a.authority = ctx.accounts.authority.key();
@@ -58,6 +135,12 @@ pub mod pipicachu_escrow {
         Ok(())
     }
     pub fn withdraw_bond(ctx: Context<Bond>, amount: u64) -> Result<()> {
+        if let Some(org) = load_organization(&ctx.accounts.organization.to_account_info())? {
+            require!(
+                !org.accepting && ctx.accounts.arbitrator.locked == 0,
+                EscrowError::BondLocked
+            );
+        }
         let a = &ctx.accounts.arbitrator;
         require!(
             amount > 0 && amount <= a.total - a.locked,
@@ -89,6 +172,14 @@ pub mod pipicachu_escrow {
         arbitration_seconds: i64,
         terms: String,
     ) -> Result<()> {
+        require!(
+            ctx.accounts.organization.approved && ctx.accounts.organization.accepting,
+            EscrowError::OrganizationUnavailable
+        );
+        require!(
+            amount <= ctx.accounts.organization.maximum_deal,
+            EscrowError::InvalidTerms
+        );
         let seller = ctx.accounts.seller.key();
         let arbitrator = ctx.accounts.arbitrator.authority;
         require!(
@@ -134,6 +225,99 @@ pub mod pipicachu_escrow {
         d.approvals = 0;
         d.bump = ctx.bumps.deal;
         d.terms = terms;
+        d.workflow_version = 0;
+        Ok(())
+    }
+    pub fn create_organization_deal(
+        ctx: Context<CreateOrganizationDeal>,
+        nonce: u64,
+        buyer: Pubkey,
+        amount: u64,
+        funding_seconds: i64,
+        delivery_seconds: i64,
+        review_seconds: i64,
+        arbitration_seconds: i64,
+        terms: String,
+    ) -> Result<()> {
+        let org = &ctx.accounts.organization;
+        require!(
+            org.approved && org.accepting,
+            EscrowError::OrganizationUnavailable
+        );
+        require!(
+            ctx.accounts.arbitrator.total >= org.minimum_deposit,
+            EscrowError::InsufficientBond
+        );
+        require!(amount <= org.maximum_deal, EscrowError::InvalidTerms);
+        require!(
+            [
+                funding_seconds,
+                delivery_seconds,
+                review_seconds,
+                arbitration_seconds
+            ] == [
+                org.funding_seconds,
+                org.delivery_seconds,
+                org.review_seconds,
+                org.arbitration_seconds
+            ],
+            EscrowError::InvalidTerms
+        );
+        require!(
+            ctx.accounts
+                .arbitrator
+                .total
+                .checked_sub(ctx.accounts.arbitrator.locked)
+                .ok_or(EscrowError::Overflow)?
+                >= amount.div_ceil(10),
+            EscrowError::InsufficientBond
+        );
+        let seller = ctx.accounts.seller.key();
+        let arbitrator = ctx.accounts.arbitrator.authority;
+        require!(
+            buyer != seller && buyer != arbitrator && seller != arbitrator,
+            EscrowError::InvalidTerms
+        );
+        require!(
+            amount >= 1_000_000 && amount <= 1_000_000_000_000,
+            EscrowError::InvalidTerms
+        );
+        require!(
+            !terms.trim().is_empty() && terms.len() <= 512,
+            EscrowError::InvalidTerms
+        );
+        for seconds in [
+            funding_seconds,
+            delivery_seconds,
+            review_seconds,
+            arbitration_seconds,
+        ] {
+            require!(
+                (10..=MAX_SECONDS).contains(&seconds),
+                EscrowError::InvalidTerms
+            );
+        }
+        let d = &mut ctx.accounts.deal;
+        d.seller = seller;
+        d.buyer = buyer;
+        d.arbitrator = arbitrator;
+        d.mint = ctx.accounts.mint.key();
+        d.nonce = nonce;
+        d.amount = amount;
+        d.bond = amount.div_ceil(10);
+        d.fee = amount / 100;
+        d.platform_fee = amount / 100;
+        d.fee_version = 1;
+        d.created_at = Clock::get()?.unix_timestamp;
+        d.fund_by = d.created_at + funding_seconds;
+        d.delivery_seconds = delivery_seconds;
+        d.review_seconds = review_seconds;
+        d.arbitration_seconds = arbitration_seconds;
+        d.state = State::Created;
+        d.approvals = 1;
+        d.bump = ctx.bumps.deal;
+        d.terms = terms;
+        d.workflow_version = 1;
         Ok(())
     }
     pub fn accept_deal(ctx: Context<Act>) -> Result<()> {
@@ -165,6 +349,19 @@ pub mod pipicachu_escrow {
             d.state == State::Created && now < d.fund_by && d.approvals == 1,
             EscrowError::WrongState
         );
+        if d.workflow_version == 1 {
+            let org = load_organization(&ctx.accounts.organization.to_account_info())?
+                .ok_or(EscrowError::OrganizationUnavailable)?;
+            require!(
+                org.approved && org.accepting,
+                EscrowError::OrganizationUnavailable
+            );
+            require!(
+                ctx.accounts.arbitrator.total >= org.minimum_deposit
+                    && d.amount <= org.maximum_deal,
+                EscrowError::InsufficientBond
+            );
+        }
         for a in [&mut ctx.accounts.arbitrator] {
             require!(a.total - a.locked >= d.bond, EscrowError::InsufficientBond);
             a.locked = a.locked.checked_add(d.bond).ok_or(EscrowError::Overflow)?;
@@ -297,7 +494,9 @@ fn settle(ctx: Context<Settle>, pay_seller: bool) -> Result<()> {
     };
     let fee = if pay_seller { d.fee } else { 0 };
     require!(
-        d.fee_version <= 1 && (d.fee_version != 0 || d.platform_fee == 0),
+        d.workflow_version <= 1
+            && d.fee_version <= 1
+            && (d.fee_version != 0 || d.platform_fee == 0),
         EscrowError::InvalidTerms
     );
     let platform_fee = if pay_seller { d.platform_fee } else { 0 };
@@ -407,6 +606,9 @@ pub struct Bond<'info> {
     #[account(mut, seeds=[b"bond",arbitrator.key().as_ref()], bump, token::mint=mint, token::authority=arbitrator)]
     pub vault: Box<Account<'info, TokenAccount>>,
     pub token_program: Program<'info, Token>,
+    /// CHECK: Seed-bound optional registry, validated for owner/discriminator in handlers.
+    #[account(seeds=[b"organization",authority.key().as_ref()],bump)]
+    pub organization: UncheckedAccount<'info>,
 }
 #[derive(Accounts)]
 #[instruction(nonce:u64)]
@@ -426,6 +628,29 @@ pub struct CreateDeal<'info> {
     pub system_program: Program<'info, System>,
     #[account(seeds=[b"platform_fee_v1"],bump=fee_config.bump)]
     pub fee_config: Account<'info, FeeConfig>,
+    #[account(seeds=[b"organization",arbitrator.authority.as_ref()],bump=organization.bump,constraint=organization.mint==mint.key())]
+    pub organization: Box<Account<'info, Organization>>,
+}
+#[derive(Accounts)]
+#[instruction(nonce:u64)]
+pub struct CreateOrganizationDeal<'info> {
+    #[account(mut)]
+    pub seller: Signer<'info>,
+    #[account(seeds=[b"config"], bump=config.bump, has_one=mint)]
+    pub config: Account<'info, Config>,
+    pub mint: Box<Account<'info, Mint>>,
+    #[account(has_one=mint)]
+    pub arbitrator: Box<Account<'info, Arbitrator>>,
+    #[account(init, payer=seller, space=8+868, seeds=[b"deal",seller.key().as_ref(), &nonce.to_le_bytes()], bump)]
+    pub deal: Box<Account<'info, Deal>>,
+    #[account(init, payer=seller, seeds=[b"vault",deal.key().as_ref()], bump, token::mint=mint, token::authority=deal)]
+    pub vault: Box<Account<'info, TokenAccount>>,
+    pub token_program: Program<'info, Token>,
+    pub system_program: Program<'info, System>,
+    #[account(seeds=[b"platform_fee_v1"],bump=fee_config.bump)]
+    pub fee_config: Account<'info, FeeConfig>,
+    #[account(seeds=[b"organization",arbitrator.authority.as_ref()],bump=organization.bump,constraint=organization.mint==mint.key())]
+    pub organization: Box<Account<'info, Organization>>,
 }
 #[derive(Accounts)]
 pub struct Act<'info> {
@@ -446,6 +671,9 @@ pub struct Fund<'info> {
     #[account(mut, seeds=[b"vault",deal.key().as_ref()], bump, token::mint=mint, token::authority=deal)]
     pub vault: Box<Account<'info, TokenAccount>>,
     pub token_program: Program<'info, Token>,
+    /// CHECK: Seed-bound optional registry, validated for owner/discriminator in handlers.
+    #[account(seeds=[b"organization",deal.arbitrator.as_ref()],bump)]
+    pub organization: UncheckedAccount<'info>,
 }
 #[derive(Accounts)]
 pub struct Settle<'info> {
@@ -524,6 +752,7 @@ pub struct Deal {
     // Appended inside existing minimum 28-byte padding; legacy accounts retain zero fee/version.
     pub platform_fee: u64,
     pub fee_version: u8,
+    pub workflow_version: u8,
 }
 #[derive(AnchorSerialize, AnchorDeserialize, Clone, PartialEq, Eq)]
 pub enum State {
@@ -549,6 +778,56 @@ pub enum EscrowError {
     InsufficientBond,
     #[msg("Arithmetic overflow")]
     Overflow,
+    #[msg("Approved organization is not accepting eligible deals")]
+    OrganizationUnavailable,
+}
+
+fn load_organization(info: &AccountInfo) -> Result<Option<Organization>> {
+    if info.data_is_empty() {
+        return Ok(None);
+    }
+    require_keys_eq!(*info.owner, crate::ID, EscrowError::Unauthorized);
+    let data = info.try_borrow_data()?;
+    Ok(Some(Organization::try_deserialize(&mut &data[..])?))
+}
+#[account]
+pub struct Organization {
+    pub authority: Pubkey,
+    pub mint: Pubkey,
+    pub approved: bool,
+    pub accepting: bool,
+    pub minimum_deposit: u64,
+    pub maximum_deal: u64,
+    pub funding_seconds: i64,
+    pub delivery_seconds: i64,
+    pub review_seconds: i64,
+    pub arbitration_seconds: i64,
+    pub bump: u8,
+}
+#[derive(Accounts)]
+pub struct ApproveOrganization<'info> {
+    #[account(mut)]
+    pub manager: Signer<'info>,
+    #[account(has_one=mint)]
+    pub arbitrator: Box<Account<'info, Arbitrator>>,
+    pub mint: Box<Account<'info, Mint>>,
+    #[account(init,payer=manager,space=8+115,seeds=[b"organization",arbitrator.authority.as_ref()],bump)]
+    pub organization: Box<Account<'info, Organization>>,
+    pub system_program: Program<'info, System>,
+}
+#[derive(Accounts)]
+pub struct ManageOrganization<'info> {
+    pub manager: Signer<'info>,
+    #[account(mut,seeds=[b"organization",organization.authority.as_ref()],bump=organization.bump)]
+    pub organization: Box<Account<'info, Organization>>,
+}
+#[derive(Accounts)]
+pub struct OrganizationAction<'info> {
+    pub authority: Signer<'info>,
+    #[account(mut,seeds=[b"organization",authority.key().as_ref()],bump=organization.bump,has_one=authority)]
+    pub organization: Box<Account<'info, Organization>>,
+    #[account(seeds=[b"arb",authority.key().as_ref()],bump=arbitrator.bump,has_one=authority,constraint=arbitrator.mint==organization.mint)]
+    pub arbitrator: Box<Account<'info, Arbitrator>>,
 }
 
 #[cfg(test)]
@@ -556,17 +835,28 @@ mod compatibility_tests {
     use super::*;
     #[test]
     fn legacy_maximum_terms_decode_without_platform_fee() {
-        let mut legacy=Vec::new();
+        let mut legacy = Vec::new();
         legacy.extend_from_slice(Deal::DISCRIMINATOR);
-        for _ in 0..4 { legacy.extend_from_slice(Pubkey::default().as_ref()); }
-        for value in [42u64,100_000_000,10_000_000,1_000_000] {legacy.extend_from_slice(&value.to_le_bytes());}
-        for value in [1i64,600,300,120,120,0,0,0] {legacy.extend_from_slice(&value.to_le_bytes());}
-        legacy.extend_from_slice(&[0,0,255,0]);legacy.extend_from_slice(&[0u8;96]);
-        legacy.extend_from_slice(&512u32.to_le_bytes());legacy.extend_from_slice(&[b'x';512]);
-        assert_eq!(legacy.len(),848);
-        legacy.resize(876,0);
-        let account=Deal::try_deserialize(&mut &legacy[..]).unwrap();
-        assert_eq!(account.platform_fee,0);assert_eq!(account.fee_version,0);
-        assert_eq!(account.terms.len(),512);assert_eq!(account.amount-account.fee,99_000_000);
+        for _ in 0..4 {
+            legacy.extend_from_slice(Pubkey::default().as_ref());
+        }
+        for value in [42u64, 100_000_000, 10_000_000, 1_000_000] {
+            legacy.extend_from_slice(&value.to_le_bytes());
+        }
+        for value in [1i64, 600, 300, 120, 120, 0, 0, 0] {
+            legacy.extend_from_slice(&value.to_le_bytes());
+        }
+        legacy.extend_from_slice(&[0, 0, 255, 0]);
+        legacy.extend_from_slice(&[0u8; 96]);
+        legacy.extend_from_slice(&512u32.to_le_bytes());
+        legacy.extend_from_slice(&[b'x'; 512]);
+        assert_eq!(legacy.len(), 848);
+        legacy.resize(876, 0);
+        let account = Deal::try_deserialize(&mut &legacy[..]).unwrap();
+        assert_eq!(account.platform_fee, 0);
+        assert_eq!(account.fee_version, 0);
+        assert_eq!(account.workflow_version, 0);
+        assert_eq!(account.terms.len(), 512);
+        assert_eq!(account.amount - account.fee, 99_000_000);
     }
 }

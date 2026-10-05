@@ -7,6 +7,9 @@ import {
   MINT,
   PROGRAM_ID,
   FEE_CONFIG,
+  organizationAddress,
+  u64,
+  i64,
 } from "../../src/escrow/client";
 fs.mkdirSync("work/private", { recursive: true });
 fs.mkdirSync("work/validator", { recursive: true });
@@ -102,3 +105,35 @@ fs.writeFileSync(
     ),
   ),
 );
+
+const arbFile = "work/private/escrow-arbitrator.json";
+if (!fs.existsSync(arbFile))
+  fs.writeFileSync(arbFile, JSON.stringify([...Keypair.generate().secretKey]));
+const arb = Keypair.fromSecretKey(
+  Uint8Array.from(JSON.parse(fs.readFileSync(arbFile, "utf8"))),
+);
+const [orgAddress, orgBump] = PublicKey.findProgramAddressSync(
+  [Buffer.from("organization"), arb.publicKey.toBuffer()],
+  PROGRAM_ID,
+);
+fs.writeFileSync(
+  "work/validator/organization.json",
+  JSON.stringify(
+    account(
+      orgAddress,
+      PROGRAM_ID,
+      Buffer.concat([
+        (await digest("account:Organization")).subarray(0, 8),
+        arb.publicKey.toBuffer(),
+        MINT.toBuffer(),
+        Buffer.from([1, 1]),
+        u64(1_000_000n),
+        u64(1_000_000_000_000n),
+        ...Array(4).fill(20).map(i64),
+        Buffer.from([orgBump]),
+      ]),
+      1746960,
+    ),
+  ),
+);
+console.log("ORG_GENESIS", organizationAddress(arb.publicKey).toBase58());

@@ -1,0 +1,50 @@
+{
+  "at": "2026-10-05T07:52:53.532Z",
+  "network": "devnet",
+  "source": "Circle Devnet USDC, CLI signing (not Phantom extension)",
+  "deal": "9PDbicPSGUJK2HuWrRaLYPm4KrMoUhdwK5q2fpgGG6Uw",
+  "checks": [
+    {
+      "case": "non-manager cannot revoke registry"
+    },
+    {
+      "case": "wrong signer cannot toggle service"
+    },
+    {
+      "case": "withdrawal locked while accepting even with unused capacity"
+    },
+    {
+      "case": "amount above organization policy"
+    },
+    {
+      "case": "custom deadlines cannot bypass standing consent"
+    },
+    {
+      "case": "standing consent, no per-deal arbitrator signature",
+      "signature": "5rLFd3PZcFV1182hWBBrVYWyN2omwUrnPusncdQYzEG84FEPgCarT1expvdQpsSxfr8jftCWhT8fkKy4X9kZnYpd"
+    },
+    {
+      "case": "paused service blocks new funding"
+    },
+    {
+      "case": "buyer funds without arbitrator acceptance",
+      "signature": "FpB8apuuVwQ4Bu77mrPQnSVB66qmidPeDFhz3Qr97PbQSmB1zSjNbdwrRHf9KRyUnTjUCHZDhMtvbWcfo3nfJvc"
+    },
+    {
+      "case": "duplicate fund cannot reserve bond twice"
+    },
+    {
+      "case": "reserved obligations block all withdrawals after pause"
+    },
+    {
+      "case": "paused organization still settles existing obligations 98/1/1",
+      "signature": "2RDVjK6VeuJsFF2MEaJP7BCPb7Bp4TrFixCUbRg3U76B1Uo8mKwBQLqjCULG6v67SFKmWFEZfUSq3cXBk8DNgvwt"
+    },
+    {
+      "case": "double payout rejected"
+    },
+    {
+      "case": "withdraw only when paused and all obligations settled"
+    }
+  ]
+}

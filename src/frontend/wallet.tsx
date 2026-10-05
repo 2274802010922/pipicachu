@@ -139,6 +139,7 @@ export function WalletButton() {
   return (
     <div className="wallet-control">
       <button
+        className={who ? "wallet-connected" : "primary wallet-connect"}
         disabled={busy}
         onClick={async () => {
           setBusy(true);

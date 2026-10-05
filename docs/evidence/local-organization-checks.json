@@ -1,0 +1,50 @@
+{
+  "at": "2026-10-05T07:39:03.789Z",
+  "network": "local-validator",
+  "source": "Synthetic local genesis approved registry",
+  "deal": "G1ZJxCBbGdzy6wfG8TTVTi5mBLArfQGnharpamSPoAuX",
+  "checks": [
+    {
+      "case": "non-manager cannot revoke registry"
+    },
+    {
+      "case": "wrong signer cannot toggle service"
+    },
+    {
+      "case": "withdrawal locked while accepting even with unused capacity"
+    },
+    {
+      "case": "amount above organization policy"
+    },
+    {
+      "case": "custom deadlines cannot bypass standing consent"
+    },
+    {
+      "case": "standing consent, no per-deal arbitrator signature",
+      "signature": "2VJrjKD7S43z6F7AAe98rg7rwiUSpZ7ZJx6qWKb3ePZqiA5du7CXwEsSU4hNwpr3haTxNmvtRhNZQfmBBuLHu8gw"
+    },
+    {
+      "case": "paused service blocks new funding"
+    },
+    {
+      "case": "buyer funds without arbitrator acceptance",
+      "signature": "51qswddYuQ8jiHbTEUuwiEHwhBuoX9imWQfJatDFi3jJyGd6cMGXu7WR6KkCwbPGsTUw7qrhsnEadDFpsz5emFhE"
+    },
+    {
+      "case": "duplicate fund cannot reserve bond twice"
+    },
+    {
+      "case": "reserved obligations block all withdrawals after pause"
+    },
+    {
+      "case": "paused organization still settles existing obligations 98/1/1",
+      "signature": "4KoPzC9WHohtPWjTYbitromtkQse5qAX5aVqRjQCf3oqJ6877dJs4aRYLHQvzyU7yAQZVrmgDo7wgcDFuog6kv4"
+    },
+    {
+      "case": "double payout rejected"
+    },
+    {
+      "case": "withdraw only when paused and all obligations settled"
+    }
+  ]
+}

@@ -2,9 +2,15 @@
 import { useLanguage } from "../i18n/provider";
 import type { Deal } from "@/escrow/client";
 export function currentDealStep(
-  deal: Pick<Deal, "state" | "approvals">,
+  deal: Pick<Deal, "state" | "approvals" | "workflowVersion">,
   bondReady: boolean,
 ): number {
+  if (deal.workflowVersion === 1) {
+    if (deal.state === "created") return 1;
+    if (deal.state === "funded") return 2;
+    if (["delivered", "disputed"].includes(deal.state)) return 3;
+    return -1;
+  }
   if (deal.state === "created")
     return deal.approvals === 1 && bondReady ? 2 : 1;
   if (deal.state === "funded") return 3;
@@ -20,23 +26,39 @@ export function DealProgress({
 }) {
   const { t } = useLanguage(),
     current = currentDealStep(deal, bondReady);
-  const labels = [
-    t("Tạo link", "Create link"),
-    t("Cọc trọng tài", "Arbitrator bond"),
-    t("Nạp tiền", "Fund"),
-    t("Giao hàng", "Deliver"),
-    deal.state === "disputed"
-      ? t("Tranh chấp", "Dispute")
-      : t("Kiểm tra & trả tiền", "Review & payout"),
-  ];
+  const labels =
+    deal.workflowVersion === 1
+      ? [
+          t("Tạo link", "Create link"),
+          t("Ký quỹ", "Fund escrow"),
+          t("Bàn giao", "Delivery"),
+          deal.state === "disputed"
+            ? t("Tranh chấp", "Dispute")
+            : t("Kết thúc", "Settlement"),
+        ]
+      : [
+          t("Tạo link", "Create link"),
+          t("Cọc trọng tài", "Arbitrator bond"),
+          t("Nạp tiền", "Fund"),
+          t("Giao hàng", "Deliver"),
+          deal.state === "disputed"
+            ? t("Tranh chấp", "Dispute")
+            : t("Kiểm tra & trả tiền", "Review & payout"),
+        ];
   const finished = (i: number) =>
-    deal.state === "completed" ||
-    i === 0 ||
-    (i === 1 &&
-      ["funded", "delivered", "disputed", "refunded"].includes(deal.state)) ||
-    (i === 2 &&
-      ["funded", "delivered", "disputed", "refunded"].includes(deal.state)) ||
-    (i === 3 && ["delivered", "disputed"].includes(deal.state));
+    deal.workflowVersion === 1
+      ? deal.state === "completed" || i === 0 || (current >= 0 && i < current)
+      : deal.state === "completed" ||
+        i === 0 ||
+        (i === 1 &&
+          ["funded", "delivered", "disputed", "refunded"].includes(
+            deal.state,
+          )) ||
+        (i === 2 &&
+          ["funded", "delivered", "disputed", "refunded"].includes(
+            deal.state,
+          )) ||
+        (i === 3 && ["delivered", "disputed"].includes(deal.state));
   const list = (
     <ol
       className="deal-flow"
@@ -76,8 +98,8 @@ export function DealProgress({
         <summary>
           {current >= 0
             ? t(
-                `Bước ${current + 1}/5 · ${labels[current]}`,
-                `Step ${current + 1}/5 · ${labels[current]}`,
+                `Bước ${current + 1}/${labels.length} · ${labels[current]}`,
+                `Step ${current + 1}/${labels.length} · ${labels[current]}`,
               )
             : t("Giao dịch đã kết thúc", "Deal ended")}
         </summary>

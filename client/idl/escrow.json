@@ -149,6 +149,73 @@
       ]
     },
     {
+      "name": "approve_organization",
+      "discriminator": [173, 131, 141, 145, 220, 194, 126, 6],
+      "accounts": [
+        {
+          "name": "manager",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "arbitrator"
+        },
+        {
+          "name": "mint",
+          "relations": ["arbitrator"]
+        },
+        {
+          "name": "organization",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  111, 114, 103, 97, 110, 105, 122, 97, 116, 105, 111, 110
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "arbitrator.authority",
+                "account": "Arbitrator"
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "minimum_deposit",
+          "type": "u64"
+        },
+        {
+          "name": "maximum_deal",
+          "type": "u64"
+        },
+        {
+          "name": "funding_seconds",
+          "type": "i64"
+        },
+        {
+          "name": "delivery_seconds",
+          "type": "i64"
+        },
+        {
+          "name": "review_seconds",
+          "type": "i64"
+        },
+        {
+          "name": "arbitration_seconds",
+          "type": "i64"
+        }
+      ]
+    },
+    {
       "name": "cancel_deal",
       "discriminator": [158, 86, 193, 45, 168, 111, 48, 29],
       "accounts": [
@@ -369,6 +436,163 @@
               }
             ]
           }
+        },
+        {
+          "name": "organization",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  111, 114, 103, 97, 110, 105, 122, 97, 116, 105, 111, 110
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "arbitrator.authority",
+                "account": "Arbitrator"
+              }
+            ]
+          }
+        }
+      ],
+      "args": [
+        {
+          "name": "nonce",
+          "type": "u64"
+        },
+        {
+          "name": "buyer",
+          "type": "pubkey"
+        },
+        {
+          "name": "amount",
+          "type": "u64"
+        },
+        {
+          "name": "funding_seconds",
+          "type": "i64"
+        },
+        {
+          "name": "delivery_seconds",
+          "type": "i64"
+        },
+        {
+          "name": "review_seconds",
+          "type": "i64"
+        },
+        {
+          "name": "arbitration_seconds",
+          "type": "i64"
+        },
+        {
+          "name": "terms",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "create_organization_deal",
+      "discriminator": [114, 254, 140, 44, 39, 192, 1, 55],
+      "accounts": [
+        {
+          "name": "seller",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [99, 111, 110, 102, 105, 103]
+              }
+            ]
+          }
+        },
+        {
+          "name": "mint",
+          "relations": ["config", "arbitrator"]
+        },
+        {
+          "name": "arbitrator"
+        },
+        {
+          "name": "deal",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [100, 101, 97, 108]
+              },
+              {
+                "kind": "account",
+                "path": "seller"
+              },
+              {
+                "kind": "arg",
+                "path": "nonce"
+              }
+            ]
+          }
+        },
+        {
+          "name": "vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [118, 97, 117, 108, 116]
+              },
+              {
+                "kind": "account",
+                "path": "deal"
+              }
+            ]
+          }
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        },
+        {
+          "name": "fee_config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112, 108, 97, 116, 102, 111, 114, 109, 95, 102, 101, 101, 95,
+                  118, 49
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "organization",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  111, 114, 103, 97, 110, 105, 122, 97, 116, 105, 111, 110
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "arbitrator.authority",
+                "account": "Arbitrator"
+              }
+            ]
+          }
         }
       ],
       "args": [
@@ -498,6 +722,23 @@
         {
           "name": "token_program",
           "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "name": "organization",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  111, 114, 103, 97, 110, 105, 122, 97, 116, 105, 111, 110
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "authority"
+              }
+            ]
+          }
         }
       ],
       "args": [
@@ -725,6 +966,24 @@
         {
           "name": "token_program",
           "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "name": "organization",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  111, 114, 103, 97, 110, 105, 122, 97, 116, 105, 111, 110
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "deal.arbitrator",
+                "account": "Deal"
+              }
+            ]
+          }
         }
       ],
       "args": []
@@ -1121,6 +1380,91 @@
       ]
     },
     {
+      "name": "set_organization_accepting",
+      "discriminator": [91, 191, 188, 180, 102, 147, 34, 8],
+      "accounts": [
+        {
+          "name": "authority",
+          "signer": true,
+          "relations": ["organization", "arbitrator"]
+        },
+        {
+          "name": "organization",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  111, 114, 103, 97, 110, 105, 122, 97, 116, 105, 111, 110
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "authority"
+              }
+            ]
+          }
+        },
+        {
+          "name": "arbitrator",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [97, 114, 98]
+              },
+              {
+                "kind": "account",
+                "path": "authority"
+              }
+            ]
+          }
+        }
+      ],
+      "args": [
+        {
+          "name": "accepting",
+          "type": "bool"
+        }
+      ]
+    },
+    {
+      "name": "set_organization_approval",
+      "discriminator": [30, 138, 183, 7, 83, 145, 115, 105],
+      "accounts": [
+        {
+          "name": "manager",
+          "signer": true
+        },
+        {
+          "name": "organization",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  111, 114, 103, 97, 110, 105, 122, 97, 116, 105, 111, 110
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "organization.authority",
+                "account": "Organization"
+              }
+            ]
+          }
+        }
+      ],
+      "args": [
+        {
+          "name": "approved",
+          "type": "bool"
+        }
+      ]
+    },
+    {
       "name": "withdraw_bond",
       "discriminator": [222, 199, 141, 31, 188, 93, 155, 40],
       "accounts": [
@@ -1172,6 +1516,23 @@
         {
           "name": "token_program",
           "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "name": "organization",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  111, 114, 103, 97, 110, 105, 122, 97, 116, 105, 111, 110
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "authority"
+              }
+            ]
+          }
         }
       ],
       "args": [
@@ -1198,6 +1559,10 @@
     {
       "name": "FeeConfig",
       "discriminator": [143, 52, 146, 187, 219, 123, 76, 155]
+    },
+    {
+      "name": "Organization",
+      "discriminator": [145, 38, 152, 251, 91, 57, 118, 160]
     }
   ],
   "errors": [
@@ -1230,6 +1595,11 @@
       "code": 6005,
       "name": "Overflow",
       "msg": "Arithmetic overflow"
+    },
+    {
+      "code": 6006,
+      "name": "OrganizationUnavailable",
+      "msg": "Approved organization is not accepting eligible deals"
     }
   ],
   "types": [
@@ -1395,6 +1765,10 @@
           {
             "name": "fee_version",
             "type": "u8"
+          },
+          {
+            "name": "workflow_version",
+            "type": "u8"
           }
         ]
       }
@@ -1407,6 +1781,58 @@
           {
             "name": "treasury",
             "type": "pubkey"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Organization",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "authority",
+            "type": "pubkey"
+          },
+          {
+            "name": "mint",
+            "type": "pubkey"
+          },
+          {
+            "name": "approved",
+            "type": "bool"
+          },
+          {
+            "name": "accepting",
+            "type": "bool"
+          },
+          {
+            "name": "minimum_deposit",
+            "type": "u64"
+          },
+          {
+            "name": "maximum_deal",
+            "type": "u64"
+          },
+          {
+            "name": "funding_seconds",
+            "type": "i64"
+          },
+          {
+            "name": "delivery_seconds",
+            "type": "i64"
+          },
+          {
+            "name": "review_seconds",
+            "type": "i64"
+          },
+          {
+            "name": "arbitration_seconds",
+            "type": "i64"
           },
           {
             "name": "bump",

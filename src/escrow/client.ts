@@ -51,6 +51,7 @@ export type Deal = {
   fee: bigint;
   platformFee: bigint;
   feeVersion: number;
+  workflowVersion?: number;
   createdAt: number;
   fundBy: number;
   deliverySeconds: number;
@@ -221,10 +222,12 @@ export async function decodeDeal(address: string, data: Buffer): Promise<Deal> {
     terms: r.text(),
     platformFee: r.uint(),
     feeVersion: r.byte(),
+    workflowVersion: r.byte(),
   };
   if (
     !d.state ||
     d.feeVersion > 1 ||
+    d.workflowVersion > 1 ||
     (d.feeVersion === 0 && d.platformFee !== 0n) ||
     d.mint !== MINT.toBase58() ||
     dealAddress(new PublicKey(d.seller), d.nonce).toBase58() !== address
@@ -286,6 +289,7 @@ export async function createDealIx(
       key(TOKEN_PROGRAM_ID),
       key(SystemProgram.programId),
       key(FEE_CONFIG),
+      key(organizationAddress(arbitrator)),
     ],
     Buffer.concat([
       u64(nonce),
@@ -307,6 +311,7 @@ export async function bondIx(name: string, actor: PublicKey, value: bigint) {
       key(getAssociatedTokenAddressSync(MINT, actor), true),
       key(bondAddress(arb), true),
       key(TOKEN_PROGRAM_ID),
+      key(organizationAddress(actor)),
     ],
     u64(value),
   );
@@ -332,6 +337,7 @@ export async function fundIx(actor: PublicKey, d: Deal) {
     key(getAssociatedTokenAddressSync(MINT, actor), true),
     key(vaultAddress(new PublicKey(d.address)), true),
     key(TOKEN_PROGRAM_ID),
+    key(organizationAddress(new PublicKey(d.arbitrator))),
   ]);
 }
 export async function settleIxs(
@@ -384,4 +390,131 @@ export async function settleIxs(
 }
 export function transaction(ixs: TransactionInstruction[]) {
   return new Transaction().add(...ixs);
+}
+
+export type Organization = {
+  authority: string;
+  mint: string;
+  approved: boolean;
+  accepting: boolean;
+  minimumDeposit: bigint;
+  maximumDeal: bigint;
+  times: number[];
+  bump: number;
+};
+export function organizationAddress(authority: PublicKey) {
+  return PublicKey.findProgramAddressSync(
+    [Buffer.from("organization"), authority.toBuffer()],
+    PROGRAM_ID,
+  )[0];
+}
+export async function decodeOrganization(data: Buffer): Promise<Organization> {
+  await assertAccount(data, "Organization");
+  const r = new Reader(data);
+  return {
+    authority: r.pub(),
+    mint: r.pub(),
+    approved: r.byte() === 1,
+    accepting: r.byte() === 1,
+    minimumDeposit: r.uint(),
+    maximumDeal: r.uint(),
+    times: [r.int(), r.int(), r.int(), r.int()],
+    bump: r.byte(),
+  };
+}
+export async function readOrganization(c: Connection, authority: PublicKey) {
+  const info = await c.getAccountInfo(
+    organizationAddress(authority),
+    "confirmed",
+  );
+  if (!info) return null;
+  if (!info.owner.equals(PROGRAM_ID)) throw new Error("INVALID_ACCOUNT");
+  const org = await decodeOrganization(info.data);
+  if (org.authority !== authority.toBase58() || org.mint !== MINT.toBase58())
+    throw new Error("INVALID_ACCOUNT");
+  return org;
+}
+export async function listOrganizations(c: Connection) {
+  const rows = await c.getProgramAccounts(PROGRAM_ID, {
+    filters: [{ dataSize: 123 }],
+  });
+  const result = [];
+  for (const row of rows) {
+    const org = await decodeOrganization(row.account.data);
+    if (
+      org.mint === MINT.toBase58() &&
+      organizationAddress(new PublicKey(org.authority)).equals(row.pubkey) &&
+      org.approved
+    )
+      result.push(org);
+  }
+  return result;
+}
+export async function createOrganizationDealIx(
+  seller: PublicKey,
+  buyer: PublicKey,
+  arbitrator: PublicKey,
+  nonce: bigint,
+  value: bigint,
+  times: number[],
+  terms: string,
+) {
+  const ix = await createDealIx(
+    seller,
+    buyer,
+    arbitrator,
+    nonce,
+    value,
+    times,
+    terms,
+  );
+  ix.data = Buffer.concat([
+    (await digest("global:create_organization_deal")).subarray(0, 8),
+    ix.data.subarray(8),
+  ]);
+  return ix;
+}
+export async function organizationAcceptingIx(
+  actor: PublicKey,
+  accepting: boolean,
+) {
+  return instruction(
+    "set_organization_accepting",
+    [
+      key(actor, false, true),
+      key(organizationAddress(actor), true),
+      key(arbAddress(actor)),
+    ],
+    Buffer.from([accepting ? 1 : 0]),
+  );
+}
+export async function approveOrganizationIx(
+  manager: PublicKey,
+  authority: PublicKey,
+  minimum: bigint,
+  maximum: bigint,
+  times: number[],
+) {
+  return instruction(
+    "approve_organization",
+    [
+      key(manager, true, true),
+      key(arbAddress(authority)),
+      key(MINT),
+      key(organizationAddress(authority), true),
+      key(SystemProgram.programId),
+    ],
+    Buffer.concat([u64(minimum), u64(maximum), ...times.map(i64)]),
+  );
+}
+export async function organizationApprovalIx(
+  manager: PublicKey,
+  authority: PublicKey,
+  approved: boolean,
+) {
+  return instruction(
+    "set_organization_approval",
+    [key(manager, false, true), key(organizationAddress(authority), true)],
+    Buffer.from([approved ? 1 : 0]),
+  );
 }

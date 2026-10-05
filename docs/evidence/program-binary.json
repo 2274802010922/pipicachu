@@ -2,9 +2,10 @@
   "at": "2026-10-04T19:52:12.885Z",
   "programId": "4Xds5m5JtWR8HbNLdGeF7e3Qh3akKMHwMfjKsQeVXnrb",
   "network": "devnet",
-  "method": "solana program dump, cmp and sha256sum against built SBF",
-  "localSha256": "cefc482eeb4d2b7b3f6cece0e44a637ac7e7639d805abb21a6f977546166492e",
-  "deployedSha256": "cefc482eeb4d2b7b3f6cece0e44a637ac7e7639d805abb21a6f977546166492e",
-  "byteForByteMatch": true,
-  "upgradeSignature": "4r5J2gPXpkQDwhrkAWK2ByvR36PymM8YKmU128yYmu5f1u6h9A5yNs4gNsrdbphAYkwnkmb3bV6r74jkZN23qYdB"
+  "method": "solana program dump, exact SBF prefix comparison and zero-only reserved padding after program extend",
+  "localSha256": "875287e32ca051c8d754a7f69d824bd8f2bb2ac240d8d381777792b5ae9a9422",
+  "byteForByteMatch": false,
+  "upgradeSignature": "5NrH4tQFotbkuoasXdFzsLZ94XFatBCKxdd9Nxxu9CjxmsVjYKbSnZ7YNJqpMMHQnQzfJXs3ZMg4eX9XUPk3xUtN",
+  "codePrefixMatch": true,
+  "reservedPaddingZero": true
 }

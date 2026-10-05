@@ -1,8 +1,8 @@
 {
-  "at": "2026-10-04T13:37:16.830Z",
+  "at": "2026-10-05T07:36:40.138Z",
   "network": "local-validator",
   "tokenSource": "synthetic local mint at Devnet USDC address (not Circle issuance)",
-  "genesis": "FAHSP7C3L83evZMSestGDfCKg2YNd9dZnhut34C1JUx3",
+  "genesis": "26YEKmL9odhhD4oAaZHKnRqwNW1pRPZZoKDxVDs6NNJH",
   "programId": "4Xds5m5JtWR8HbNLdGeF7e3Qh3akKMHwMfjKsQeVXnrb",
   "roles": {
     "buyer": "Ef4nftv5jmn2E7D1TkcAgz4THUPACg7rt2FguDAkd67w",
@@ -27,6 +27,10 @@
       "detail": "Rejected by program / transaction validation"
     },
     {
+      "scenario": "platform fee destination cannot be redirected",
+      "detail": "Rejected by program / transaction validation"
+    },
+    {
       "scenario": "unrelated vault cannot substitute deal vault",
       "detail": "Rejected by program / transaction validation"
     },
@@ -36,7 +40,7 @@
     },
     {
       "scenario": "confirm",
-      "signature": "32m3LY6JoSayam1LygDg7Tnvv5cffC64EMyAGFRaoXqiTxig9PPfUVokuQrnesYgtnt6kAoavViTTet2mBckWfEe",
+      "signature": "5BdU25ugHeSs5nUwsybcusRWtV19wkBe21ikKBK3XNbEHYpeYt3JXrwwLyJawB2Wr6wKL2QE5VL8u7t6ZZwLVSF5",
       "detail": "completed"
     },
     {
@@ -57,7 +61,7 @@
     },
     {
       "scenario": "finalize",
-      "signature": "5Vcn4vmdbwKaY6i3DpFUzBPf2Qudix1N9Fz3owJpKGATzSqMBZ68A28TMZcwS1rukgohM4Mgxfm8jfmvgNCYk3VY",
+      "signature": "5mpWMiaSWWdUUA2bKYqSF845fdBMHQo1ybRhutXFxUMoziM7NHz1wfmDEVYM92hyybUwqiDTS34jWGeckYAGgDie",
       "detail": "completed"
     },
     {
@@ -82,7 +86,7 @@
     },
     {
       "scenario": "refund_expired",
-      "signature": "4TmL37tAoNQiSWPM3GZFKAFehMRfgFwUJgngjfS44MdC28dMXsGKb6fiRNe9oe8gzpaT1H8WYb8Bo56jT4ShYd6R",
+      "signature": "4JJPqmfk1v2ddCgQpecMHVw8Mbz82Qb1T7nykPAyAaATHoR3qbky9GThfvtPJeHmnaZx8MahJxJdUhvqSvvM2ktb",
       "detail": "refunded"
     },
     {
@@ -107,7 +111,7 @@
     },
     {
       "scenario": "resolve",
-      "signature": "54bMiQjH9CNJNGCzRBny7iZFE78K1S9goVNPvJMLVbiJUoKHRgzHkvrJebPny17VLN5KHFUrHDmbB2swb21LwGh3",
+      "signature": "4x3HHB1mbYbAL6UtG9sq99FnFyf2dPaLcvf8qg18XZLrq6ZmYqWDR2bdBwPS4NVriZ5JSCpJjtRdC1wjvnW7YpBE",
       "detail": "completed"
     },
     {
@@ -132,7 +136,7 @@
     },
     {
       "scenario": "resolve",
-      "signature": "YAmu47VxmChuHPXekz5d7Ri6YTSbGDf15aJCzkw2LTouVz4nFLQiP1b5GscWAzpp1UX2gQLKbnBkKKX7LAPF6LP",
+      "signature": "5tkkmT18a7fpGsZu8r8uv18zmmwjJK4nWhEuJPfTbqEFdsw52uikqDVYkDEGs9FBRQGpHURocpWf9ZotK66RwGjH",
       "detail": "refunded"
     },
     {
@@ -161,7 +165,7 @@
     },
     {
       "scenario": "accept_settlement",
-      "signature": "5qtsSojjM3E61SFYzJwVbtXTTJdcohro8QcoaEmmpVQ4w39RRqYfBSmCMmE7YvgtNyMjGgPzYknGuyMD9DpYcp8C",
+      "signature": "3BePcJeM2onss5TmKrB131f6zNPc18jmM4hmtvwsnTXUKCtxn3LzVDpKXgLssZoCgHXEYurfBd2rUem8rPesTRi9",
       "detail": "refunded"
     },
     {
@@ -171,32 +175,32 @@
   ],
   "deals": [
     {
-      "address": "6f36yWLyp2KZ1g41HEE4iCKGqsvQrnH4RiRftSJ9hhtj",
+      "address": "GTPN7oixgQZHYqeVvUgGBaspD9rjJMMJvAT9EVN6SQcD",
       "vi": "Buyer xác nhận → trả seller",
       "en": "Buyer confirms → seller paid"
     },
     {
-      "address": "Gb43YcF3cJqshP9DxZ2VnfL1EZrg7CiAb1Bnb6pYn24A",
+      "address": "69sjSfbegzHVoS3DGF7Tg3xfj4rPStP4xx88W6Et5Rf4",
       "vi": "Hết hạn kiểm tra → giải ngân",
       "en": "Review deadline → release"
     },
     {
-      "address": "HgvzAfen3pGMh8F816GuECcm3MgB7dMBNDfnNgX3FEEZ",
+      "address": "JBMkAd3gCexFTKaYPeJGNGUxdinPYGDUpWQ8SWnPKgnt",
       "vi": "Không bàn giao → hoàn buyer",
       "en": "Missed delivery → buyer refunded"
     },
     {
-      "address": "PryTR91TXoK46EHLGBjy7UMow69WH4gjfpT2GWQHsDX",
+      "address": "mQYo1UNAVqBNabySJfg6t6tWrim21vVj5NYD6SQzBHc",
       "vi": "Tranh chấp → trọng tài trả seller",
       "en": "Dispute → arbitrator pays seller"
     },
     {
-      "address": "2eykmYc6vz2raGvtVteeQpsCv8hbCmsCm3Dxy3tr8GZw",
+      "address": "Dmvcq7n8xEbH4kVEd6KLnuYjMbREcJLaYVnsXb1pxmFq",
       "vi": "Tranh chấp → trọng tài hoàn buyer",
       "en": "Dispute → arbitrator refunds buyer"
     },
     {
-      "address": "q7sfpa3qLRjiH3pv8FJG6znJsNzJ9CkcErFzk6oLZCr",
+      "address": "BanJrN28hBaxnYoZfqjD2G4rgDT8BVGmUKiSsfgtmkYE",
       "vi": "Trọng tài hết hạn → hai bên đồng ý hoàn tiền",
       "en": "Arbitrator expires → mutual refund"
     }

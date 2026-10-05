@@ -32,6 +32,7 @@ import {
   registerIx,
   settleIxs as clientSettleIxs,
   readFeeTreasury,
+  organizationAcceptingIx,
   vaultAddress,
   PROGRAM_ID,
   amount,
@@ -545,12 +546,18 @@ for (const a of [arbitrator])
   assert.equal((await readArbitrator(connection, a.publicKey))!.locked, 0n);
 const existing = await readArbitrator(connection, arbitrator.publicKey);
 await send(arbitrator, [
+  await organizationAcceptingIx(arbitrator.publicKey, false),
+]);
+await send(arbitrator, [
   await bondIx("withdraw_bond", arbitrator.publicKey, 1_000_000n),
 ]);
 assert.equal(
   (await readArbitrator(connection, arbitrator.publicKey))!.total,
   existing!.total - 1_000_000n,
 );
+await send(arbitrator, [
+  await organizationAcceptingIx(arbitrator.publicKey, true),
+]);
 const report = {
   at: new Date().toISOString(),
   network: live ? "devnet" : "local-validator",

@@ -6,6 +6,7 @@ if grep -q 'Stack offset' /tmp/pipicachu-sbf-build.log; then echo 'Unsafe SBF st
 npx tsx scripts/devnet/prepare-local.ts
 solana-test-validator --reset --quiet --ledger work/validator/ledger --rpc-port 8897 --faucet-port 9907 \
  --bpf-program 4Xds5m5JtWR8HbNLdGeF7e3Qh3akKMHwMfjKsQeVXnrb target/deploy/pipicachu_escrow.so \
+ --account "$(node --input-type=module -e 'import fs from "node:fs";console.log(JSON.parse(fs.readFileSync("work/validator/organization.json","utf8")).pubkey)')" work/validator/organization.json \
  --account 4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU work/validator/mint.json \
  --account "$(node --input-type=module -e 'import {PublicKey} from "@solana/web3.js"; console.log(PublicKey.findProgramAddressSync([Buffer.from("platform_fee_v1")],new PublicKey("4Xds5m5JtWR8HbNLdGeF7e3Qh3akKMHwMfjKsQeVXnrb"))[0].toBase58())')" work/validator/fee-config.json \
  --account "$(node --input-type=module -e 'import {PublicKey} from "@solana/web3.js"; console.log(PublicKey.findProgramAddressSync([Buffer.from("config")],new PublicKey("4Xds5m5JtWR8HbNLdGeF7e3Qh3akKMHwMfjKsQeVXnrb"))[0].toBase58())')" work/validator/config.json > work/validator/validator.log 2>&1 &
@@ -16,3 +17,5 @@ for attempt in $(seq 1 60); do
  sleep 1
 done
 npm run test:program
+
+npx tsx tests/program/organizations.ts

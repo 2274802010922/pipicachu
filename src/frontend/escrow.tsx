@@ -15,7 +15,11 @@ import {
   act,
   amount,
   bondIx,
-  createDealIx,
+  createOrganizationDealIx,
+  listOrganizations,
+  readOrganization,
+  organizationAcceptingIx,
+  type Organization,
   dealAddress,
   digest,
   fundIx,
@@ -25,7 +29,6 @@ import {
   readArbitrator,
   readDeal,
   decodeDeal,
-  registerIx,
   settleIxs,
   type Arbitrator,
   type Deal,
@@ -36,6 +39,7 @@ import keeperConfig from "@/escrow/keeper-config.json";
 import { eligibleForAutomaticRelease } from "@/escrow/keeper";
 import { feeBreakdown } from "@/escrow/fees";
 import { bondReadiness } from "@/escrow/bond";
+import { useConfirmation } from "./components/confirmation";
 import { BondStep } from "./components/bond-step";
 import { DealProgress, currentDealStep } from "./components/deal-progress";
 import rawSamples from "@/escrow/samples.json";
@@ -113,6 +117,10 @@ function errorMessage(error: unknown, vi: boolean) {
     SIMULATION_FAILED: [
       "Chưa thể thực hiện. Kiểm tra số dư SOL/USDC, quyền thao tác, cọc khả dụng và thời hạn; tải lại trạng thái trước khi thử lại.",
       "Cannot execute. Check SOL/USDC balances, permissions, available bond and deadlines; refresh before retrying.",
+    ],
+    ORGANIZATION_UNAVAILABLE: [
+      "Trọng tài chưa được duyệt, tạm ngừng hoặc không đủ cọc. Tải lại để chọn trọng tài khác.",
+      "Arbitrator unapproved, paused or underfunded. Refresh and select another arbitrator.",
     ],
     ARBITRATOR_NOT_REGISTERED: [
       "Ví trọng tài chưa đăng ký trên phiên bản hiện tại. Chủ ví cần vào trang Trọng tài và bấm Đăng ký trọng tài Devnet; sau đó quay lại ví người bán để tạo deal. Chưa cần nạp cọc ở bước tạo.",
@@ -334,70 +342,103 @@ export function Home() {
 export function CreateDeal() {
   const { t, locale } = useLanguage();
   const { who, connection } = useWallet();
+  const router = useRouter();
   const op = useOperation();
-  const [error, setError] = useState("");
-  const [created, setCreated] = useState("");
-  const [createdBond, setCreatedBond] = useState(0n);
   const [form, setForm] = useState({
     buyer: "",
     arbitrator: "",
-    amount: "10",
+    amount: "1",
     terms: "",
-    funding: "600",
-    delivery: "300",
-    review: "120",
-    arbitration: "120",
   });
-  const [ack, setAck] = useState(false);
-  const field = (name: keyof typeof form, value: string) =>
-    setForm({ ...form, [name]: value });
+  const [catalog, setCatalog] = useState<
+    { org: Organization; arb: Arbitrator | null }[]
+  >([]);
+  const [error, setError] = useState("");
+  const [ready, setReady] = useState(false);
+  const load = useCallback(async () => {
+    setReady(false);
+    try {
+      const c = connection();
+      const orgs = await listOrganizations(c);
+      const rows = await Promise.all(
+        orgs.map(async (org) => ({
+          org,
+          arb: await readArbitrator(c, new PublicKey(org.authority)),
+        })),
+      );
+      setCatalog(rows);
+      setError("");
+      setReady(true);
+    } catch (e) {
+      setError(errorMessage(e, locale === "vi"));
+    }
+  }, [connection, locale]);
+  useEffect(() => {
+    const timer = setTimeout(() => void load(), 0);
+    return () => clearTimeout(timer);
+  }, [load]);
+  const selected = catalog.find((row) => row.org.authority === form.arbitrator);
+  const eligible = (row: { org: Organization; arb: Arbitrator | null }) =>
+    row.org.approved &&
+    row.org.accepting &&
+    row.arb !== null &&
+    row.arb.total >= row.org.minimumDeposit &&
+    preview !== null &&
+    preview >= 1_000_000n &&
+    preview <= row.org.maximumDeal &&
+    !!bondReadiness((preview + 9n) / 10n, row.arb)?.ready;
   let preview: bigint | null = null;
   try {
     preview = parseAmount(form.amount);
   } catch {}
+  const field = (name: keyof typeof form, value: string) =>
+    setForm((current) => ({ ...current, [name]: value }));
   async function submit(e: React.FormEvent) {
     e.preventDefault();
+    if (!who || !selected) return;
     setError("");
-    if (!who) return;
     try {
       const buyer = new PublicKey(form.buyer),
         arbitrator = new PublicKey(form.arbitrator);
+      const value = parseAmount(form.amount);
       if (
+        value < 1_000_000n ||
         new Set([who, buyer, arbitrator].map((p) => p.toBase58())).size !== 3 ||
+        !form.terms.trim() ||
         Buffer.byteLength(form.terms) > 512
       )
-        throw new Error("INVALID_TERMS");
-      const value = parseAmount(form.amount);
-      const times = [
-        form.funding,
-        form.delivery,
-        form.review,
-        form.arbitration,
-      ].map(Number);
-      if (times.some((n) => !Number.isInteger(n) || n < 10 || n > 2592000))
-        throw new Error("INVALID_TERMS");
-      const random = crypto.getRandomValues(new Uint8Array(8));
-      const nonce = Buffer.from(random).readBigUInt64LE();
+        throw Error("INVALID_TERMS");
+      const nonce = Buffer.from(
+        crypto.getRandomValues(new Uint8Array(8)),
+      ).readBigUInt64LE();
       const address = dealAddress(who, nonce).toBase58();
       await op.run(
         async () => {
-          if (!(await readArbitrator(connection(), arbitrator)))
-            throw new Error("ARBITRATOR_NOT_REGISTERED");
+          const org = await readOrganization(connection(), arbitrator);
+          const arb = await readArbitrator(connection(), arbitrator);
+          if (
+            !org?.approved ||
+            !org.accepting ||
+            !arb ||
+            arb.total < org.minimumDeposit ||
+            value > org.maximumDeal ||
+            !bondReadiness((value + 9n) / 10n, arb)?.ready
+          )
+            throw Error("ORGANIZATION_UNAVAILABLE");
           return [
-            await createDealIx(
+            await createOrganizationDealIx(
               who,
               buyer,
               arbitrator,
               nonce,
               value,
-              times,
+              org.times,
               form.terms,
             ),
           ];
         },
         async () => {
-          setCreated(address);
-          setCreatedBond((value + 9n) / 10n);
+          router.push(`/deals/${address}`);
         },
       );
     } catch (e) {
@@ -410,15 +451,15 @@ export function CreateDeal() {
       <h1>{t("Tạo giao dịch", "Create a deal")}</h1>
       <p className="lead">
         {t(
-          "Ví đang kết nối là người bán.",
-          "The connected wallet is the seller.",
+          "Ví đang dùng là người bán. Chọn trọng tài đã chuẩn bị cọc.",
+          "Your wallet is the seller. Choose an arbitrator with prepaid bond.",
         )}
       </p>
       {!who && (
         <Notice>
           {t(
-            "Kết nối ví người bán để tạo giao dịch.",
-            "Connect the seller wallet to create a deal.",
+            "Kết nối ví người bán để tạo link.",
+            "Connect the seller wallet to create a link.",
           )}
         </Notice>
       )}
@@ -442,159 +483,114 @@ export function CreateDeal() {
             />
           </label>
         </div>
-        <div className="grid">
-          <label>
-            <span id="arbitrator-wallet-label">
-              {t("Ví trọng tài", "Arbitrator wallet")}
-            </span>
-            <input
-              aria-labelledby="arbitrator-wallet-label"
-              aria-describedby="arbitrator-wallet-help"
-              required
-              value={form.arbitrator}
-              onChange={(e) => field("arbitrator", e.target.value)}
-            />
-            <small id="arbitrator-wallet-help">
-              {t(
-                "Ví này phải đăng ký trong trang Trọng tài trước khi tạo deal. Cọc cần đủ trước khi người mua nạp tiền.",
-                "This wallet must register on the Arbitrator page before creating a deal. Sufficient bond is required before the buyer funds.",
-              )}{" "}
-              <Link href="/admin" target="_blank" rel="noreferrer">
-                {t("Mở trang Trọng tài", "Open Arbitrator")} ↗
-              </Link>
-            </small>
-          </label>
-        </div>
         <label>
-          <span id="deal-terms-label">
-            {t("Điều khoản công khai", "Public terms")}
-          </span>
-          <textarea
-            aria-labelledby="deal-terms-label"
-            aria-describedby="deal-terms-help"
+          {t("Trọng tài", "Arbitrator")}
+          <select
+            aria-label={t("Trọng tài", "Arbitrator")}
             required
-            rows={4}
+            value={form.arbitrator}
+            onChange={(e) => field("arbitrator", e.target.value)}
+          >
+            <option value="">
+              {t("Chọn trọng tài đã duyệt", "Choose an approved arbitrator")}
+            </option>
+            {catalog.map((row) => (
+              <option
+                key={row.org.authority}
+                value={row.org.authority}
+                disabled={!eligible(row)}
+              >
+                {organizationName(row.org.authority, locale)} ·{" "}
+                {eligible(row)
+                  ? t("Đang nhận giao dịch", "Accepting deals")
+                  : t("Chưa thể nhận deal này", "Unavailable for this deal")}
+              </option>
+            ))}
+          </select>
+        </label>
+        {!ready ? (
+          <p>{t("Đang đọc registry Devnet…", "Reading Devnet registry…")}</p>
+        ) : !catalog.length ? (
+          <Notice>
+            {t(
+              "Chưa có trọng tài đã duyệt. Chủ dự án cần thiết lập registry Devnet.",
+              "No approved arbitrator. The owner must configure the Devnet registry.",
+            )}
+          </Notice>
+        ) : null}
+        {selected && (
+          <p className="small">
+            {t("Tối đa", "Maximum")} {amount(selected.org.maximumDeal)} USDC ·{" "}
+            {t("Giao trong", "Delivery within")}{" "}
+            {Math.round(selected.org.times[1] / 60)} {t("phút", "minutes")} ·{" "}
+            {t("Kiểm tra", "Review")} {Math.round(selected.org.times[2] / 60)}{" "}
+            {t("phút", "minutes")}
+          </p>
+        )}
+        <label>
+          {t(
+            "Bạn bán gì và điều kiện bàn giao?",
+            "What are you selling and the delivery terms?",
+          )}
+          <textarea
+            required
+            rows={3}
             value={form.terms}
             onChange={(e) => field("terms", e.target.value)}
           />
-          <small id="deal-terms-help">
+          <small>
             {t(
-              "Tối đa 512 byte. Mô tả hàng, tiêu chí bàn giao và kênh trao đổi. Không ghi mật khẩu hoặc dữ liệu riêng tư.",
-              "Up to 512 bytes. Describe goods, delivery criteria and communication channel. Do not include passwords or private data.",
+              "Tối đa 512 byte. Không ghi dữ liệu riêng tư. Điều kiện cố định sau khi tạo.",
+              "Up to 512 bytes. No private data. Terms are fixed after creation.",
             )}
           </small>
         </label>
-        <details>
-          <summary>
-            {t("Thời hạn demo (giây)", "Demo time windows (seconds)")}
-          </summary>
-          <div className="grid stack">
-            {(
-              [
-                ["funding", t("Hạn nạp sau khi tạo", "Funding after creation")],
-                [
-                  "delivery",
-                  t("Bàn giao sau khi nạp", "Delivery after funding"),
-                ],
-                [
-                  "review",
-                  t("Kiểm tra sau khi bàn giao", "Review after delivery"),
-                ],
-                [
-                  "arbitration",
-                  t("Thời gian trọng tài xử lý", "Arbitration window"),
-                ],
-              ] as [keyof typeof form, string][]
-            ).map(([name, label]) => (
-              <label key={name}>
-                {label}
-                <input
-                  type="number"
-                  required
-                  min={10}
-                  max={2592000}
-                  value={form[name]}
-                  onChange={(e) => field(name, e.target.value)}
-                />
-              </label>
-            ))}
-          </div>
-        </details>
-        <Notice>
+        <div className="fee-preview">
           {preview
             ? t(
-                `Buyer nạp ${amount(preview)} USDC · Seller nhận ${amount(preview - (preview / 100n) * 2n)} · Phí ${amount((preview / 100n) * 2n)}`,
-                `Buyer pays ${amount(preview)} USDC · Seller gets ${amount(preview - (preview / 100n) * 2n)} · Fee ${amount((preview / 100n) * 2n)}`,
+                `Buyer nạp ${amount(preview)} · Seller nhận ${amount(preview - (preview / 100n) * 2n)} · Phí ${amount((preview / 100n) * 2n)} USDC`,
+                `Buyer pays ${amount(preview)} · Seller gets ${amount(preview - (preview / 100n) * 2n)} · Fee ${amount((preview / 100n) * 2n)} USDC`,
               )
             : t(
-                "Phí trọng tài 1% + hệ thống 1%; hoàn tiền không thu phí.",
-                "1% arbitrator + 1% platform fee; refunds have no fee.",
+                "Phí trọng tài 1% + hệ thống 1%; hoàn tiền không phí.",
+                "Arbitrator 1% + platform 1%; fee-free refunds.",
               )}
-        </Notice>
+        </div>
         <p className="small">
           {t(
-            "Phí trọng tài 1% + phí hệ thống 1%",
-            "Arbitrator 1% + platform 1%",
+            "Tạo và ký nghĩa là chấp thuận điều kiện. Cọc không phải bảo hiểm; tranh chấp quá hạn mà không đồng thuận có thể kẹt tiền.",
+            "Creating and signing accepts these terms. Bond is not insurance; expired disputes without agreement may lock funds.",
           )}
         </p>
-        <details>
-          <summary>{t("Lưu ý trước khi ký", "Before signing")}</summary>
-          <p className="small">
-            {t(
-              "Điều kiện cố định sau khi tạo. Cọc trọng tài 10%; không phải bảo hiểm. Nếu trọng tài quá hạn và hai bên không đồng thuận, tiền có thể tiếp tục bị khóa.",
-              "Terms are fixed after creation. Arbitrator bond is 10%, not insurance. After arbitration timeout, funds may remain locked without mutual agreement.",
-            )}
-          </p>
-        </details>
-        <label className="check">
-          <input
-            type="checkbox"
-            checked={ack}
-            onChange={(e) => setAck(e.target.checked)}
-          />
-          <span>
-            {t(
-              "Tôi đồng ý số tiền và điều kiện giao dịch.",
-              "I agree to the amount and deal terms.",
-            )}
-          </span>
-        </label>
-        <div>
-          <button
-            className="primary action-current"
-            disabled={!who || !ack || op.busy}
-          >
-            {t("Tạo và ký bằng ví", "Create and sign")}
-          </button>
-        </div>
+        <button
+          className="primary action-current"
+          disabled={
+            !who || !ready || !selected || !eligible(selected) || op.busy
+          }
+        >
+          {t("Tạo giao dịch và ký bằng ví", "Create and sign")}
+        </button>
         {error && <Notice error>{error}</Notice>}
         {op.feedback}
-        {created && (
-          <Notice>
-            <h2>
-              {t(
-                "Bước tiếp theo: Trọng tài nạp cọc",
-                "Next step: Arbitrator deposits bond",
-              )}
-            </h2>
-            <p>
-              {t(
-                `Đã tạo link. Gửi link cho trọng tài để chuẩn bị ${amount(createdBond)} USDC cọc và nhận deal; sau đó người mua nạp tiền.`,
-                `Link created. Share it with the arbitrator to prepare ${amount(createdBond)} USDC bond and accept, then the buyer funds.`,
-              )}
-            </p>
-            <Link href={`/deals/${created}`}>
-              {t(
-                "Mở deal vừa tạo để sao chép link",
-                "Open the new deal to copy its link",
-              )}{" "}
-              →
-            </Link>
-          </Notice>
+        {error && (
+          <button type="button" onClick={() => void load()}>
+            {t("Thử lại", "Retry")}
+          </button>
         )}
       </form>
     </>
   );
+}
+function organizationName(address: string, locale: string) {
+  return address === samples.arbitrator
+    ? locale === "vi"
+      ? "Trọng tài Demo A"
+      : "Demo Arbitrator A"
+    : (locale === "vi" ? "Trọng tài đã duyệt" : "Approved arbitrator") +
+        " · " +
+        address.slice(0, 4) +
+        "…" +
+        address.slice(-4);
 }
 const STATE_LABELS: Record<Deal["state"], [string, string]> = {
   created: ["Chờ chấp thuận / nạp tiền", "Awaiting acceptance / funding"],
@@ -630,6 +626,7 @@ const ACTION_LABELS: Record<string, [string, string]> = {
   ],
 };
 export function DealView({ id }: { id: string }) {
+  const confirmation = useConfirmation();
   const { t, locale } = useLanguage();
   const { who, connection } = useWallet();
   const op = useOperation();
@@ -643,7 +640,8 @@ export function DealView({ id }: { id: string }) {
     [now, setNow] = useState(0),
     [readAt, setReadAt] = useState(0),
     [evidence, setEvidence] = useState(""),
-    [ack, setAck] = useState(false),
+    [complaintOpen, setComplaintOpen] = useState(false),
+    [organization, setOrganization] = useState<Organization | null>(null),
     [copy, setCopy] = useState(""),
     [receipts, setReceipts] = useState<{ signature: string; err: unknown }[]>(
       [],
@@ -660,6 +658,11 @@ export function DealView({ id }: { id: string }) {
           profile = undefined;
         }
       }
+      setOrganization(
+        d.workflowVersion === 1
+          ? await readOrganization(c, new PublicKey(d.arbitrator))
+          : null,
+      );
       const slot = await c.getSlot();
       const time = await c.getBlockTime(slot);
       if (time === null) throw new Error("RPC_UNAVAILABLE");
@@ -668,9 +671,11 @@ export function DealView({ id }: { id: string }) {
       setReadAt(Date.now());
       setError("");
       setArbitratorProfile(profile);
-      const history = await c.getSignaturesForAddress(new PublicKey(id), {
-        limit: 10,
-      });
+      const history = await c
+        .getSignaturesForAddress(new PublicKey(id), {
+          limit: 10,
+        })
+        .catch(() => []);
       setReceipts(history);
     } catch (e) {
       setError(errorMessage(e, locale === "vi"));
@@ -683,12 +688,27 @@ export function DealView({ id }: { id: string }) {
   }, [connection, id, locale]);
   useEffect(() => {
     const first = setTimeout(() => void refresh(), 0);
-    const timer = setInterval(() => void refresh(), 15000);
+    const timer = setInterval(() => {
+      if (document.visibilityState === "visible") void refresh();
+    }, 10000);
+    const visible = () => {
+      if (document.visibilityState === "visible") void refresh();
+    };
+    document.addEventListener("visibilitychange", visible);
     return () => {
       clearTimeout(first);
       clearInterval(timer);
+      document.removeEventListener("visibilitychange", visible);
     };
-  }, [refresh]);
+  }, [refresh, who]);
+  const organizationReady =
+    !!deal &&
+    (deal.workflowVersion !== 1 ||
+      (!!organization?.approved &&
+        organization.accepting &&
+        !!arbitratorProfile &&
+        arbitratorProfile.total >= organization.minimumDeposit &&
+        deal.amount <= organization.maximumDeal));
   const available =
     deal && readAt
       ? actions(deal, who?.toBase58() || null, now).filter(
@@ -697,7 +717,8 @@ export function DealView({ id }: { id: string }) {
             name !== "accept_deal" &&
             !(
               name === "fund" &&
-              !bondReadiness(deal.bond, arbitratorProfile)?.ready
+              (!bondReadiness(deal.bond, arbitratorProfile)?.ready ||
+                !organizationReady)
             ),
         )
       : [];
@@ -725,6 +746,38 @@ export function DealView({ id }: { id: string }) {
     }, refresh);
   }
   async function execute(name: string) {
+    if (name === "dispute" && !complaintOpen) {
+      setComplaintOpen(true);
+      return;
+    }
+    if (
+      deal &&
+      [
+        "confirm",
+        "resolve_seller",
+        "resolve_buyer",
+        "accept_settlement",
+        "cancel_deal",
+      ].includes(name)
+    ) {
+      const refund =
+        name === "resolve_buyer" ||
+        (name === "accept_settlement" && deal.proposal === 2);
+      const f = feeBreakdown(deal.amount, deal.fee, deal.platformFee, refund);
+      const text =
+        name === "cancel_deal"
+          ? t("Hủy deal chưa nạp tiền?", "Cancel the unfunded deal?")
+          : refund
+            ? t(
+                `Hoàn buyer ${amount(deal.amount)} USDC, không thu phí. Xác nhận?`,
+                `Refund buyer ${amount(deal.amount)} USDC without fees. Confirm?`,
+              )
+            : t(
+                `Trả seller ${amount(f.sellerNet)} USDC; trọng tài ${amount(f.arbitratorFee)}, hệ thống ${amount(f.platformFee)}. Không thể hoàn tác. Xác nhận?`,
+                `Pay seller ${amount(f.sellerNet)} USDC; arbitrator ${amount(f.arbitratorFee)}, platform ${amount(f.platformFee)}. Irreversible. Confirm?`,
+              );
+      if (!(await confirmation.ask(text))) return;
+    }
     if (!deal || !who) return;
     await op.run(async () => {
       const actor = who,
@@ -764,7 +817,6 @@ export function DealView({ id }: { id: string }) {
         return settleIxs(name, actor, deal, undefined, connection());
       return [await act(name, actor, d)];
     }, refresh);
-    setAck(false);
   }
   if (loading || (deal && deal.address !== id))
     return (
@@ -788,7 +840,7 @@ export function DealView({ id }: { id: string }) {
     );
   const fees = feeBreakdown(deal.amount, deal.fee, deal.platformFee);
   const readiness = readAt ? bondReadiness(deal.bond, arbitratorProfile) : null;
-  const bondReady = !!readiness?.ready;
+  const bondReady = organizationReady && !!readiness?.ready;
   const step = currentDealStep(deal, bondReady);
   const terminal = ["completed", "refunded", "cancelled"].includes(deal.state);
   const deadline =
@@ -815,7 +867,7 @@ export function DealView({ id }: { id: string }) {
     : waitingForKeeper
       ? t("Đang chờ tự trả tiền", "Awaiting automatic payout")
       : deal.state === "created"
-        ? step === 1
+        ? deal.workflowVersion !== 1 && step === 1
           ? t("Trọng tài chuẩn bị cọc", "Arbitrator prepares bond")
           : t("Người mua nạp tiền", "Buyer funds")
         : deal.state === "funded"
@@ -891,7 +943,7 @@ export function DealView({ id }: { id: string }) {
                 ? "action-decision"
                 : ""
         }
-        disabled={!ack || op.busy || bondOp.busy}
+        disabled={op.busy || bondOp.busy}
         onClick={() => void execute(name)}
       >
         {main ? primaryLabel : t(...ACTION_LABELS[name])}
@@ -900,6 +952,7 @@ export function DealView({ id }: { id: string }) {
   }
   return (
     <>
+      {confirmation.dialog}
       <div className="deal-heading">
         <div>
           <span className="eyebrow">DEAL · DEVNET</span>
@@ -914,6 +967,21 @@ export function DealView({ id }: { id: string }) {
         </button>
       </div>
       <DealProgress deal={deal} bondReady={bondReady} />
+      <p className="role-banner">
+        {t("Ví đang dùng:", "Current wallet:")}{" "}
+        {who
+          ? who.toBase58() === deal.buyer
+            ? t("Người mua", "Buyer")
+            : who.toBase58() === deal.seller
+              ? t("Người bán", "Seller")
+              : who.toBase58() === deal.arbitrator
+                ? t("Trọng tài", "Arbitrator")
+                : t(
+                    "Người xem — đổi tài khoản Phantom để thao tác",
+                    "Viewer — switch Phantom account to act",
+                  )
+          : t("Chưa kết nối", "Not connected")}
+      </p>
       {error && <Notice error>{error}</Notice>}
       {!readAt && (
         <Notice>
@@ -924,6 +992,16 @@ export function DealView({ id }: { id: string }) {
         </Notice>
       )}
       {copy && <Notice>{copy}</Notice>}
+      {deal.workflowVersion === 1 &&
+        deal.state === "created" &&
+        !organizationReady && (
+          <Notice error>
+            {t(
+              "Trọng tài đang ngừng nhận hoặc không đủ điều kiện. Không thể nạp tiền; người bán cần tạo link mới với trọng tài khả dụng.",
+              "Arbitrator paused or ineligible. Funding is blocked; the seller must create a new link with an available arbitrator.",
+            )}
+          </Notice>
+        )}
       <div className="deal-summary">
         <strong>{amount(deal.amount)} USDC</strong>
         <span>
@@ -945,7 +1023,10 @@ export function DealView({ id }: { id: string }) {
           </span>
         )}
       </div>
-      {deal.state === "created" && step === 1 && !expired ? (
+      {deal.workflowVersion !== 1 &&
+      deal.state === "created" &&
+      step === 1 &&
+      !expired ? (
         <BondStep
           deal={deal}
           profile={arbitratorProfile}
@@ -963,7 +1044,10 @@ export function DealView({ id }: { id: string }) {
           <span className="eyebrow">
             {terminal
               ? t("KẾT QUẢ", "RESULT")
-              : t(`BƯỚC ${step + 1}/5`, `STEP ${step + 1}/5`)}
+              : t(
+                  `BƯỚC ${step + 1}/${deal.workflowVersion === 1 ? 4 : 5}`,
+                  `STEP ${step + 1}/${deal.workflowVersion === 1 ? 4 : 5}`,
+                )}
           </span>
           <h2 id="action-title">
             {terminal
@@ -1053,43 +1137,29 @@ export function DealView({ id }: { id: string }) {
                   </strong>
                 </p>
               )}
-              {requiresEvidence && (
-                <label>
-                  <span id="evidence-label">
-                    {t(
-                      "Ghi chú bàn giao / khiếu nại",
-                      "Delivery / dispute note",
-                    )}
-                  </span>
-                  <textarea
-                    aria-labelledby="evidence-label"
-                    rows={2}
-                    value={evidence}
-                    onChange={(e) => setEvidence(e.target.value)}
-                  />
-                  <small>
-                    {t(
-                      "Chia sẻ bằng chứng qua kênh đã thỏa thuận.",
-                      "Share evidence through the agreed channel.",
-                    )}
-                  </small>
-                </label>
-              )}
-              {available.some((n) => n !== "cancel_deal") && (
-                <label className="check compact-consent">
-                  <input
-                    type="checkbox"
-                    checked={ack}
-                    onChange={(e) => setAck(e.target.checked)}
-                  />
-                  <span>
-                    {t(
-                      "Tôi đồng ý điều kiện và thao tác này.",
-                      "I agree to the terms and this action.",
-                    )}
-                  </span>
-                </label>
-              )}
+              {requiresEvidence &&
+                (deal.state !== "delivered" || complaintOpen) && (
+                  <label>
+                    <span id="evidence-label">
+                      {t(
+                        "Ghi chú bàn giao / khiếu nại",
+                        "Delivery / dispute note",
+                      )}
+                    </span>
+                    <textarea
+                      aria-labelledby="evidence-label"
+                      rows={2}
+                      value={evidence}
+                      onChange={(e) => setEvidence(e.target.value)}
+                    />
+                    <small>
+                      {t(
+                        "Chia sẻ bằng chứng qua kênh đã thỏa thuận.",
+                        "Share evidence through the agreed channel.",
+                      )}
+                    </small>
+                  </label>
+                )}
               <div className="actions main-actions">
                 {primaryAction && actionButton(primaryAction, true)}
                 {available.includes("dispute") && actionButton("dispute")}
@@ -1114,19 +1184,6 @@ export function DealView({ id }: { id: string }) {
               {available.includes("cancel_deal") && (
                 <details className="secondary-actions">
                   <summary>{t("Thao tác khác", "Other actions")}</summary>
-                  <label className="check">
-                    <input
-                      type="checkbox"
-                      checked={ack}
-                      onChange={(e) => setAck(e.target.checked)}
-                    />
-                    <span>
-                      {t(
-                        "Tôi muốn hủy deal chưa nạp tiền.",
-                        "I want to cancel this unfunded deal.",
-                      )}
-                    </span>
-                  </label>
                   {actionButton("cancel_deal")}
                 </details>
               )}
@@ -1260,6 +1317,7 @@ export function Admin() {
   const { who, connection } = useWallet();
   const op = useOperation();
   const [arb, setArb] = useState<Arbitrator | null>(null),
+    [org, setOrg] = useState<Organization | null>(null),
     [balance, setBalance] = useState("—"),
     [value, setValue] = useState("10"),
     [error, setError] = useState(""),
@@ -1270,6 +1328,7 @@ export function Admin() {
     try {
       const c = connection();
       setArb(await readArbitrator(c, who));
+      setOrg(await readOrganization(c, who));
       try {
         const b = await c.getTokenAccountBalance(
           getAssociatedTokenAddressSync(MINT, who),
@@ -1325,47 +1384,58 @@ export function Admin() {
             {t("Tải lại", "Refresh")}
           </button>
           {loaded && (
-            <section className="panel">
-              <h2>{t("Tiền cọc của bạn", "Your bond")}</h2>
+            <section className="panel stack">
+              <h2>{t("Quỹ cọc trọng tài", "Arbitrator bond pool")}</h2>
               {!arb ? (
-                <>
-                  <p>
-                    {t(
-                      "Ví này chưa đăng ký làm trọng tài.",
-                      "This wallet is not registered as an arbitrator.",
-                    )}
-                  </p>
-                  <button
-                    disabled={op.busy}
-                    onClick={() =>
-                      void op.run(async () => [await registerIx(who)], refresh)
-                    }
-                  >
-                    {t(
-                      "Đăng ký trọng tài Devnet",
-                      "Register Devnet arbitrator",
-                    )}
-                  </button>
-                </>
+                <Notice>
+                  {t(
+                    "Ví này chưa được thiết lập. Chỉ tổ chức do hệ thống duyệt được nhận deal mới.",
+                    "Wallet not onboarded. Only approved organizations can receive new deals.",
+                  )}
+                </Notice>
               ) : (
                 <>
+                  <p className="role-banner">
+                    {org?.approved
+                      ? organizationName(who.toBase58(), locale)
+                      : t(
+                          "Chỉ quản lý cọc deal cũ — chưa được duyệt nhận deal mới",
+                          "Legacy bond only — not approved for new deals",
+                        )}
+                  </p>
                   <div className="grid three">
                     {[
-                      [t("Tổng cọc", "Total bond"), amount(arb.total)],
-                      [t("Đang khóa", "Reserved"), amount(arb.locked)],
+                      [t("Tổng cọc", "Total bond"), arb.total],
+                      [t("Đã dành cho deal", "Reserved for deals"), arb.locked],
                       [
-                        t("Có thể rút", "Withdrawable"),
-                        amount(arb.total - arb.locked),
+                        t("Còn khả dụng", "Available capacity"),
+                        arb.total - arb.locked,
                       ],
                     ].map(([label, v]) => (
-                      <div key={label}>
-                        <p className="muted">{label}</p>
-                        <p className="amount">{v}</p>
-                        <p>USDC</p>
+                      <div key={String(label)}>
+                        <p>{String(label)}</p>
+                        <strong className="amount">
+                          {amount(v as bigint)} USDC
+                        </strong>
                       </div>
                     ))}
                   </div>
-                  <p>
+                  {org && (
+                    <p>
+                      {org.accepting
+                        ? t(
+                            "Đang nhận giao dịch · cọc không được rút",
+                            "Accepting deals · withdrawals locked",
+                          )
+                        : t(
+                            "Ngừng nhận giao dịch mới",
+                            "New deals paused",
+                          )}{" "}
+                      · {t("Cọc tối thiểu", "Minimum deposit")}{" "}
+                      {amount(org.minimumDeposit)} USDC
+                    </p>
+                  )}
+                  <p className="small">
                     {t("USDC trong ví:", "Wallet USDC:")} {balance}
                   </p>
                   <label>
@@ -1380,26 +1450,62 @@ export function Admin() {
                     />
                   </label>
                   <div className="actions">
+                    {org?.approved && (
+                      <button
+                        className="primary"
+                        disabled={op.busy}
+                        onClick={() =>
+                          void op.run(
+                            async () => [
+                              await bondIx(
+                                "deposit_bond",
+                                who,
+                                parseAmount(value),
+                              ),
+                            ],
+                            refresh,
+                          )
+                        }
+                      >
+                        {t("Nạp cọc", "Deposit bond")}
+                      </button>
+                    )}
+                    {org?.approved && (
+                      <button
+                        className={org.accepting ? "" : "primary"}
+                        disabled={
+                          op.busy ||
+                          (!org.accepting && arb.total < org.minimumDeposit)
+                        }
+                        onClick={() => {
+                          if (
+                            window.confirm(
+                              t(
+                                "Chấp thuận phạm vi và thời hạn của tổ chức? Deal đủ điều kiện sẽ được nhận tự động. Cọc không thể rút khi đang nhận hoặc còn nghĩa vụ.",
+                                "Accept the organization's scope and deadlines? Eligible deals are accepted automatically. Bond cannot be withdrawn while accepting or reserved.",
+                              ),
+                            )
+                          )
+                            void op.run(
+                              async () => [
+                                await organizationAcceptingIx(
+                                  who,
+                                  !org.accepting,
+                                ),
+                              ],
+                              refresh,
+                            );
+                        }}
+                      >
+                        {org.accepting
+                          ? t("Ngừng nhận giao dịch", "Pause new deals")
+                          : t("Bật nhận giao dịch", "Enable new deals")}
+                      </button>
+                    )}
                     <button
-                      className="primary action-current"
-                      disabled={op.busy}
-                      onClick={() =>
-                        void op.run(
-                          async () => [
-                            await bondIx(
-                              "deposit_bond",
-                              who,
-                              parseAmount(value),
-                            ),
-                          ],
-                          refresh,
-                        )
+                      disabled={
+                        op.busy || (!!org && (org.accepting || arb.locked > 0n))
                       }
-                    >
-                      {t("Nạp cọc", "Deposit bond")}
-                    </button>
-                    <button
-                      disabled={op.busy}
                       onClick={() =>
                         void op.run(
                           async () => [
@@ -1413,18 +1519,42 @@ export function Admin() {
                         )
                       }
                     >
-                      {t("Rút cọc khả dụng", "Withdraw available bond")}
+                      {t("Rút cọc", "Withdraw bond")}
                     </button>
                   </div>
+                  {!!org && (org.accepting || arb.locked > 0n) && (
+                    <p className="small">
+                      {t(
+                        "Ngừng nhận deal mới và hoàn tất mọi deal đã nạp trước khi rút cọc.",
+                        "Pause new deals and settle all funded deals before withdrawing.",
+                      )}
+                    </p>
+                  )}
+                  {org && (
+                    <details>
+                      <summary>
+                        {t(
+                          "Phạm vi chấp thuận trước",
+                          "Standing consent policy",
+                        )}
+                      </summary>
+                      <p>
+                        {t("Tối đa", "Maximum")} {amount(org.maximumDeal)} USDC
+                        · {t("Bàn giao", "Delivery")} {org.times[1]}s ·{" "}
+                        {t("Kiểm tra", "Review")} {org.times[2]}s ·{" "}
+                        {t("Xử tranh chấp", "Arbitration")} {org.times[3]}s
+                      </p>
+                    </details>
+                  )}
                 </>
               )}
               {op.feedback}
-              <Notice>
+              <p className="small">
                 {t(
-                  "Cọc bị khóa khi deal được nạp và mở khóa khi kết thúc. MVP chưa có phạt xử sai, bảo hiểm hoặc kháng nghị.",
-                  "Bond is reserved on funding and released on settlement. This MVP has no wrongful-ruling slashing, insurance or appeal.",
+                  "Cọc không phải bảo hiểm. Chưa có phạt xử sai hoặc kháng nghị.",
+                  "Bond is not insurance. No wrongful-ruling slashing or appeal.",
                 )}
-              </Notice>
+              </p>
             </section>
           )}
           <section className="panel">

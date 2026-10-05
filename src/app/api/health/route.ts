@@ -5,7 +5,7 @@ export async function GET() {
   return NextResponse.json(
     {
       app: "pipicachu",
-      version: "0.4.0",
+      version: "0.5.0",
       product: "escrow",
       cluster: "devnet",
       programId: deployment.programId,
@@ -18,6 +18,7 @@ export async function GET() {
         refundBps: 0,
       },
       arbitratorCount: deployment.arbitratorCount,
+      approvedPrepaidOrganizations: deployment.organizationWorkflow,
       mint: deployment.mint,
       deployed: deployment.deployed,
       commit: process.env.VERCEL_GIT_COMMIT_SHA || null,

@@ -1,0 +1,22 @@
+{
+  "at": "2026-10-05T07:52:27.598Z",
+  "network": "devnet",
+  "programId": "4Xds5m5JtWR8HbNLdGeF7e3Qh3akKMHwMfjKsQeVXnrb",
+  "organization": "Ht5k38ysGyt2VKoddxbACCeLoVngQFojNeXzACGz9dEP",
+  "label": "Demo Arbitrator A (test organization, not a real corporate partner)",
+  "minimumDepositAtomic": "1000000",
+  "maximumDealAtomic": "10000000",
+  "policySeconds": [1800, 1800, 300, 1800],
+  "legacySnapshotCount": 39,
+  "legacyFeeWorkflowUnchanged": true,
+  "receipt": [
+    {
+      "action": "initializer approves Demo A",
+      "signature": "5nCF4YK2maZu4fu4mVtL7ZRfUNkpB1HLekYd3LNkGxvvvcZbkZv2Hqqrrs7QztQkKdeLDCcKV9VhAtWUxu6sMyUp"
+    },
+    {
+      "action": "arbitrator signs standing consent",
+      "signature": "5VkAbu7HTofpX6mKTqpckbaZ8NLgXUxvtteBcYhTGYTdPfoSg5JAC8w6bVbwKSyz9KZwbmUdhEVQaVVzup9PTtH6"
+    }
+  ]
+}

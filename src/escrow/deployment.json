@@ -2,11 +2,12 @@
   "programId": "4Xds5m5JtWR8HbNLdGeF7e3Qh3akKMHwMfjKsQeVXnrb",
   "mint": "4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU",
   "cluster": "devnet",
-  "schemaVersion": 4,
+  "schemaVersion": 5,
   "feeVersion": 1,
   "platformTreasury": "CXjKGEBNTTotzoF26nGPfAG4AFicGgP72SMqUQKY1pJN",
   "arbitratorFeeBps": 100,
   "platformFeeBps": 100,
   "arbitratorCount": 1,
-  "deployed": true
+  "deployed": true,
+  "organizationWorkflow": true
 }

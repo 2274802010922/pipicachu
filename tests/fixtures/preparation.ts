@@ -51,6 +51,7 @@ export function preparationFixture(
   locked = 1_000_000n,
   state = 0,
   platformFee = 0n,
+  workflowVersion = 0,
 ) {
   const terms = Buffer.from(
     "Synthetic browser fixture: 10 USDC deal, 1 USDC bond.",
@@ -81,7 +82,7 @@ export function preparationFixture(
     len,
     terms,
     integer(platformFee),
-    Buffer.from([platformFee > 0n ? 1 : 0]),
+    Buffer.from([platformFee > 0n ? 1 : 0, workflowVersion]),
   ]);
   const padded = Buffer.alloc(876);
   bytes.copy(padded);
@@ -94,4 +95,28 @@ export function preparationFixture(
     Buffer.from([arbBump, 0]),
   ]);
   return { deal: account(padded), arb: account(profile) };
+}
+
+export const organizationAccountAddress = PublicKey.findProgramAddressSync(
+  [Buffer.from("organization"), new PublicKey(parties.arb).toBuffer()],
+  pid,
+)[0].toBase58();
+export function organizationFixture(accepting = true) {
+  return account(
+    Buffer.concat([
+      disc("Organization"),
+      new PublicKey(parties.arb).toBuffer(),
+      mint.toBuffer(),
+      Buffer.from([1, accepting ? 1 : 0]),
+      integer(1_000_000n),
+      integer(100_000_000n),
+      ...Array(4).fill(300).map(integer),
+      Buffer.from([
+        PublicKey.findProgramAddressSync(
+          [Buffer.from("organization"), new PublicKey(parties.arb).toBuffer()],
+          pid,
+        )[1],
+      ]),
+    ]),
+  );
 }
