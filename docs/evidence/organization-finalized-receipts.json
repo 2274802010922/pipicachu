@@ -1,0 +1,25 @@
+{
+  "at": "2026-10-05T08:15:23.667Z",
+  "network": "devnet",
+  "commitment": "finalized",
+  "deal": "9PDbicPSGUJK2HuWrRaLYPm4KrMoUhdwK5q2fpgGG6Uw",
+  "workflowVersion": 1,
+  "fundingSignature": "FpB8apuuVwQ4Bu77mrPQnSVB66qmidPeDFhz3Qr97PbQSmB1zSjNbdwrRHf9KRyUnTjUCHZDhMtvbWcfo3nfJvc",
+  "fundingSigners": ["DwTKmg68k39b8jZWt1CHypfoPs5JuJsuP88SfKcbW3uj"],
+  "noPerDealArbitratorSignature": true,
+  "payoutSignature": "2RDVjK6VeuJsFF2MEaJP7BCPb7Bp4TrFixCUbRg3U76B1Uo8mKwBQLqjCULG6v67SFKmWFEZfUSq3cXBk8DNgvwt",
+  "transfers": [
+    {
+      "destination": "J87drs4SD6ZRG2pJZpft1sYSZqrGJ7TWgeFGvm8UyAEu",
+      "atomic": "980000"
+    },
+    {
+      "destination": "CRGDNamp6qRG31RFmWxSxSoKeT3GaLzpzqro7vh9dNfu",
+      "atomic": "10000"
+    },
+    {
+      "destination": "8Sf4GdWLnY7eP6qAsewJPaWbNzDpkgTvpkrRAUNbRDks",
+      "atomic": "10000"
+    }
+  ]
+}

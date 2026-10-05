@@ -646,6 +646,13 @@ export function DealView({ id }: { id: string }) {
     [receipts, setReceipts] = useState<{ signature: string; err: unknown }[]>(
       [],
     );
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setEvidence("");
+      setComplaintOpen(false);
+    }, 0);
+    return () => clearTimeout(timer);
+  }, [who, id]);
   const refresh = useCallback(async () => {
     try {
       const c = connection();
@@ -1319,7 +1326,7 @@ export function Admin() {
   const [arb, setArb] = useState<Arbitrator | null>(null),
     [org, setOrg] = useState<Organization | null>(null),
     [balance, setBalance] = useState("—"),
-    [value, setValue] = useState("10"),
+    [value, setValue] = useState("1"),
     [error, setError] = useState(""),
     [loaded, setLoaded] = useState(false),
     [deals, setDeals] = useState<Deal[]>([]);
@@ -1628,8 +1635,8 @@ export function Demo() {
           </li>
           <li>
             {t(
-              "Trọng tài đăng ký, nạp cọc. Người bán tạo deal, trọng tài mở link và chấp thuận.",
-              "The arbitrator registers and deposits bond. The seller creates a deal; the arbitrator opens its link and accepts.",
+              "Trọng tài được duyệt nạp cọc và bật nhận một lần. Người bán chọn tổ chức rồi tạo link; buyer nạp ngay nếu đủ điều kiện.",
+              "An approved arbitrator deposits bond and enables standing consent once. The seller selects it and creates a link; the buyer funds eligible deals directly.",
             )}
           </li>
           <li>
@@ -1644,7 +1651,7 @@ export function Demo() {
             {t("Tạo deal mới", "Create a new deal")}
           </Link>
           <Link className="button" href="/admin">
-            {t("Chuẩn bị trọng tài", "Prepare arbitrators")}
+            {t("Quỹ trọng tài", "Arbitrator bond pool")}
           </Link>
         </div>
         <p className="small">
@@ -1755,8 +1762,8 @@ export function Guide({ privacy = false }: { privacy?: boolean }) {
               </li>
               <li>
                 {t(
-                  "Trọng tài: chấp thuận vai trò, nạp cọc, phán quyết trả seller hoặc hoàn buyer trong thời hạn của mình.",
-                  "Arbitrators: accept roles, deposit bond and rule seller payout or buyer refund during their window.",
+                  "Trọng tài đã duyệt: nạp quỹ và bật nhận trước; xử tranh chấp trong thời hạn. Deal cũ giữ bước nhận riêng.",
+                  "Approved arbitrators pre-fund and enable standing consent; rule disputes within their window. Legacy deals keep individual acceptance.",
                 )}
               </li>
             </ul>

@@ -8,7 +8,8 @@ import {
 } from "@solana/web3.js";
 import {
   act,
-  createDealIx,
+  createOrganizationDealIx,
+  readOrganization,
   dealAddress,
   digest,
   fundIx,
@@ -37,23 +38,24 @@ async function send(k: Keypair, ixs: Awaited<ReturnType<typeof act>>[]) {
     commitment: "confirmed",
   });
 }
+const organization = await readOrganization(c, arb.publicKey);
+if (!organization?.accepting) throw Error("Organization not ready");
 const deals = [];
 let nonce = BigInt(Date.now());
 for (const kind of ["undisputed", "disputed"] as const) {
   const n = nonce++,
     address = dealAddress(seller.publicKey, n);
   await send(seller, [
-    await createDealIx(
+    await createOrganizationDealIx(
       seller.publicKey,
       buyer.publicKey,
       arb.publicKey,
       n,
       1_000_000n,
-      [600, 300, kind === "disputed" ? 120 : 20, 1800],
+      organization.times,
       `Keeper proof: ${kind}. Seller creates; buyer pays 1 USDC; seller delivers. Review timeout pays seller 0.98 USDC + 0.01 arbitrator fee + 0.01 platform fee. Dispute must block automatic payout.`,
     ),
   ]);
-  await send(arb, [await act("accept_deal", arb.publicKey, address)]);
   await send(buyer, [
     await fundIx(buyer.publicKey, await readDeal(c, address.toBase58())),
   ]);
@@ -86,7 +88,7 @@ const deadline = deals[0].reviewBy;
 while (true) {
   const clock = await c.getAccountInfo(SYSVAR_CLOCK_PUBKEY);
   if (clock && Number(clock.data.readBigInt64LE(32)) >= deadline) break;
-  await new Promise((r) => setTimeout(r, 3000));
+  await new Promise((r) => setTimeout(r, 15000));
 }
 fs.mkdirSync("docs/evidence", { recursive: true });
 fs.writeFileSync(

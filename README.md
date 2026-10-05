@@ -7,7 +7,7 @@
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-Apache_2.0-2456E6?style=flat-square" alt="Apache 2.0"></a>
   <a href="https://pipicachu.vercel.app/demo"><img src="https://img.shields.io/badge/Solana-Devnet-B7F34D?style=flat-square&amp;labelColor=091426" alt="Solana Devnet"></a>
 </p>
-<p align="center"><a href="https://pipicachu.vercel.app"><strong>Mở sản phẩm</strong></a> · <a href="https://pipicachu.vercel.app/demo">Thử 6 kịch bản</a> · <a href="docs/evidence/README.md">Xem bằng chứng</a> · <a href="README.en.md">English</a></p>
+<p align="center"><a href="https://pipicachu.vercel.app"><strong>Mở sản phẩm</strong></a> · <a href="https://pipicachu.vercel.app/demo">Thử các kịch bản</a> · <a href="docs/evidence/README.md">Xem bằng chứng</a> · <a href="README.en.md">English</a></p>
 
 ![Một link giao dịch, điều kiện rõ ràng: tạo link → nạp USDC → bàn giao → xác nhận hoặc tranh chấp](docs/assets/readme-banner.svg)
 
@@ -36,12 +36,15 @@ Admin trung gian giao dịch hàng/dịch vụ số qua cộng đồng, cùng ng
 | Hết hạn không cần seller ký thêm          | Keeper gửi finalize; tranh chấp chặn payout tự động                   | [Keeper thật](docs/evidence/keeper-live.json)     |
 | Dễ theo dõi từng bước                     | UI VI/EN, bước hiện tại nổi bật, một hành động chính                  | [Design system](docs/design/system.md)            |
 
+## Trọng tài cọc trước — flow mới
+
+Trọng tài được initializer duyệt, nạp quỹ và ký bật nhận theo policy một lần. Seller chọn từ registry; buyer fund tự bảo lưu cọc. Không có lượt ký accept cho mỗi deal mới. UI4 bước, bỏ checkbox lặp và nhập ví trọng tài/thời hạn thủ công. Deal cũ giữ cách chấp thuận cũ. [Policy và tương thích](docs/product/organization-flow.md), [13 ca Devnet](docs/evidence/devnet-organization-checks.json). Demo A là tổ chức thử nghiệm, không phải đối tác công ty thật.
+
 ## Luồng giao dịch
 
 ```mermaid
 flowchart TD
-  A[Seller tạo link deal] --> B[Trọng tài chuẩn bị cọc và chấp thuận]
-  B --> C[Buyer nạp USDC vào vault]
+  A[Seller chọn trọng tài đã duyệt và tạo link] --> C[Buyer nạp USDC vào vault]
   C --> D{Seller bàn giao đúng hạn?}
   D -->|Không| E[Hoàn buyer toàn bộ tiền]
   D -->|Có| F{Buyer kiểm tra}
@@ -85,8 +88,8 @@ Treasury lưu trong FeeConfig immutable; không chọn recipient bằng UI hoặ
 
 | Phạm vi đã kiểm      | Kết quả / nguồn                                                                |
 | -------------------- | ------------------------------------------------------------------------------ |
-| Unit và IDL          | **53 tests**                                                                   |
-| Browser              | **17 tests** · VI/EN · 375/768/1024/1440px · axe                               |
+| Unit và IDL          | **55 tests**                                                                   |
+| Browser              | **21 tests** · VI/EN · 375/768/1024/1440px · axe                               |
 | Smart contract local | **39 executable checks** · mint synthetic có nhãn                              |
 | Devnet               | **39 checks**, **6 kịch bản** có receipt finalized đối chiếu số tiền           |
 | Tương thích phí cũ   | Deal nạp trước upgrade vẫn trả seller 99%, platform 0%                         |

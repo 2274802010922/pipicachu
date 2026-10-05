@@ -53,5 +53,6 @@ jobs:
           name: escrow-program-evidence
           path: |
             docs/evidence/local-escrow-cycle.json
+            docs/evidence/local-organization-checks.json
             work/validator/validator.log
           retention-days: 7

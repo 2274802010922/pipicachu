@@ -28,3 +28,7 @@ Fork phải tạo ví service mới và secret riêng; workflow mặc định ch
 ## Ví nhận phí hệ thống
 
 Ví owner chọn: `CXjKGEBNTTotzoF26nGPfAG4AFicGgP72SMqUQKY1pJN`. Treasury lưu tại FeeConfig PDA trên Devnet; không cần thêm biến môi trường/private key. `npm run check:live` đối chiếu treasury on-chain với deployment public. Không đổi recipient bằng env. Script `scripts/devnet/fee-rollout.ts` ghi legacy trước upgrade và initialize sau upgrade, chỉ dùng key pipicachu trong vùng ignore.
+
+## Organization registry v0.5
+
+Không env mới. `scripts/devnet/setup-organization.ts` chỉ dùng key pipicachu trong ignore để initializer duyệt Demo A và trọng tài ký standing consent. Không tự chọn công ty thật hoặc đưa key lên Vercel. Policy demo min1/max10 USDC,30m/30m/5m/30m. Người dùng thông thường không được tự approve registry; wallet/deal cũ cần reload sau nâng cấp account list.

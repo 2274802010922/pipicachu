@@ -2,6 +2,11 @@
   "arbitrator": "Ht5k38ysGyt2VKoddxbACCeLoVngQFojNeXzACGz9dEP",
   "deals": [
     {
+      "address": "9PDbicPSGUJK2HuWrRaLYPm4KrMoUhdwK5q2fpgGG6Uw",
+      "vi": "Cọc sẵn → buyer nạp trực tiếp → trả seller",
+      "en": "Prepaid bond → direct buyer funding → seller payout"
+    },
+    {
       "address": "5qwtsdycSpcoJzx5iFh85E7tSe9gbHBA27wJnrRVnMMg",
       "vi": "Buyer xác nhận → trả seller",
       "en": "Buyer confirms → seller paid"

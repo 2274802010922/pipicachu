@@ -1,4 +1,18 @@
-# Bằng chứng v0.4 — phí hệ thống
+# Bằng chứng v0.5 — trọng tài được duyệt, cọc trước
+
+- [Registry rollout](organization-rollout.json): initializer duyệt Demo A, trọng tài ký standing consent thật. 39 account cũ giữ fee/workflow snapshot. Tổ chức thử nghiệm, không phải đối tác công ty thật.
+- [13 checks local](local-organization-checks.json) và [13 checks Devnet](devnet-organization-checks.json): authority, policy, pause/fund, withdrawal lock, reserve/double fund, settle khi paused, phí và double payout.
+- [Receipt độc lập finalized](organization-finalized-receipts.json): fund chỉ có buyer signer, không arb ký từng deal; payout98/1/1 đúng destination và mint.
+- [Vercel browser mới](browser-wallet-cycle.json): auto-open sau tạo → fund trực tiếp → deliver → reject giữ state → confirm với dialog số tiền; axe/VI/EN/privacy. Injected test provider, không Phantom extension thật.
+- [Keeper workflow1](keeper-live.json): run37282329331 signer service thật, payout98/1/1; disputed giữ nguyên rồi arb refund fixture.
+
+Web55 unit/21 browser, UI4 bước cho deal mới và5 bước legacy, responsive375/768/1024/1440. CI implementation [37280669915](https://github.com/2274802010922/pipicachu/actions/runs/37280669915) pass cả web và52 executable program checks (39+13); native Rust compatibility đã kiểm riêng.
+
+SBF dump có code prefix khớp [binary proof](program-binary.json), phần capacity thêm chỉ zero; không ghi byte-for-byte toàn file khi có padding. [Deployment](devnet-deployment.json) giữ Program ID và treasury, schema5. Không env mới, Mainnet hoặc audit độc lập.
+
+## Bằng chứng phí/legacy trước workflow mới
+
+### v0.4 — phí hệ thống
 
 Deal mới: seller 98%, trọng tài 1%, hệ thống 1%; refund nguyên principal. Treasury `CXjKGEBNTTotzoF26nGPfAG4AFicGgP72SMqUQKY1pJN`. Chỉ Devnet.
 

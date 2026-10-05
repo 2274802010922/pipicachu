@@ -1,4 +1,4 @@
-# Kiến trúc escrow v0.3
+# Kiến trúc escrow v0.5
 
 ```text
 Browser + Phantom → Devnet RPC proxy → Anchor program
@@ -26,3 +26,7 @@ Wallet ký: khai báo compute budget trước simulate/sign (300.000 CU, priorit
 Deal mới chốt 1% trọng tài + 1% hệ thống; buyer nạp nguyên số tiền, seller nhận số tiền trừ hai phí. Hoàn buyer nguyên principal, không phí. Chia tiền và mở cọc trong cùng transaction. Platform ATA phải thuộc treasury FeeConfig immutable: `CXjKGEBNTTotzoF26nGPfAG4AFicGgP72SMqUQKY1pJN`. Chỉ initializer pin được tạo FeeConfig một lần, không có lệnh sửa treasury. Upgrade authority vẫn tồn tại trong demo Devnet.
 
 Deal giữ discriminator/PDA/allocation 876 bytes. Bổ sung u64 platform_fee và u8 fee_version sau terms vào padding cũ tối thiểu 28 bytes. Legacy đọc fee_version=0/platform_fee=0, không thu phí hồi tố. Create/settle bổ sung FeeConfig/platform ATA; client cũ cần reload. Mỗi phí 1% làm tròn xuống đơn vị nguyên USDC, phần dư thuộc seller.
+
+## Approved organization workflow
+
+Registry account riêng123 bytes, authority+mint+approval+accepting+policy. Fund/Bond có seed-bound optional registry; workflow1 yêu cầu approved/accepting và min/max capacity. New createOrganizationDeal snapshot consent, fee và deadlines; không gọi accept từng deal. Settlement bỏ qua trạng thái tiếp nhận để không khóa nghĩa vụ đã nạp. Deposit pool không đồng nghĩa bảo hiểm. [Flow và ABI compatibility](../product/organization-flow.md).

@@ -36,12 +36,15 @@ This is a technical MVP. User research, revenue and willingness to pay have not 
 | Timeout payout without another seller signature          | Keeper submits finalize; disputes block automatic payout                         | [Live keeper](docs/evidence/keeper-live.json)      |
 | A readable next step                                     | Consistent VI/EN UI, highlighted current step, one primary action                | [Design](docs/design/system.md)                    |
 
+## Prepaid approved organizations
+
+Initializer-approved arbitrators deposit a pool and sign standing consent once. Sellers select the registry; buyer funding reserves bond atomically without per-deal arbitrator signing. Four-step UI, no repetitive checkboxes or manual arbitrator address/time fields. Legacy deals retain manual acceptance. [Policy](docs/product/organization-flow.md), [13 live Devnet checks](docs/evidence/devnet-organization-checks.json). Demo A is a test organization, not a real corporate partnership.
+
 ## Deal flow
 
 ```mermaid
 flowchart TD
-  A[Seller creates deal link] --> B[Arbitrator prepares bond and accepts]
-  B --> C[Buyer deposits USDC into vault]
+  A[Seller selects an approved organization and creates link] --> C[Buyer deposits USDC into vault]
   C --> D{Delivery before deadline?}
   D -->|No| E[Full buyer refund]
   D -->|Yes| F{Buyer reviews}
@@ -85,8 +88,8 @@ The immutable FeeConfig defines the treasury; UI/env cannot select the recipient
 
 | Verified scope           | Result / source                                                                        |
 | ------------------------ | -------------------------------------------------------------------------------------- |
-| Unit and IDL             | **53 tests**                                                                           |
-| Browser                  | **17 tests** · VI/EN · 375/768/1024/1440px · axe                                       |
+| Unit and IDL             | **55 tests**                                                                           |
+| Browser                  | **21 tests** · VI/EN · 375/768/1024/1440px · axe                                       |
 | Local smart contract     | **39 executable checks** · labelled synthetic mint                                     |
 | Devnet                   | **39 checks**, **6 scenarios** with finalized vault-transfer receipts                  |
 | Legacy fee compatibility | Pre-upgrade funded deal pays 99% seller, 0% platform                                   |

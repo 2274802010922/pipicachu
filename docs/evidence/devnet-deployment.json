@@ -2,11 +2,13 @@
   "programId": "4Xds5m5JtWR8HbNLdGeF7e3Qh3akKMHwMfjKsQeVXnrb",
   "network": "devnet",
   "mint": "4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU",
-  "schemaVersion": 4,
+  "schemaVersion": 5,
   "feeVersion": 1,
   "treasury": "CXjKGEBNTTotzoF26nGPfAG4AFicGgP72SMqUQKY1pJN",
   "feeConfig": "4sXcPGCiZRcjmKzFxssk7duiRZKAF9MAhMJwB6jwdVRR",
   "initializeSignature": "3SuQsp31vwT4821LiQiCca2iCmcSHxCoaYvuZfwkibFvUE8XAxEzXGWf1feSDWFitrX1yYESDwwCatDjwvjfjaNu",
-  "upgradeSignature": "4r5J2gPXpkQDwhrkAWK2ByvR36PymM8YKmU128yYmu5f1u6h9A5yNs4gNsrdbphAYkwnkmb3bV6r74jkZN23qYdB",
-  "upgradeAuthorityRetained": true
+  "upgradeSignature": "5NrH4tQFotbkuoasXdFzsLZ94XFatBCKxdd9Nxxu9CjxmsVjYKbSnZ7YNJqpMMHQnQzfJXs3ZMg4eX9XUPk3xUtN",
+  "upgradeAuthorityRetained": true,
+  "organizationWorkflow": true,
+  "workflowVersion": 1
 }

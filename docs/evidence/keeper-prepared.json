@@ -1,18 +1,18 @@
 {
-  "at": "2026-10-04T19:53:38.898Z",
+  "at": "2026-10-05T08:11:57.214Z",
   "network": "devnet",
   "programId": "4Xds5m5JtWR8HbNLdGeF7e3Qh3akKMHwMfjKsQeVXnrb",
   "deals": [
     {
       "kind": "undisputed",
-      "address": "HHw3ciYsN7UFAayBoSjMCUDJfMpQN65XWjmZH7i3oL8F",
-      "reviewBy": 1791143615,
+      "address": "8bHD7rfMPkrAPn29wa3QnzofeUzrCKb7aTenUcyd41tu",
+      "reviewBy": 1791187914,
       "state": "delivered"
     },
     {
       "kind": "disputed",
-      "address": "EqX4bvAbtpnrSVoUGa5GZK9TvWzbEw7nyhqJVYCj7Jdt",
-      "reviewBy": 1791143718,
+      "address": "6SXK1PvuHYSMRJt7oVWZHYN5i635nHrz3UBfzeAm8VLJ",
+      "reviewBy": 1791187918,
       "state": "disputed"
     }
   ]
