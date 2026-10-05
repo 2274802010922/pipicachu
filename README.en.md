@@ -17,14 +17,14 @@
 
 **v0.5, Devnet only**, with the UI deployed at the [visual checkpoint](https://github.com/2274802010922/pipicachu/commit/4530c03). This is an evolving MVP, **not a complete implementation of every flow or edge case**.
 
-| Area                              | Current status                                                                             |
-| --------------------------------- | ------------------------------------------------------------------------------------------ |
-| Light terminal VI/EN UI           | Deployed: 44px header controls, two-row mobile header/menu, consistent buttons and spacing |
-| Create / fund / deliver           | Existing flow preserved; prepaid organization registry implemented on-chain                |
-| User-wallet arbitrator onboarding | **Not implemented** as a separate registration → approval → deposit → enable UI flow       |
-| Demo Arbitrator A                 | Maintainer test wallet, not a user-supplied arbitrator or corporate partner                |
-| Seller equals platform treasury   | **Known error 2040, not fixed**; see outstanding work below                                |
-| Actual Phantom extension          | Not reverified; signed browser-flow evidence uses an injected test provider                |
+| Area                              | Current status                                                                                                                                     |
+| --------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Light terminal VI/EN UI           | Deployed: 44px header controls, two-row mobile header/menu, consistent buttons and spacing                                                         |
+| Create / fund / deliver           | Existing flow preserved; prepaid organization registry implemented on-chain                                                                        |
+| User-wallet arbitrator onboarding | **Not implemented** as a separate registration → approval → deposit → enable UI flow                                                               |
+| Current arbitrator                | Owner-supplied `7PpWKXsjxR6f7Zu8Se11h2nWkEyaaNVxLLd6XF9K39CG`, approved; its owner must deposit and enable. Previous Demo A disabled for new deals |
+| Seller equals platform treasury   | **Known error 2040, not fixed**; see outstanding work below                                                                                        |
+| Actual Phantom extension          | Not reverified; signed browser-flow evidence uses an injected test provider                                                                        |
 
 ## UI showcase
 
@@ -74,7 +74,7 @@ This is a technical MVP. User research, revenue and willingness to pay have not 
 
 ## Prepaid approved organizations
 
-Initializer-approved arbitrators deposit a pool and sign standing consent once. Sellers select the registry; buyer funding reserves bond atomically without per-deal arbitrator signing. Four-step UI, no repetitive checkboxes or manual arbitrator address/time fields. Legacy deals retain manual acceptance. [Policy](docs/product/organization-flow.md), [13 live Devnet checks](docs/evidence/devnet-organization-checks.json). Demo A is a test organization, not a real corporate partnership.
+Initializer-approved arbitrators deposit a pool and sign standing consent once. Sellers select the registry; buyer funding reserves bond atomically without per-deal arbitrator signing. Four-step UI, no repetitive checkboxes or manual arbitrator address/time fields. Legacy deals retain manual acceptance. [Policy](docs/product/organization-flow.md), [13 live Devnet checks](docs/evidence/devnet-organization-checks.json). Previous Demo A remains historical evidence only. The current wallet is owner-selected; approval does not establish corporate identity.
 
 ## Deal flow
 

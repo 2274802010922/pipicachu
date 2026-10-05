@@ -1,0 +1,11 @@
+{
+  "at": "2026-10-05T14:51:09.141Z",
+  "network": "devnet",
+  "oldArbitrator": "Ht5k38ysGyt2VKoddxbACCeLoVngQFojNeXzACGz9dEP",
+  "newArbitrator": "7PpWKXsjxR6f7Zu8Se11h2nWkEyaaNVxLLd6XF9K39CG",
+  "oldApproval": false,
+  "oldAccepting": false,
+  "signature": "2gKX6Sy2EGhA4uGAGjmhdWxXov9uWTMydCWy4ooh1uKZdMbviU2VDQee64o69UyCa39LZ7BbPAQMNfYmZ4DCK2hD",
+  "oldBondUnchanged": true,
+  "scope": "Disable old test arbitrator for new deals only; preserve all old participants, balances and obligations."
+}

@@ -42,6 +42,7 @@ import { bondReadiness } from "@/escrow/bond";
 import { useConfirmation } from "./components/confirmation";
 import { BondStep } from "./components/bond-step";
 import { DealProgress, currentDealStep } from "./components/deal-progress";
+import arbitratorConfig from "@/escrow/arbitrator-config.json";
 import rawSamples from "@/escrow/samples.json";
 const samples = rawSamples as {
   arbitrator: string;
@@ -582,15 +583,15 @@ export function CreateDeal() {
   );
 }
 function organizationName(address: string, locale: string) {
-  return address === samples.arbitrator
-    ? locale === "vi"
-      ? "Trọng tài Demo A"
-      : "Demo Arbitrator A"
-    : (locale === "vi" ? "Trọng tài đã duyệt" : "Approved arbitrator") +
-        " · " +
-        address.slice(0, 4) +
-        "…" +
-        address.slice(-4);
+  const label =
+    address === arbitratorConfig.wallet
+      ? locale === "vi"
+        ? "Trọng tài của dự án"
+        : "Project arbitrator"
+      : locale === "vi"
+        ? "Trọng tài đã duyệt"
+        : "Approved arbitrator";
+  return `${label} · ${address.slice(0, 4)}…${address.slice(-4)}`;
 }
 const STATE_LABELS: Record<Deal["state"], [string, string]> = {
   created: ["Chờ chấp thuận / nạp tiền", "Awaiting acceptance / funding"],
@@ -1705,7 +1706,7 @@ export function Demo() {
           <div>
             <dt>{t("Trọng tài mẫu", "Sample arbitrator")}</dt>
             <dd>
-              <Address value={samples.arbitrator || "—"} />
+              <Address value={arbitratorConfig.wallet} />
             </dd>
           </div>
         </dl>

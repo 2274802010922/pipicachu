@@ -17,14 +17,14 @@
 
 Bản **v0.5 trên Devnet**, UI đã cập nhật tại [checkpoint visual](https://github.com/2274802010922/pipicachu/commit/4530c03). Đây là MVP đang phát triển, **chưa hoàn tất mọi luồng và trường hợp**.
 
-| Hạng mục                             | Trạng thái hiện tại                                                                |
-| ------------------------------------ | ---------------------------------------------------------------------------------- |
-| UI light terminal VI/EN              | Đã deploy: header 44px, mobile hai hàng/menu, nút và spacing thống nhất            |
-| Tạo deal / ký quỹ / bàn giao         | Flow hiện tại giữ nguyên; registry cọc trước đã có trên contract                   |
-| Đăng ký trọng tài bằng ví người dùng | **Chưa triển khai** luồng riêng đăng ký → duyệt → nạp cọc → bật nhận trên UI       |
-| Trọng tài Demo A                     | Ví test từ nghiệm thu, không phải ví người dùng cung cấp hoặc đối tác công ty thật |
-| Payout khi seller trùng ví hệ thống  | **Lỗi 2040 đã biết, chưa sửa**; xem phần giới hạn bên dưới                         |
-| Phantom extension thực               | Chưa có bằng chứng kiểm lại; browser signed-flow dùng injected test provider       |
+| Hạng mục                             | Trạng thái hiện tại                                                                                                                          |
+| ------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| UI light terminal VI/EN              | Đã deploy: header 44px, mobile hai hàng/menu, nút và spacing thống nhất                                                                      |
+| Tạo deal / ký quỹ / bàn giao         | Flow hiện tại giữ nguyên; registry cọc trước đã có trên contract                                                                             |
+| Đăng ký trọng tài bằng ví người dùng | **Chưa triển khai** luồng riêng đăng ký → duyệt → nạp cọc → bật nhận trên UI                                                                 |
+| Ví trọng tài hiện tại                | `7PpWKXsjxR6f7Zu8Se11h2nWkEyaaNVxLLd6XF9K39CG` do owner cung cấp, đã duyệt; cần chủ ví nạp cọc và bật nhận. Demo A cũ đã ngừng nhận deal mới |
+| Payout khi seller trùng ví hệ thống  | **Lỗi 2040 đã biết, chưa sửa**; xem phần giới hạn bên dưới                                                                                   |
+| Phantom extension thực               | Chưa có bằng chứng kiểm lại; browser signed-flow dùng injected test provider                                                                 |
 
 ## UI showcase
 
@@ -74,7 +74,7 @@ Admin trung gian giao dịch hàng/dịch vụ số qua cộng đồng, cùng ng
 
 ## Trọng tài cọc trước — flow mới
 
-Trọng tài được initializer duyệt, nạp quỹ và ký bật nhận theo policy một lần. Seller chọn từ registry; buyer fund tự bảo lưu cọc. Không có lượt ký accept cho mỗi deal mới. UI 4 bước, bỏ checkbox lặp và nhập ví trọng tài/thời hạn thủ công. Deal cũ giữ cách chấp thuận cũ. [Policy và tương thích](docs/product/organization-flow.md), [13 ca Devnet](docs/evidence/devnet-organization-checks.json). Demo A là tổ chức thử nghiệm, không phải đối tác công ty thật.
+Trọng tài được initializer duyệt, nạp quỹ và ký bật nhận theo policy một lần. Seller chọn từ registry; buyer fund tự bảo lưu cọc. Không có lượt ký accept cho mỗi deal mới. UI 4 bước, bỏ checkbox lặp và nhập ví trọng tài/thời hạn thủ công. Deal cũ giữ cách chấp thuận cũ. [Policy và tương thích](docs/product/organization-flow.md), [13 ca Devnet](docs/evidence/devnet-organization-checks.json). Demo A cũ chỉ còn trong bằng chứng lịch sử. Ví trọng tài hiện tại do owner chỉ định; không suy ra danh tính công ty từ địa chỉ ví.
 
 ## Luồng giao dịch
 

@@ -1,0 +1,14 @@
+{
+  "at": "2026-10-05T14:47:57.199Z",
+  "network": "devnet",
+  "wallet": "7PpWKXsjxR6f7Zu8Se11h2nWkEyaaNVxLLd6XF9K39CG",
+  "source": "Public address explicitly provided by the project owner",
+  "signature": "5bWihyVM23bqQ1ciyiaAkGWsshLazMCuwZvDkKngWHgE37qhRHey3w8hWHvZwojXsCmWBJV2JNNDSsqkuKfGH6p6",
+  "approved": true,
+  "accepting": false,
+  "minimumDepositAtomic": "1000000",
+  "maximumDealAtomic": "10000000",
+  "policySeconds": [1800, 1800, 300, 1800],
+  "bondTotalAtomic": "0",
+  "scope": "Approval only; no user-wallet signing, deposit, acceptance or modification of existing deals."
+}

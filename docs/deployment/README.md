@@ -32,3 +32,7 @@ Ví owner chọn: `CXjKGEBNTTotzoF26nGPfAG4AFicGgP72SMqUQKY1pJN`. Treasury lưu 
 ## Organization registry v0.5
 
 Không env mới. `scripts/devnet/setup-organization.ts` chỉ dùng key pipicachu trong ignore để initializer duyệt Demo A và trọng tài ký standing consent. Không tự chọn công ty thật hoặc đưa key lên Vercel. Policy demo min1/max10 USDC,30m/30m/5m/30m. Người dùng thông thường không được tự approve registry; wallet/deal cũ cần reload sau nâng cấp account list.
+
+### Duyệt public wallet đã được owner chỉ định
+
+`npx tsx scripts/devnet/approve-arbitrator.ts <PUBLIC_WALLET>` kiểm genesis Devnet và profile có sẵn, rồi initializer ký approval. Không lấy key ví trọng tài, không ký deposit/enable thay họ. Cấu hình mới mặc địnhmin1/max10USDC và30m/30m/5m/30m. Wallet được duyệt vẫn cần chủ ví nạp cọc và ký bật nhận trên/admin; các deal cũ không đổi participant. Receipt ở docs/evidence/user-arbitrator-approval.json. Đây là công cụ maintainer, chưa phải UI onboarding/duyệt mới đã plan.

@@ -1,3 +1,15 @@
+# Thay ví test bằng ví user — 05/10/2026
+
+User làm rõ yêu cầu là thay Demo A, không thêm song song. Đã initializer revoke approval củaHt5k38ysGyt2VKoddxbACCeLoVngQFojNeXzACGz9dEP, acceptingfalse; transaction2gKX6Sy2EGhA4uGAGjmhdWxXov9uWTMydCWy4ooh1uKZdMbviU2VDQee64o69UyCa39LZ7BbPAQMNfYmZ4DCK2hD finalized. Cọc của ví cũ (total/locked) không đổi; không sửa participant hoặc rút tiền deal cũ. New registry selection chỉ có7PpWKXsjxR6f7Zu8Se11h2nWkEyaaNVxLLd6XF9K39CG approved, đangchờuser nạp min1USDC và ký accepting.
+
+Cấu hình public trọng tài ởsrc/escrow/arbitrator-config.json; UI labelProject arbitrator và địa chỉngắn, không gọi víuser làDemoA. TrangDemo hiển thịvíuser thayvítest; src/escrow/samples.json giữtrọngtàicũ vì là provenance receipt đã tạo, không sửa lịch sử. Không tự ký/nạp/enable bằngvíuser, không sửa lỗi2040.
+
+# Ví trọng tài do user cung cấp — 05/10/2026
+
+User chỉ định7PpWKXsjxR6f7Zu8Se11h2nWkEyaaNVxLLd6XF9K39CG làm trọng tài. Profile đã tồn tại với total/locked0; registry chưa có. Đã initializer approve bằng transaction finalized5bWihyVM23bqQ1ciyiaAkGWsshLazMCuwZvDkKngWHgE37qhRHey3w8hWHvZwojXsCmWBJV2JNNDSsqkuKfGH6p6. Approvedtrue, acceptingfalse; min1USDC/max10USDC/policy30m/30m/5m/30m như cấu hình Devnet hiện hữu. User tự ký deposit và enable bằng Phantom, không yêu cầu/private key user. Script approve-arbitrator chỉ lấy public address, chỉ manager ký.
+
+Không đổi vai trò trong deal cũ: cùng ví7PpW là buyer của BZXd... ở snapshot lỗi2040; approval mới không chuyển thành arbitrator của deal đó. Buyer/seller/arb của deal mới phải khác nhau. Không thay treasury, không tự nạp cọc/bật nhận, không claim lỗi2040 đã sửa. KYC/company identity không suy ra từ approval Devnet.
+
 # README và showcase trạng thái thực — 05/10/2026
 
 User yêu cầu README khớp bản đang deploy. Đã đồng bộ VI/EN: trạng thái UI/contract hiện có, onboarding riêng chưa triển khai, Demo A là ví fixture, nhãn funding sai và lỗi2040 alias seller=treasury chưa sửa, Phantom extension/video chưa có bằng chứng mới. Counts55unit26browser52program; sample7 gồm1workflow mới+6legacy. Ví dụ phí1USDC khớp demo thay100 vượt policyDemoA.
