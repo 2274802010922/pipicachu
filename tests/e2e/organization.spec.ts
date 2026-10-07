@@ -29,6 +29,8 @@ for (const width of [375, 768, 1024, 1440])
       const b = route.request().postDataJSON();
       const f = preparationFixture(1, 2_000_000n, 0n, state, 100_000n, 1);
       let result: unknown = [];
+      if (b.method === "getAccountInfo" && b.params[0] === preparationAddress)
+        expect(b.params[1].commitment).toBe("finalized");
       if (b.method === "getAccountInfo")
         result = {
           context: { slot: 1 },

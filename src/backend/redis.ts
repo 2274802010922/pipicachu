@@ -3,6 +3,25 @@ export const redisConfigured = () =>
   !!process.env.RATE_LIMIT_REDIS_URL && !!process.env.RATE_LIMIT_REDIS_TOKEN;
 export const limiterConfigured = () =>
   redisConfigured() && (process.env.RATE_LIMIT_IP_SALT?.length || 0) >= 32;
+export class RedisServiceError extends Error {
+  constructor(public reason: "permissions" | "quota" | "command" | "network") {
+    super("REDIS_UNAVAILABLE");
+  }
+}
+function redisFailure(status: number, message: unknown): RedisServiceError {
+  const text = typeof message === "string" ? message.toLowerCase() : "";
+  return new RedisServiceError(
+    status === 401 ||
+      status === 403 ||
+      /noperm|permission|readonly|read.only|unauthorized/.test(text)
+      ? "permissions"
+      : status === 429 || /quota|limit exceeded/.test(text)
+        ? "quota"
+        : status === 400 || /err|script|command|crossslot/.test(text)
+          ? "command"
+          : "network",
+  );
+}
 export async function redisCommand<T = unknown>(
   args: (string | number)[],
 ): Promise<T> {
@@ -19,11 +38,12 @@ export async function redisCommand<T = unknown>(
       redirect: "error",
       cache: "no-store",
     });
-    if (!response.ok) throw Error();
     const body = await response.json();
-    if (body.error) throw Error();
+    if (!response.ok || body.error)
+      throw redisFailure(response.status, body.error);
     return body.result as T;
-  } catch {
+  } catch (error) {
+    if (error instanceof RedisServiceError) throw error;
     throw Error("REDIS_UNAVAILABLE");
   }
 }

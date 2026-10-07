@@ -17,3 +17,11 @@ Cần actual manager application approvalCXj bằngPhantom, các nhánhv0.6live/
 ## Workflow
 
 Chỉ pipicachu, không Picachu cũ/keys/password/deployment cũ. Current arb7PpWKXsjxR6f7Zu8Se11h2nWkEyaaNVxLLd6XF9K39CG giữ nguyên; manager không phải treasury authority. Commit tiếng Việt/pushmain/checkCI, không yêu cầu xác nhận lại việc userđãduyệt. NoAI/noMainnet/noinsurance/slashing/backup arb. UpgradeauthorityDevnet còn giữ. State/history source chung và money rights do Rust.
+
+## Cập nhật cuối checkpoint
+
+main383757f, CI37622854442 pass cả web/program; Vercel đúng revision, smoke readonly pass. Phát hiện readinessfalsepositive: PINGRedis pass nhưng unsignedsimulate qua proxy bị RATE_LIMIT_UNAVAILABLE. Không coi writes/limiter hoạt động. Code mới probe chính Lua limiter, trả limiterError enum an toàn; đang verify rồi push để chẩn đoán provider. Không lộ credential/rawerror.
+
+Application test riêng2dakRFzAYG6qrWenyNUt5uCAGLhDYJMUhLBfXJn5XeC8 đã register/submit pending thật; không thayprimary7Pp. Chrome /manage kết nối managerCXj, đã điền min1/max10USDC, times300/60/60/60; ownerapprovalquestion pending. Không bấm ký khi gatewaywrite chưa hoạt động. Script accept-v06.ts chỉ chạy nếu applicationapproved, min/max/times phù hợp; giữkeytestignore. Manager never loaded onserver.
+
+Frontend thêm finalized reads cho deal, epochguardkhi đổi ví, nhãn pendingvícũ, Creatorrefresh/guard policysnapshot. Browserrecoverypass và full32 đãpass trướcdiagnosticRedis; unit107 với2Redisdiagnostic tests. DeckVIEN18slides @oai/artifact-tool; R5PPTX trong work/deck-v06/output, PDFR3cũ cần xuấtR5/R6 cậpnhậtcount107. MarkersPresentationscreate2pptx vàPDFcreate2pdf ĐÃCHẠY, không chạy lại khi sửa. Đã visualQA cảdeckVI vàEN; vòngcuối chỉsửa sốtest/title9. PPTXnative tables8,15 valid, chưa mởPowerPoint.

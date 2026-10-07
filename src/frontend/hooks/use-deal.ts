@@ -32,7 +32,7 @@ export function useDeal(id: string) {
     const revision = ++generation.current;
     try {
       const c = connection(),
-        d = await readDeal(c, id);
+        d = await readDeal(c, id, "finalized");
       const [arb, org, clock] = await Promise.all([
         d.state === "created"
           ? readArbitrator(c, new PublicKey(d.arbitrator)).catch(

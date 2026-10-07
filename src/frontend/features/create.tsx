@@ -6,6 +6,7 @@ import { PublicKey } from "@solana/web3.js";
 import { useLanguage } from "../i18n/provider";
 import { useWallet } from "../wallet";
 import { Notice } from "../components/feedback";
+import { useFreshness } from "../hooks/use-freshness";
 import { useOperation } from "../hooks/use-operation";
 import { errorMessage } from "../errors";
 import { organizationName } from "../shared-escrow";
@@ -38,6 +39,7 @@ export function CreateDeal() {
   >([]);
   const [error, setError] = useState("");
   const [ready, setReady] = useState(false);
+  const { fresh, markFresh, markStale } = useFreshness();
   const generation = useRef(0),
     draftOwner = useRef<string | null>(null);
   useEffect(() => {
@@ -51,32 +53,45 @@ export function CreateDeal() {
     );
     return () => clearTimeout(timer);
   }, [who]);
-  const load = useCallback(async () => {
-    const revision = ++generation.current;
-    setReady(false);
-    try {
-      const c = connection();
-      const orgs = await listOrganizations(c);
-      const rows = await Promise.all(
-        orgs.map(async (org) => ({
-          org,
-          arb: await readArbitrator(c, new PublicKey(org.authority)),
-        })),
-      );
-      if (rows.length && !(await readManager(c)))
-        throw Error("CLIENT_OUTDATED");
-      if (revision !== generation.current) return;
-      setCatalog(rows);
-      setError("");
-      setReady(true);
-    } catch (e) {
-      if (revision !== generation.current) return;
-      setError(errorMessage(e, locale === "vi"));
-    }
-  }, [connection, locale]);
+  const load = useCallback(
+    async (foreground = true) => {
+      const revision = ++generation.current;
+      if (foreground) setReady(false);
+      try {
+        const c = connection();
+        const orgs = await listOrganizations(c);
+        const rows = await Promise.all(
+          orgs.map(async (org) => ({
+            org,
+            arb: await readArbitrator(c, new PublicKey(org.authority)),
+          })),
+        );
+        if (rows.length && !(await readManager(c)))
+          throw Error("CLIENT_OUTDATED");
+        if (revision !== generation.current) return;
+        setCatalog(rows);
+        setError("");
+        setReady(true);
+        markFresh();
+      } catch (e) {
+        if (revision !== generation.current) return;
+        setReady(false);
+        markStale();
+        setError(errorMessage(e, locale === "vi"));
+      }
+    },
+    [connection, locale, markFresh, markStale],
+  );
   useEffect(() => {
     const timer = setTimeout(() => void load(), 0);
-    return () => clearTimeout(timer);
+    const poll = setInterval(() => {
+      if (document.visibilityState === "visible") void load(false);
+    }, 10000);
+    return () => {
+      generation.current++;
+      clearTimeout(timer);
+      clearInterval(poll);
+    };
   }, [load]);
   const selected = catalog.find((row) => row.org.authority === form.arbitrator);
   const eligible = (row: { org: Organization; arb: Arbitrator | null }) =>
@@ -126,6 +141,14 @@ export function CreateDeal() {
             !bondReadiness((value + 9n) / 10n, arb)?.ready
           )
             throw Error("ORGANIZATION_UNAVAILABLE");
+          if (
+            org.minimumDeposit !== selected.org.minimumDeposit ||
+            org.maximumDeal !== selected.org.maximumDeal ||
+            org.times.some((value, i) => value !== selected.org.times[i])
+          ) {
+            await load();
+            throw Error("ORGANIZATION_POLICY_CHANGED");
+          }
           return [
             await createOrganizationDealIx(
               who,
@@ -271,7 +294,12 @@ export function CreateDeal() {
         <button
           className="primary action-current"
           disabled={
-            !who || !ready || !selected || !eligible(selected) || op.busy
+            !who ||
+            !ready ||
+            !fresh ||
+            !selected ||
+            !eligible(selected) ||
+            op.busy
           }
         >
           {t("Tạo giao dịch và ký bằng ví", "Create and sign")}

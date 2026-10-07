@@ -46,6 +46,7 @@ export function useOperation(scope?: {
     [error, setError] = useState<unknown>(null),
     [used, setUsed] = useState(false),
     [checking, setChecking] = useState(false);
+  const epoch = useRef(0);
   const afterRef = useRef<{ fn?: () => Promise<void>; done: boolean } | null>(
     null,
   );
@@ -62,13 +63,15 @@ export function useOperation(scope?: {
     operation.owner === who?.toBase58() &&
     isUnresolved(operation);
   useEffect(() => {
+    epoch.current++;
     const timer = setTimeout(() => {
       setError(null);
       setUsed(false);
+      setRunning(false);
       afterRef.current = null;
     }, 0);
     return () => clearTimeout(timer);
-  }, [who]);
+  }, [who, scope?.dealAddress, scope?.action]);
   useEffect(() => {
     if (
       active?.phase !== "finalized" ||
@@ -90,6 +93,11 @@ export function useOperation(scope?: {
       setUsed(true);
       return;
     }
+    const revision = epoch.current;
+    const actor = who?.toBase58();
+    const current = () =>
+      revision === epoch.current &&
+      actor === window.phantom?.solana?.publicKey?.toBase58();
     setRunning(true);
     setUsed(true);
     setError(null);
@@ -99,15 +107,18 @@ export function useOperation(scope?: {
         ...scope,
         ...meta,
       });
-      if (afterRef.current && !afterRef.current.done) {
+      if (current() && afterRef.current && !afterRef.current.done) {
         afterRef.current.done = true;
         await after?.();
       }
     } catch (e) {
-      if (!(e instanceof Error && e.message.startsWith("PENDING:")))
+      if (
+        current() &&
+        !(e instanceof Error && e.message.startsWith("PENDING:"))
+      )
         setError(e);
     } finally {
-      setRunning(false);
+      if (current()) setRunning(false);
     }
   }
   const feedback = (

@@ -1,0 +1,11 @@
+{
+  "at": "2026-10-07",
+  "site": "https://pipicachu.vercel.app",
+  "revision": "383757f894170b2819370e41ba21fe8c7e224d9a",
+  "method": "unsigned simulateTransaction through production proxy; no broadcast",
+  "readProxyAvailable": true,
+  "writeQuotaAvailable": false,
+  "errorCode": "RATE_LIMIT_UNAVAILABLE",
+  "readinessFalsePositive": "PING passed but actual EVAL-protected simulation was unavailable; readiness fix adds exact limiter script probe",
+  "secretsExposed": false
+}

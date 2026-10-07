@@ -105,6 +105,13 @@ for (const width of [375, 768, 1024, 1440]) {
     await expect(
       page.getByRole("button", { name: "Nạp cọc", exact: true }),
     ).toHaveCount(0);
+    if (width === 375 || width === 1440)
+      await page
+        .locator(".panel")
+        .first()
+        .screenshot({
+          path: `work/v06/screenshots/arbitrator-registration-vi-${width}.png`,
+        });
     await page.getByLabel("Ngôn ngữ").selectOption("en");
     await expect(page.getByRole("heading", { level: 1 })).toHaveText(
       "Arbitrator workspace",
@@ -114,6 +121,13 @@ for (const width of [375, 768, 1024, 1440]) {
         path: `work/v06/screenshots/arbitrator-pending-${width}.png`,
         fullPage: true,
       });
+    if (width === 375 || width === 1440)
+      await page
+        .locator(".panel")
+        .first()
+        .screenshot({
+          path: `work/v06/screenshots/arbitrator-registration-${width}.png`,
+        });
     expect(
       await page.evaluate(
         () => document.documentElement.scrollWidth <= innerWidth,

@@ -1,0 +1,40 @@
+{
+  "at": "2026-10-07T12:56:52.067Z",
+  "network": "devnet",
+  "testArbitrator": "2dakRFzAYG6qrWenyNUt5uCAGLhDYJMUhLBfXJn5XeC8",
+  "manager": "CXjKGEBNTTotzoF26nGPfAG4AFicGgP72SMqUQKY1pJN",
+  "application": {
+    "address": "7J278jc9GXjF5r4igbVEPxN819FdAAX8UjSYGP9hCCHU",
+    "authority": "2dakRFzAYG6qrWenyNUt5uCAGLhDYJMUhLBfXJn5XeC8",
+    "status": "pending",
+    "submittedAt": 1791377809,
+    "updatedAt": 1791377809,
+    "reasonCode": 0,
+    "bump": 255
+  },
+  "receipts": [
+    {
+      "action": "fund isolated test wallet SOL Devnet",
+      "signature": "3nt2aSKRMPRe6tbkLWbXMQvt4hNf2THXzBdRtnAxp4z7Hj3HchBwoHyCs5vJG2GPAuzct5opr1GySizAHxkQVtLX"
+    },
+    {
+      "action": "fund isolated test wallet 1 USDC Devnet",
+      "signature": "NTg1rKD6uYgcr5AVVKz4iFtF9YRzJwc1x7Z4jHoRqUJkY7AFfE3a9qDt1UWGsYeHHH1mTZEfaRuG9LTCKDBJwas"
+    },
+    {
+      "action": "register and submit application (not approval)",
+      "signature": "MgVVnGFtYkn4cGxg5vLKfTQRKaVRr8xLFaL94ukhvHR1YEvmcw4XBhnnGNKeqd5UAPqE7rXhEDMb6axuMHvhkBe"
+    }
+  ],
+  "primaryArbitratorUnchanged": "7PpWKXsjxR6f7Zu8Se11h2nWkEyaaNVxLLd6XF9K39CG",
+  "approvalRequiresOwner": true,
+  "suggestedTestPolicy": {
+    "minimumUSDC": "1",
+    "maximumUSDC": "10",
+    "fundingSeconds": 300,
+    "deliverySeconds": 60,
+    "reviewSeconds": 60,
+    "arbitrationSLASeconds": 60
+  },
+  "purpose": "Isolated v0.6 live acceptance; pause after checks, no automatic replacement in product configuration"
+}

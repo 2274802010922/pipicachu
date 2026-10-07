@@ -9,3 +9,11 @@ OwnerquestionUpstashsignin đang chờ: localRedisvalues trống; salt đãSaveV
 Cổng còn lại: client/testfinal/CI/Vercel/Redis/keeper; actualmanagerPhantom vàlivev0.6branches; dependencyexceptions đầyđủ/benchmarkv0.6; docs/READMEstatus/UIshowcase; VIEN18slidedecksPPTXPDF vàrenderQA;0.6releaseexactcommit. Presentationsskill dùng @oai/artifact-tool, khôngpython-pptx/PptxGenJS; markerstarted đúngmộtlầntrướcauthoring (chưa chạy marker).
 
 YTmTY3e3qX_4k giữhappy-pathv0.5. Không gọivideo/receiptscũ làv0.6pass; ENchờfootage, userWTPchưathu. Owner mời tester, khôngnhắncho người ngoài.
+
+## Điểm nối mới
+
+main383757f đãpush/CI37622854442 pass/Vercelsmoke. Nhiều polish/slide/helpers/Redisdiagnostic chưacommit. Quan trọng: prodreadinessPINGfalsepositive, simulateRATE_LIMIT_UNAVAILABLE; backendreadinessgiờprobe exactLua, RedisServiceError.reason chỉenumpermissions/quota/command/network. Đang npmrunverify work/v06-redis-ready-verify.log, phảipushdiagnosticđểđọc reason trênprod trướcownerSig. GitHubsecretlist chỉDEVNET_KEEPER_KEYPAIR, localRedisempty; Upstashsignin pending.
+
+Cua v06ManagerTab đang/manage walletCXj; policy fields300/60/60/60,min1,max10 cho2daktestapplicationpending. Userasyncquestion xinownerkýduyệt chưatrảlời, genericheartbeat khôngapproval. upstashDeployTab vàManagerTab markHandoff khiends. Khôngre-usepassword/keysPicachu. Preparetest funds0.1SOL+1USDC từ ownpipicachufixtureDwT, keywork/private/v06-live-arbitrator.json ignored. Primary7Ppunmodified. Publicproof docs/evidence/v06/test-application.json. accept-v06.ts ownerapprovalguard +exactapproveinstruction/signermanager,6branchesCLI afterapproval, pauseprobe afterward; policy guardexcludesfunding300,others60. Keeperseparate chưaverified.
+
+Slides source scripts/slides/content-v06.json vàbuild-v06.mjs; artifactmodulejunction work/deck-v06/build/node_modules pointsbundled. R5filesPPTX generated, render-r5 exists. VIall18/PDFR3 andENall18/R4 visualQA. Remainingfinal title/count107/32, exportPDFfromfinalPNGandrender; markersalreadyrun once2pptx+once2pdf, khôngrepeat. BundledPythonreportlab/pypdf, systemPythonqrcode alreadyavailable (bundledmissingqrcode). finalizer requires RUNTIME_NODE_MODULES/runtimeNode/Python env. FinalsavoidoverwriteuseR6 filenames. Sourceflowdiagrams native, tables8&15 native,sourcecitesnotes, noAIillustrations.

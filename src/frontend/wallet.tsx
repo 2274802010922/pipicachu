@@ -61,6 +61,7 @@ const Context = createContext<{
   disconnect: () => Promise<void>;
   send: (tx: Transaction, meta?: OperationMeta) => Promise<string>;
   operation: Operation | null;
+  otherPending: Operation[];
   resume: () => Promise<void>;
   connection: () => Connection;
 }>({
@@ -69,6 +70,7 @@ const Context = createContext<{
   disconnect: async () => {},
   send: async () => "",
   operation: null,
+  otherPending: [],
   resume: async () => {},
   connection: () => new Connection("http://localhost/api/rpc"),
 });
@@ -213,6 +215,12 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
         send,
         connection,
         operation: who ? operations[who.toBase58()] || null : null,
+        otherPending: Object.values(operations).filter(
+          (item) =>
+            item.owner !== who?.toBase58() &&
+            !!item.signature &&
+            isUnresolved(item),
+        ),
         resume,
       }}
     >
@@ -223,7 +231,7 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
 export const useWallet = () => useContext(Context);
 export function WalletButton() {
   const { t } = useLanguage();
-  const { who, connect, disconnect } = useWallet();
+  const { who, connect, disconnect, otherPending } = useWallet();
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   return (
@@ -255,6 +263,15 @@ export function WalletButton() {
             ? `${who.toBase58().slice(0, 4)}…${who.toBase58().slice(-4)} · ${t("Ngắt", "Disconnect")}`
             : t("Kết nối ví", "Connect wallet")}
       </button>
+      {otherPending.map((item) => (
+        <span key={item.id} className="small" role="status">
+          {t(
+            "Thao tác chưa chốt của ví trước:",
+            "Unresolved action for previous wallet:",
+          )}{" "}
+          {item.owner.slice(0, 4)}…{item.owner.slice(-4)}
+        </span>
+      ))}
       {error && (
         <span role="alert" className="small">
           {error}

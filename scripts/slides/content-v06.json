@@ -1,0 +1,408 @@
+[
+  {
+    "number": 1,
+    "section": "pipicachu",
+    "vi": {
+      "title": "Ký quỹ USDC cho\nsản phẩm số qua cộng đồng",
+      "body": [
+        "Một link. Điều kiện rõ. Tiền giữ trong vault.",
+        "Demo Devnet · V0.6 đang nghiệm thu"
+      ]
+    },
+    "en": {
+      "title": "USDC escrow for\ndigital-goods communities",
+      "body": [
+        "One link. Fixed terms. Program-controlled funds.",
+        "Devnet prototype · V0.6 under acceptance"
+      ]
+    },
+    "layout": "cover",
+    "notes": "Original project. docs/product/README.md; Devnet prototype, no independently verified paid demand."
+  },
+  {
+    "number": 2,
+    "section": "Problem",
+    "vi": {
+      "title": "Ai giao trước, ai trả trước?",
+      "body": [
+        "Người bán: “Nhận tiền rồi mình gửi file.”",
+        "Người mua: “Mình muốn kiểm file trước.”",
+        "Admin giữ tiền giúp, nhưng hai bên phải tin ví cá nhân đó.",
+        "Tình huống minh họa; chưa phải dữ liệu phỏng vấn."
+      ]
+    },
+    "en": {
+      "title": "Who delivers first? Who pays first?",
+      "body": [
+        "Seller: “I send the files after payment.”",
+        "Buyer: “I want to inspect them first.”",
+        "An intermediary helps, but both rely on that person holding funds.",
+        "Illustrative scenario; not interview or customer data."
+      ]
+    },
+    "layout": "problem",
+    "notes": "Illustrative persona scenario, not real customer data. FTC seller warning: https://consumer.ftc.gov/consumer-alerts/2022/07/selling-stuff-online-heres-how-avoid-scam . The warning is context, not proof of pipicachu demand."
+  },
+  {
+    "number": 3,
+    "section": "User",
+    "vi": {
+      "title": "Người đã dùng Solana và thanh toán USDC",
+      "body": [
+        "Mua/bán gói thiết kế, tài nguyên số qua nhóm cộng đồng.",
+        "Hai bên chưa quen nhau; đã thống nhất dùng USDC.",
+        "Admin cộng đồng hỗ trợ khi có tranh chấp."
+      ]
+    },
+    "en": {
+      "title": "People already using Solana wallets and USDC",
+      "body": [
+        "Digital packs traded through community groups.",
+        "Unfamiliar parties who already choose USDC.",
+        "Community intermediaries help resolve disputes."
+      ]
+    },
+    "layout": "rows",
+    "notes": "Original project source: docs/architecture/v06.md, docs/product/README.md and docs/evidence/v06/README.md. Distinguish implementation, deployment and live acceptance. No Mainnet, audit or paid-user claim."
+  },
+  {
+    "number": 4,
+    "section": "Solution",
+    "vi": {
+      "title": "Bốn bước trên cùng một link",
+      "body": ["Tạo link", "Nạp ký quỹ", "Bàn giao", "Xác nhận / tranh chấp"]
+    },
+    "en": {
+      "title": "Four steps on one shared link",
+      "body": ["Create link", "Fund escrow", "Deliver", "Confirm / dispute"]
+    },
+    "layout": "flow",
+    "notes": "Original project source: docs/architecture/v06.md, docs/product/README.md and docs/evidence/v06/README.md. Distinguish implementation, deployment and live acceptance. No Mainnet, audit or paid-user claim."
+  },
+  {
+    "number": 5,
+    "section": "Blockchain",
+    "vi": {
+      "title": "Tách quyền giữ tiền khỏi quyền phán quyết",
+      "body": [
+        "USDC nằm trong vault PDA của chương trình.",
+        "Trọng tài chọn trả người bán hoặc hoàn người mua.",
+        "CPI chia tiền/phí và mở cọc trong một transaction."
+      ]
+    },
+    "en": {
+      "title": "Separate custody from dispute judgment",
+      "body": [
+        "USDC stays in a program-derived deal vault.",
+        "The arbitrator chooses seller payout or buyer refund.",
+        "CPI settles funds, fees and bond reservation atomically."
+      ]
+    },
+    "layout": "rows",
+    "notes": "Original project source: docs/architecture/v06.md, docs/product/README.md and docs/evidence/v06/README.md. Distinguish implementation, deployment and live acceptance. No Mainnet, audit or paid-user claim."
+  },
+  {
+    "number": 6,
+    "section": "Demo",
+    "vi": {
+      "title": "Xem sản phẩm, đối chiếu bằng chứng",
+      "body": [
+        "Video v0.5: Phantom thật, deal 2 USDC, người bán nhận 1,96.",
+        "UI v0.6: đăng ký → duyệt → nạp cọc → bật nhận riêng.",
+        "Receipt, test local và kiểm extension được ghi phạm vi riêng."
+      ]
+    },
+    "en": {
+      "title": "See the product and inspect the evidence",
+      "body": [
+        "v0.5 video: real Phantom, 2 USDC deal, seller gets 1.96.",
+        "v0.6 UI: apply → review → bond → enable separately.",
+        "Receipts, local tests and extension checks have separate scopes."
+      ]
+    },
+    "layout": "demo",
+    "notes": "v0.5 video scope: https://www.youtube.com/watch?v=mTY3e3qX_4k . Screenshot of local v0.6 UI uses a labeled synthetic pending application, not live approval."
+  },
+  {
+    "number": 7,
+    "section": "Business",
+    "vi": {
+      "title": "Phí rõ ràng, nhu cầu trả phí chưa xác thực",
+      "body": [
+        "98% người bán",
+        "1% trọng tài",
+        "1% hệ thống",
+        "Hoàn đủ tiền ký quỹ, không thu phí."
+      ]
+    },
+    "en": {
+      "title": "Clear fees; willingness to pay is not validated",
+      "body": [
+        "98% seller",
+        "1% arbitrator",
+        "1% platform",
+        "Refund: full principal, no fees."
+      ]
+    },
+    "layout": "fees",
+    "notes": "Original project source: docs/architecture/v06.md, docs/product/README.md and docs/evidence/v06/README.md. Distinguish implementation, deployment and live acceptance. No Mainnet, audit or paid-user claim."
+  },
+  {
+    "number": 8,
+    "section": "Alternatives",
+    "vi": {
+      "title": "Khác biệt và các giải pháp thay thế",
+      "body": [
+        "Chuyển USDC thẳng|Ít thao tác|Người mua chịu rủi ro giao trước",
+        "Admin giữ tiền|Quy trình cộng đồng có sẵn|Phụ thuộc custody của admin",
+        "Escrow.com|Escrow service có flow kiểm hàng|Khác phạm vi và mô hình dịch vụ",
+        "Kleros|Protocol xử tranh chấp|Khác một trọng tài allowlist"
+      ]
+    },
+    "en": {
+      "title": "Positioning among existing alternatives",
+      "body": [
+        "Direct USDC|Few steps|Buyer accepts upfront delivery risk",
+        "Admin custody|Existing community workflow|Depends on intermediary custody",
+        "Escrow.com|Escrow service with inspection flow|Different scope and service model",
+        "Kleros|Dispute-resolution protocol|Different from one allowlisted arbitrator"
+      ]
+    },
+    "layout": "table",
+    "notes": "Primary alternatives: https://www.escrow.com/what-is-escrow and https://docs.kleros.io/ . No claim of an empty market or a moat."
+  },
+  {
+    "number": 9,
+    "section": "Validation",
+    "vi": {
+      "title": "Đã kiểm kỹ thuật, đang kiểm nhu cầu sử dụng",
+      "body": [
+        "105 test unit/integration · 32 test browser",
+        "39 lifecycle · 13 registry · 21 governance/capacity",
+        "46 deal cũ giữ nguyên dữ liệu khi nâng cấp",
+        "Còn cổng owner/Phantom/Redis/keeper và tester thật."
+      ]
+    },
+    "en": {
+      "title": "Technical evidence and remaining gates",
+      "body": [
+        "105 unit/integration tests · 32 browser tests",
+        "39 lifecycle · 13 registry · 21 governance/capacity",
+        "46 legacy deals unchanged during upgrade",
+        "Owner, Phantom, Redis/keeper and real-user gates remain."
+      ]
+    },
+    "layout": "validation",
+    "notes": "docs/evidence/v06/local-acceptance.json and protocol-rollout.json. Owner application approval, Phantom v0.6 and shared Redis/keeper gates pending."
+  },
+  {
+    "number": 10,
+    "section": "Roadmap",
+    "vi": {
+      "title": "Hoàn tất cổng nghiệm thu trước mở rộng",
+      "body": [
+        "V0.6: owner approval, live branches, keeper/Redis, Phantom.",
+        "Dùng thử: 1–2 admin, 5–10 người mua/bán phù hợp.",
+        "Trước Mainnet: audit, vận hành, chính sách và yêu cầu pháp lý."
+      ]
+    },
+    "en": {
+      "title": "Finish acceptance gates before expanding",
+      "body": [
+        "V0.6: owner approval, live branches, Redis/keeper, Phantom.",
+        "Pilot study: 1–2 intermediaries and 5–10 eligible traders.",
+        "Before Mainnet: audit, operations, policy and legal requirements."
+      ]
+    },
+    "layout": "rows",
+    "notes": "Original project source: docs/architecture/v06.md, docs/product/README.md and docs/evidence/v06/README.md. Distinguish implementation, deployment and live acceptance. No Mainnet, audit or paid-user claim."
+  },
+  {
+    "number": 11,
+    "section": "Team",
+    "vi": {
+      "title": "Một người xây, ngữ cảnh và kiểm thử được giữ lại",
+      "body": [
+        "GitHub: 2274802010922",
+        "Product · UI · TypeScript · Anchor/Solana · CI",
+        "Checkpoint tiếng Việt, main, IDL, receipt và harness."
+      ]
+    },
+    "en": {
+      "title": "Solo build with reproducible context and tests",
+      "body": [
+        "GitHub: 2274802010922",
+        "Product · UI · TypeScript · Anchor/Solana · CI",
+        "Versioned context, main, IDL, receipts and harness."
+      ]
+    },
+    "layout": "team",
+    "notes": "Original project source: docs/architecture/v06.md, docs/product/README.md and docs/evidence/v06/README.md. Distinguish implementation, deployment and live acceptance. No Mainnet, audit or paid-user claim."
+  },
+  {
+    "number": 12,
+    "section": "Closing",
+    "vi": {
+      "title": "Một link giao dịch, kết quả có thể đối chiếu",
+      "body": [
+        "pipicachu.vercel.app",
+        "github.com/2274802010922/pipicachu",
+        "Devnet · Token thử nghiệm · Chưa audit độc lập"
+      ]
+    },
+    "en": {
+      "title": "One deal link, inspectable outcomes",
+      "body": [
+        "pipicachu.vercel.app",
+        "github.com/2274802010922/pipicachu",
+        "Devnet · Test tokens · No independent audit"
+      ]
+    },
+    "layout": "closing",
+    "notes": "Original project source: docs/architecture/v06.md, docs/product/README.md and docs/evidence/v06/README.md. Distinguish implementation, deployment and live acceptance. No Mainnet, audit or paid-user claim."
+  },
+  {
+    "number": 13,
+    "section": "Appendix 1",
+    "vi": {
+      "title": "Quyền tiền và trust boundary",
+      "body": [
+        "Buyer: fund / confirm / dispute trước hạn.",
+        "Seller: create / deliver / accept mutual settlement.",
+        "Arbitrator: payout hoặc refund tới recipients cố định.",
+        "Manager: registry/policy; upgrade authority là quyền riêng."
+      ]
+    },
+    "en": {
+      "title": "Money permissions and trust boundaries",
+      "body": [
+        "Buyer: fund / confirm / dispute before deadline.",
+        "Seller: create / deliver / accept mutual settlement.",
+        "Arbitrator: fixed-recipient payout or refund.",
+        "Manager: registry/policy; upgrade authority is separate."
+      ]
+    },
+    "layout": "rows",
+    "notes": "Original project source: docs/architecture/v06.md, docs/product/README.md and docs/evidence/v06/README.md. Distinguish implementation, deployment and live acceptance. No Mainnet, audit or paid-user claim."
+  },
+  {
+    "number": 14,
+    "section": "Appendix 2",
+    "vi": {
+      "title": "State machine chặn chi lặp",
+      "body": [
+        "Created → Funded → Delivered → Completed",
+        "Funded quá delivery → Refunded",
+        "Delivered tranh chấp → Disputed → payout / refund",
+        "Policy 1 xử muộn; terminal đầu tiên thắng."
+      ]
+    },
+    "en": {
+      "title": "The state machine rejects repeated settlement",
+      "body": [
+        "Created → Funded → Delivered → Completed",
+        "Missed delivery → Refunded",
+        "Timely complaint → Disputed → payout / refund",
+        "Policy 1 permits late ruling; the first terminal transaction wins."
+      ]
+    },
+    "layout": "state",
+    "notes": "Original project source: docs/architecture/v06.md, docs/product/README.md and docs/evidence/v06/README.md. Distinguish implementation, deployment and live acceptance. No Mainnet, audit or paid-user claim."
+  },
+  {
+    "number": 15,
+    "section": "Appendix 3",
+    "vi": {
+      "title": "Tiền ký quỹ 2 USDC và cọc tách riêng",
+      "body": [
+        "Người bán|1,96 USDC|98%",
+        "Trọng tài|0,02 USDC|1%",
+        "Hệ thống|0,02 USDC|1%",
+        "Hoàn người mua|2 USDC|Không phí"
+      ]
+    },
+    "en": {
+      "title": "2 USDC principal, with a separate bond pool",
+      "body": [
+        "Seller|1.96 USDC|98%",
+        "Arbitrator|0.02 USDC|1%",
+        "Platform|0.02 USDC|1%",
+        "Buyer refund|2 USDC|No fees"
+      ]
+    },
+    "layout": "fee-table",
+    "notes": "Original project source: docs/architecture/v06.md, docs/product/README.md and docs/evidence/v06/README.md. Distinguish implementation, deployment and live acceptance. No Mainnet, audit or paid-user claim."
+  },
+  {
+    "number": 16,
+    "section": "Appendix 4",
+    "vi": {
+      "title": "Pending không phải thành công",
+      "body": [
+        "Kiểm tra → ký → gửi → xác nhận → finalized.",
+        "Timeout broadcast: theo signature, không ký lại ngay.",
+        "Expiry: block height finalized + đọc lại history.",
+        "Keeper: retry từng deal; manual finalize ở phần khôi phục."
+      ]
+    },
+    "en": {
+      "title": "Pending is not success",
+      "body": [
+        "Check → sign → submit → confirm → finalized.",
+        "Broadcast timeout: follow the signature, do not re-sign immediately.",
+        "Expiry: finalized block height plus historical re-read.",
+        "Keeper: isolated retries; manual finalize is a recovery action."
+      ]
+    },
+    "layout": "rows",
+    "notes": "Original project source: docs/architecture/v06.md, docs/product/README.md and docs/evidence/v06/README.md. Distinguish implementation, deployment and live acceptance. No Mainnet, audit or paid-user claim."
+  },
+  {
+    "number": 17,
+    "section": "Appendix 5",
+    "vi": {
+      "title": "Giữ ABI và điều kiện deal cũ",
+      "body": [
+        "Deal 876 byte; policy byte dùng padding, account cũ mặc định 0.",
+        "ManagerConfig 73 byte, Application 59 byte là PDA riêng.",
+        "Policy và message có binding; thay trong lúc ký bị chặn.",
+        "Nâng cấp: contract → bootstrap → web → smoke."
+      ]
+    },
+    "en": {
+      "title": "Preserve legacy ABI and agreed terms",
+      "body": [
+        "Deal stays 876 bytes; policy uses padding, legacy defaults 0.",
+        "Separate PDAs: ManagerConfig 73 bytes, Application 59 bytes.",
+        "Policy is bound to consent; changes during signing are rejected.",
+        "Upgrade: program → bootstrap → web → smoke."
+      ]
+    },
+    "layout": "rows",
+    "notes": "Original project source: docs/architecture/v06.md, docs/product/README.md and docs/evidence/v06/README.md. Distinguish implementation, deployment and live acceptance. No Mainnet, audit or paid-user claim."
+  },
+  {
+    "number": 18,
+    "section": "Appendix 6",
+    "vi": {
+      "title": "Đo có phạm vi, không thổi phồng hiệu năng",
+      "body": [
+        "10 read mẫu: median 109,5 ms · p95 144 ms.",
+        "Public Solana Devnet RPC, cùng một account, đọc tuần tự.",
+        "Tx hotfix v0.5.1: 40.896 CU · 5.000 lamport · 718 byte.",
+        "Chưa phải load test hoặc benchmark transaction v0.6."
+      ]
+    },
+    "en": {
+      "title": "Bounded measurements, without inflated performance claims",
+      "body": [
+        "10 read samples: median 109.5 ms · p95 144 ms.",
+        "Public Solana Devnet RPC; sequential reads of one account.",
+        "Historical v0.5.1 tx: 40,896 CU · 5,000 lamports · 718 bytes.",
+        "Not a load test or a v0.6 transaction benchmark."
+      ]
+    },
+    "layout": "benchmark",
+    "notes": "docs/evidence/v06/benchmark.json . 10 sequential finalized getAccountInfo reads of one historical account; historical hotfix transaction metrics are not v0.6 metrics."
+  }
+]

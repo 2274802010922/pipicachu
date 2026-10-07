@@ -8,7 +8,8 @@ import {
 } from "@/escrow/constants";
 import deployment from "@/escrow/deployment.json";
 import { upstream } from "./rpc";
-import { limiterConfigured, redisCommand, readStored } from "./redis";
+import { limiterConfigured, readStored, RedisServiceError } from "./redis";
+import { probeSharedLimiter } from "./rate-limit";
 export type Readiness = {
   ready: boolean;
   mode: "production" | "local-test";
@@ -16,6 +17,7 @@ export type Readiness = {
   program: boolean;
   manager: boolean;
   limiter: boolean;
+  limiterError?: string;
   checkedAt: string;
   missing: string[];
 };
@@ -91,8 +93,11 @@ export async function readiness(): Promise<Readiness> {
   } catch {}
   if (limiterConfigured())
     try {
-      result.limiter = (await redisCommand(["PING"])) === "PONG";
-    } catch {}
+      result.limiter = await probeSharedLimiter();
+    } catch (error) {
+      result.limiterError =
+        error instanceof RedisServiceError ? error.reason : "unavailable";
+    }
   result.missing = (["rpc", "program", "manager", "limiter"] as const).filter(
     (k) => !result[k],
   );

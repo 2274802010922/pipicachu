@@ -272,9 +272,13 @@ export async function decodeDeal(address: string, data: Buffer): Promise<Deal> {
     throw new Error("INVALID_ACCOUNT");
   return d;
 }
-export async function readDeal(c: Connection, address: string) {
+export async function readDeal(
+  c: Connection,
+  address: string,
+  commitment: "confirmed" | "finalized" = "confirmed",
+) {
   const p = new PublicKey(address),
-    info = await c.getAccountInfo(p, "confirmed");
+    info = await c.getAccountInfo(p, commitment);
   if (!info) throw new Error("DEAL_NOT_FOUND");
   if (!info.owner.equals(PROGRAM_ID)) throw new Error("INVALID_ACCOUNT");
   return decodeDeal(address, info.data);

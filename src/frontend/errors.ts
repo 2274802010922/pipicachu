@@ -85,6 +85,10 @@ export function errorMessage(error: unknown, vi: boolean) {
       "Chưa thể thực hiện. Kiểm tra số dư SOL/USDC, quyền thao tác, cọc khả dụng và thời hạn; tải lại trạng thái trước khi thử lại.",
       "Cannot execute. Check SOL/USDC balances, permissions, available bond and deadlines; refresh before retrying.",
     ],
+    ORGANIZATION_POLICY_CHANGED: [
+      "Điều kiện trọng tài đã đổi. Xem lại thời hạn rồi tạo lại; chưa ký giao dịch.",
+      "The arbitrator policy changed. Review the deadlines before retrying; no transaction was signed.",
+    ],
     ORGANIZATION_UNAVAILABLE: [
       "Trọng tài chưa được duyệt, tạm ngừng hoặc không đủ cọc. Tải lại để chọn trọng tài khác.",
       "Arbitrator unapproved, paused or underfunded. Refresh and select another arbitrator.",

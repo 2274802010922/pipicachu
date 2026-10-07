@@ -4,6 +4,7 @@ import {
   redisCommand,
   namespace,
 } from "./redis";
+import { randomUUID } from "node:crypto";
 const memory = new Map<string, { count: number; window: number }>();
 export const limits = {
   read: { ip: 240, global: 2400 },
@@ -11,6 +12,20 @@ export const limits = {
 };
 const LUA =
   "local n=redis.call('INCR',KEYS[1]); if n==1 then redis.call('EXPIRE',KEYS[1],130) end; if n>tonumber(ARGV[1]) then return 0 end; local g=redis.call('INCR',KEYS[2]); if g==1 then redis.call('EXPIRE',KEYS[2],130) end; if g>tonumber(ARGV[2]) then return 0 end; return 1";
+export async function probeSharedLimiter() {
+  const id = randomUUID();
+  return (
+    (await redisCommand<number>([
+      "EVAL",
+      LUA,
+      2,
+      `${namespace}:probe:{pipi-limits-v06}:${id}:ip`,
+      `${namespace}:probe:{pipi-limits-v06}:${id}:global`,
+      1,
+      1,
+    ])) === 1
+  );
+}
 export function memoryLimit(key: string, limit: number, now = Date.now()) {
   const window = Math.floor(now / 60000),
     old = memory.get(key),
