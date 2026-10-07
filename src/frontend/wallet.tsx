@@ -5,15 +5,43 @@ import {
   useEffect,
   useState,
   useCallback,
+  useRef,
 } from "react";
 import { Connection, PublicKey, Transaction } from "@solana/web3.js";
-import bs58 from "bs58";
 import { useLanguage } from "./i18n/provider";
-import { simulationFailureCode } from "@/escrow/simulation";
 import {
-  prepareDevnetWalletTransaction,
-  assertWalletResponse,
-} from "@/escrow/wallet-transaction";
+  submitWalletOperation,
+  trackOperation,
+  isUnresolved,
+  type Operation,
+  type OperationMeta,
+} from "@/escrow/operation";
+import { z } from "zod";
+const recoverySchema = z.object({
+  id: z.string().max(100),
+  owner: z.string().max(44),
+  action: z.string().max(64),
+  dealAddress: z.string().max(44).optional(),
+  phase: z.enum([
+    "checking",
+    "awaiting_signature",
+    "signed",
+    "submitted",
+    "confirming",
+    "unknown",
+    "finalized",
+    "failed",
+    "expired",
+  ]),
+  createdAt: z.number().int(),
+  updatedAt: z.number().int(),
+  signature: z.string().max(90).optional(),
+  messageDigest: z.string().max(64).optional(),
+  blockhash: z.string().max(44).optional(),
+  lastValidBlockHeight: z.number().int().optional(),
+  errorCode: z.string().max(80).optional(),
+});
+const RECOVERY_KEY = "pipicachu_pending_v1";
 type Phantom = {
   publicKey: PublicKey | null;
   connect: () => Promise<{ publicKey: PublicKey }>;
@@ -31,17 +59,53 @@ const Context = createContext<{
   who: PublicKey | null;
   connect: () => Promise<void>;
   disconnect: () => Promise<void>;
-  send: (tx: Transaction) => Promise<string>;
+  send: (tx: Transaction, meta?: OperationMeta) => Promise<string>;
+  operation: Operation | null;
+  resume: () => Promise<void>;
   connection: () => Connection;
 }>({
   who: null,
   connect: async () => {},
   disconnect: async () => {},
   send: async () => "",
+  operation: null,
+  resume: async () => {},
   connection: () => new Connection("http://localhost/api/rpc"),
 });
 export function WalletProvider({ children }: { children: React.ReactNode }) {
   const [who, setWho] = useState<PublicKey | null>(null);
+  const [operations, setOperations] = useState<Record<string, Operation>>({});
+  const operationsRef = useRef<Record<string, Operation>>({}),
+    whoRef = useRef<PublicKey | null>(null),
+    tracking = useRef(new Set<string>());
+  const updateOperation = useCallback((next: Operation) => {
+    const active = operationsRef.current[next.owner];
+    if (active && active.id !== next.id && next.phase !== "checking") return;
+    operationsRef.current[next.owner] = next;
+    setOperations((current) => ({ ...current, [next.owner]: next }));
+    try {
+      if (next.owner === whoRef.current?.toBase58()) {
+        if (isUnresolved(next) && next.signature)
+          sessionStorage.setItem(RECOVERY_KEY, JSON.stringify(next));
+        else sessionStorage.removeItem(RECOVERY_KEY);
+      }
+    } catch {}
+  }, []);
+  const changeWallet = useCallback((pub: PublicKey | null) => {
+    if (
+      whoRef.current?.toBase58() !== pub?.toBase58() &&
+      !isUnresolved(
+        operationsRef.current[pub?.toBase58() || ""] ||
+          ({ phase: "finalized" } as Operation),
+      )
+    )
+      try {
+        sessionStorage.removeItem(RECOVERY_KEY);
+      } catch {}
+    whoRef.current = pub;
+    setWho(pub);
+  }, []);
+
   const connection = useCallback(
     () =>
       new Connection(`${location.origin}/api/rpc`, {
@@ -55,77 +119,103 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
     const p = window.phantom?.solana;
     if (!p) return;
     const change = (pub: PublicKey | null) =>
-      setWho(pub ? new PublicKey(pub.toBase58()) : null);
-    const reset = () => setWho(null);
+      changeWallet(pub ? new PublicKey(pub.toBase58()) : null);
+    const reset = () => changeWallet(null);
     p.on("accountChanged", change);
     p.on("disconnect", reset);
     return () => {
       p.removeListener("accountChanged", change);
       p.removeListener("disconnect", reset);
     };
+  }, [changeWallet]);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      try {
+        const parsed = recoverySchema.safeParse(
+          JSON.parse(sessionStorage.getItem(RECOVERY_KEY) || "null"),
+        );
+        if (
+          parsed.success &&
+          parsed.data.signature &&
+          isUnresolved(parsed.data) &&
+          Date.now() - parsed.data.createdAt < 86400000
+        ) {
+          new PublicKey(parsed.data.owner);
+          operationsRef.current[parsed.data.owner] = parsed.data;
+          setOperations((current) => ({
+            ...current,
+            [parsed.data.owner]: parsed.data,
+          }));
+        } else sessionStorage.removeItem(RECOVERY_KEY);
+      } catch {
+        sessionStorage.removeItem(RECOVERY_KEY);
+      }
+    }, 0);
+    return () => clearTimeout(timer);
   }, []);
   async function connect() {
     const p = window.phantom?.solana;
     if (!p) throw new Error("WALLET_MISSING");
-    setWho(new PublicKey((await p.connect()).publicKey.toBase58()));
+    changeWallet(new PublicKey((await p.connect()).publicKey.toBase58()));
   }
   async function disconnect() {
     await window.phantom?.solana?.disconnect();
-    setWho(null);
+    changeWallet(null);
   }
-  async function send(tx: Transaction) {
-    const p = window.phantom?.solana;
-    if (!p || !who) throw new Error("WALLET_MISSING");
-    const c = connection();
+  const resume = useCallback(async () => {
+    const pending = operationsRef.current[whoRef.current?.toBase58() || ""];
     if (
-      (await c.getGenesisHash()) !==
-      "EtWTRABZaYq6iMfeYKouRu166VU2xqa1wcaWoxPkrZBG"
+      !pending?.signature ||
+      !isUnresolved(pending) ||
+      tracking.current.has(pending.id)
     )
-      throw new Error("RPC_NETWORK_MISMATCH");
-    const latest = await c.getLatestBlockhash();
-    prepareDevnetWalletTransaction(tx);
-    tx.feePayer = who;
-    tx.recentBlockhash = latest.blockhash;
-    const simulation = await c.simulateTransaction(tx);
-    if (simulation.value.err)
-      throw new Error(
-        simulationFailureCode(simulation.value.err, simulation.value.logs),
-      );
-    const message = tx.serializeMessage();
-    let signed: Transaction;
+      return;
+    tracking.current.add(pending.id);
     try {
-      signed = await p.signTransaction(tx);
+      await trackOperation(connection(), pending, updateOperation);
     } catch {
-      throw new Error("WALLET_REJECTED");
+    } finally {
+      tracking.current.delete(pending.id);
     }
-    assertWalletResponse(who, p.publicKey, message, signed);
-    const signature = bs58.encode(signed.signature!);
-    const bytes = signed.serialize();
-    for (let attempt = 0; attempt < 2; attempt++) {
-      try {
-        await c.sendRawTransaction(bytes);
-        break;
-      } catch {
-        await new Promise((resolve) => setTimeout(resolve, 2500));
-      }
-    }
-    // Poll over HTTP: avoid relying on browser websocket connectivity.
-    for (let attempt = 0; attempt < 45; attempt++) {
-      let status;
-      try {
-        status = (await c.getSignatureStatuses([signature])).value[0];
-      } catch {
-        await new Promise((resolve) => setTimeout(resolve, 2500));
-        continue;
-      }
-      if (status?.err) throw new Error("TRANSACTION_FAILED");
-      if (status?.confirmationStatus === "finalized") return signature;
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-    }
-    throw new Error(`PENDING:${signature}`);
+  }, [connection, updateOperation]);
+  async function send(tx: Transaction, meta?: OperationMeta) {
+    const p = window.phantom?.solana;
+    if (!p || !who) throw Error("WALLET_MISSING");
+    const pending = operationsRef.current[whoRef.current?.toBase58() || ""];
+    if (pending?.owner === who.toBase58() && isUnresolved(pending))
+      throw Error(`PENDING:${pending.signature || ""}`);
+    return submitWalletOperation({
+      connection: connection(),
+      wallet: who,
+      tx,
+      sign: (t) => p.signTransaction(t),
+      currentWallet: () => p.publicKey,
+      onUpdate: updateOperation,
+      meta,
+    });
   }
+  useEffect(() => {
+    const pending = operationsRef.current[whoRef.current?.toBase58() || ""];
+    if (
+      !pending?.signature ||
+      !isUnresolved(pending) ||
+      pending.owner !== who?.toBase58()
+    )
+      return;
+    void resume();
+  }, [who, connection, updateOperation, resume]);
   return (
-    <Context.Provider value={{ who, connect, disconnect, send, connection }}>
+    <Context.Provider
+      value={{
+        who,
+        connect,
+        disconnect,
+        send,
+        connection,
+        operation: who ? operations[who.toBase58()] || null : null,
+        resume,
+      }}
+    >
       {children}
     </Context.Provider>
   );

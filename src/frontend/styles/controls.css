@@ -59,6 +59,7 @@ textarea {
   background: var(--surface);
   color: var(--ink);
   max-width: 100%;
+  min-width: 0;
   line-height: 1.5;
 }
 input,
@@ -66,6 +67,7 @@ textarea {
   width: 100%;
 }
 select {
+  width: 100%;
   font-size: 14px;
 }
 textarea {

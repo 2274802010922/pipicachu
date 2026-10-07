@@ -565,7 +565,7 @@ assert.equal(
   existing!.total - 1_000_000n,
 );
 await send(arbitrator, [
-  await organizationAcceptingIx(arbitrator.publicKey, true),
+  await organizationAcceptingIx(arbitrator.publicKey, true, connection),
 ]);
 const report = {
   at: new Date().toISOString(),

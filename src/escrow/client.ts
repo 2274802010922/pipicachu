@@ -1,3 +1,4 @@
+import idl from "../../client/idl/escrow.json";
 import { Buffer } from "buffer";
 import {
   Connection,
@@ -10,19 +11,22 @@ import {
   TOKEN_PROGRAM_ID,
   getAssociatedTokenAddressSync,
   createAssociatedTokenAccountIdempotentInstruction,
-} from "@solana/spl-token";
-import deployment from "./deployment.json";
+} from "./token";
 
-export const PROGRAM_ID = new PublicKey(deployment.programId);
-export const MINT = new PublicKey(deployment.mint);
-export const CONFIG = PublicKey.findProgramAddressSync(
-  [Buffer.from("config")],
+export {
   PROGRAM_ID,
-)[0];
-export const FEE_CONFIG = PublicKey.findProgramAddressSync(
-  [Buffer.from("platform_fee_v1")],
+  MINT,
+  CONFIG,
+  FEE_CONFIG,
+  MANAGER_CONFIG,
+} from "./constants";
+import {
   PROGRAM_ID,
-)[0];
+  MINT,
+  CONFIG,
+  FEE_CONFIG,
+  MANAGER_CONFIG,
+} from "./constants";
 export async function readFeeTreasury(c: Connection): Promise<PublicKey> {
   const info = await c.getAccountInfo(FEE_CONFIG, "confirmed");
   if (!info || !info.owner.equals(PROGRAM_ID))
@@ -52,6 +56,7 @@ export type Deal = {
   platformFee: bigint;
   feeVersion: number;
   workflowVersion?: number;
+  resolutionPolicyVersion?: number;
   createdAt: number;
   fundBy: number;
   deliverySeconds: number;
@@ -126,6 +131,18 @@ export async function instruction(
   keys: { pubkey: PublicKey; isSigner: boolean; isWritable: boolean }[],
   args: Buffer = Buffer.alloc(0),
 ) {
+  const spec = idl.instructions.find((ix) => ix.name === name);
+  if (
+    !spec ||
+    spec.accounts.length !== keys.length ||
+    spec.accounts.some(
+      (account, index) =>
+        !!("signer" in account && account.signer) !== keys[index].isSigner ||
+        !!("writable" in account && account.writable) !==
+          keys[index].isWritable,
+    )
+  )
+    throw Error("IDL_ACCOUNT_MISMATCH");
   return new TransactionInstruction({
     programId: PROGRAM_ID,
     keys,
@@ -153,37 +170,54 @@ export function amount(n: bigint) {
   const f = (n % 1_000_000n).toString().padStart(6, "0").replace(/0+$/, "");
   return whole.toString() + (f ? "." + f : "");
 }
-class Reader {
+export class Reader {
   offset = 8;
   constructor(public b: Buffer) {}
+  requireBytes(count: number) {
+    if (
+      !Number.isSafeInteger(count) ||
+      count < 0 ||
+      this.offset + count > this.b.length
+    )
+      throw Error("INVALID_ACCOUNT");
+  }
   pub() {
+    this.requireBytes(32);
     const p = new PublicKey(this.b.subarray(this.offset, (this.offset += 32)));
     return p.toBase58();
   }
   uint() {
+    this.requireBytes(8);
     const n = this.b.readBigUInt64LE(this.offset);
     this.offset += 8;
     return n;
   }
   int() {
+    this.requireBytes(8);
     const n = this.b.readBigInt64LE(this.offset);
     this.offset += 8;
-    return Number(n);
+    const value = Number(n);
+    if (!Number.isSafeInteger(value)) throw Error("INVALID_ACCOUNT");
+    return value;
   }
   byte() {
+    this.requireBytes(1);
     return this.b[this.offset++];
   }
   hash() {
+    this.requireBytes(32);
     return this.b.subarray(this.offset, (this.offset += 32)).toString("hex");
   }
   text() {
+    this.requireBytes(4);
     const len = this.b.readUInt32LE(this.offset);
     this.offset += 4;
     if (len > 512) throw new Error("INVALID_ACCOUNT");
+    this.requireBytes(len);
     return this.b.subarray(this.offset, (this.offset += len)).toString("utf8");
   }
 }
-async function assertAccount(data: Buffer, name: string) {
+export async function assertAccount(data: Buffer, name: string) {
   if (
     !data
       .subarray(0, 8)
@@ -192,6 +226,7 @@ async function assertAccount(data: Buffer, name: string) {
     throw new Error("INVALID_ACCOUNT");
 }
 export async function decodeDeal(address: string, data: Buffer): Promise<Deal> {
+  if (data.length !== 876) throw Error("INVALID_ACCOUNT");
   await assertAccount(data, "Deal");
   const r = new Reader(data);
   const d = {
@@ -223,11 +258,13 @@ export async function decodeDeal(address: string, data: Buffer): Promise<Deal> {
     platformFee: r.uint(),
     feeVersion: r.byte(),
     workflowVersion: r.byte(),
+    resolutionPolicyVersion: r.byte(),
   };
   if (
     !d.state ||
     d.feeVersion > 1 ||
     d.workflowVersion > 1 ||
+    d.resolutionPolicyVersion > 1 ||
     (d.feeVersion === 0 && d.platformFee !== 0n) ||
     d.mint !== MINT.toBase58() ||
     dealAddress(new PublicKey(d.seller), d.nonce).toBase58() !== address
@@ -468,13 +505,30 @@ export async function createOrganizationDealIx(
   ix.data = Buffer.concat([
     (await digest("global:create_organization_deal")).subarray(0, 8),
     ix.data.subarray(8),
+    Buffer.from([1]),
   ]);
   return ix;
 }
 export async function organizationAcceptingIx(
   actor: PublicKey,
   accepting: boolean,
+  source?:
+    Connection | Pick<Organization, "minimumDeposit" | "maximumDeal" | "times">,
 ) {
+  const org =
+    accepting && source
+      ? "getAccountInfo" in source
+        ? await readOrganization(source as Connection, actor)
+        : source
+      : null;
+  if (accepting && !org) throw Error("ORGANIZATION_UNAVAILABLE");
+  const policy = org
+    ? Buffer.concat([
+        u64(org.minimumDeposit),
+        u64(org.maximumDeal),
+        ...org.times.map(i64),
+      ])
+    : Buffer.alloc(48);
   return instruction(
     "set_organization_accepting",
     [
@@ -482,7 +536,7 @@ export async function organizationAcceptingIx(
       key(organizationAddress(actor), true),
       key(arbAddress(actor)),
     ],
-    Buffer.from([accepting ? 1 : 0]),
+    Buffer.concat([Buffer.from([accepting ? 1 : 0]), policy]),
   );
 }
 export async function approveOrganizationIx(
@@ -500,6 +554,7 @@ export async function approveOrganizationIx(
       key(MINT),
       key(organizationAddress(authority), true),
       key(SystemProgram.programId),
+      key(MANAGER_CONFIG),
     ],
     Buffer.concat([u64(minimum), u64(maximum), ...times.map(i64)]),
   );
@@ -511,7 +566,11 @@ export async function organizationApprovalIx(
 ) {
   return instruction(
     "set_organization_approval",
-    [key(manager, false, true), key(organizationAddress(authority), true)],
+    [
+      key(manager, false, true),
+      key(organizationAddress(authority), true),
+      key(MANAGER_CONFIG),
+    ],
     Buffer.from([approved ? 1 : 0]),
   );
 }

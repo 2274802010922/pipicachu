@@ -2,12 +2,16 @@
   "programId": "4Xds5m5JtWR8HbNLdGeF7e3Qh3akKMHwMfjKsQeVXnrb",
   "mint": "4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU",
   "cluster": "devnet",
-  "schemaVersion": 5,
+  "schemaVersion": 6,
   "feeVersion": 1,
   "platformTreasury": "CXjKGEBNTTotzoF26nGPfAG4AFicGgP72SMqUQKY1pJN",
   "arbitratorFeeBps": 100,
   "platformFeeBps": 100,
   "arbitratorCount": 1,
   "deployed": true,
-  "organizationWorkflow": true
+  "organizationWorkflow": true,
+  "resolutionPolicyVersion": 1,
+  "managerConfig": "B7CUY6dLyHAGCtxnwHHSiS5h2SKJsfJdNW5eZbxnkG8c",
+  "protocolVersion": "0.6.0",
+  "binarySha256": "eab6bf0c451e3028250af24fcd89c057465385a936f62e3dd1f4fc0939c2a0a9"
 }

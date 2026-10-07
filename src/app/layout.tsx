@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import "@fontsource/be-vietnam-pro/400.css";

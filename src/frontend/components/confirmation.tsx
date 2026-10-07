@@ -1,7 +1,7 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { useLanguage } from "../i18n/provider";
-export function useConfirmation() {
+export function useConfirmation(resetKey?: string) {
   const { t } = useLanguage();
   const [message, setMessage] = useState<string | null>(null);
   const element = useRef<HTMLDialogElement>(null);
@@ -10,13 +10,17 @@ export function useConfirmation() {
     if (message && !element.current?.open) element.current?.showModal();
   }, [message]);
   useEffect(() => () => resolve.current?.(false), []);
-  function finish(accepted: boolean) {
+  const finish = useCallback((accepted: boolean) => {
     const done = resolve.current;
     resolve.current = null;
     element.current?.close();
     setMessage(null);
     done?.(accepted);
-  }
+  }, []);
+  useEffect(() => {
+    const timer = setTimeout(() => finish(false), 0);
+    return () => clearTimeout(timer);
+  }, [resetKey, finish]);
   return {
     ask: (text: string) =>
       new Promise<boolean>((done) => {

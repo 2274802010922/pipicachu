@@ -1,13 +1,9 @@
-# Trọng tài được duyệt và cọc nạp trước
+# Registry và cọc nạp trước v0.6
 
-Registry PDA organization+authority, initializer quản lý approval. Chỉ trọng tài được duyệt/đang nhận mới tạo deal; không suy ra danh tính công ty từ số dư hoặc tên hiển thị. Demo A là tổ chức thử nghiệm.
+Registry organization PDA authority, mint, approval, accepting và policy. `/admin`: trọng tài đăng ký application, chờ manager, nạp cọc và bật nhận. `/manage`: manager đọc quyền từ chain, ký duyệt/reject/revoke, cập nhật policy khi paused; transfer quyền hai bước. Không backend giữ manager key. Allowlist không xác minh danh tính công ty.
 
-Trọng tài nạp quỹ trước rồi ký bật nhận theo policy cố định (minimumDeposit, maximumDeal, bốn thời hạn). CreateOrganizationDeal tự ghi consent/workflowVersion1; buyer fund kiểm lại registry và cọc rồi reserve nguyên tử. Pause/revoke chặn funding mới của workflow1; settle/refund deal đã nạp không phụ thuộc trạng thái tiếp nhận.
+Trọng tài bật nhận bằng message bind đúng policy hiện tại. Khi manager thay policy trong lúc chờ ví ký, enable cũ bị InvalidTerms. CreateOrganizationDeal ghi standing consent/workflow1 và resolution policy1; buyer fund kiểm lại registry, min/max, capacity, khóa bond nguyên tử. Không ký accept từng deal. Pause/revoke chặn fund mới, settlement nghĩa vụ đã nạp không phụ thuộc accepting. Khi accepting hoặc còn locked bond không rút. Cọc không phải insurance/slashing.
 
-Khi đang nhận, không rút bất kỳ cọc nào. Khi ngừng, vẫn chặn rút toàn bộ nếu locked>0. Settlement mở capacity nhưng không trả cọc về ví. Không slashing/bảo hiểm. Không có chức năng tự đăng ký làm tổ chức trên UI; chỉ initializer duyệt ví. API legacy create cũng yêu cầu registry approved, nhưng vẫn manual accept; deal tồn tại trước upgrade giữ workflowVersion0 và cách xử lý cũ.
+Demo default min1/max10 USDC; funding/delivery/SLA30 phút, review5 phút. Ví owner đã chỉ định `7PpWKXsjxR6f7Zu8Se11h2nWkEyaaNVxLLd6XF9K39CG` giữ nguyên, không thay bằng ví agent. Initializer bootstrap ManagerConfig vào owner `CXjKGEBNTTotzoF26nGPfAG4AFicGgP72SMqUQKY1pJN` một lần; sau đó không approval bypass initializer. [Bootstrap receipt](../evidence/v06/manager-bootstrap.json).
 
-Policy Demo A Devnet: tối thiểu1 USDC, mỗi deal tối đa10 USDC; funding/delivery/arbitration30 phút, review5 phút. Chỉ public metadata, không private key ở frontend/Vercel.
-
-UI mới4 bước: tạo link → ký quỹ → bàn giao → kết thúc. Form chọn registry, không nhập ví trọng tài hoặc thời hạn tùy ý. Auto-open sau finalized; điều khoản và preview trước ký; final payout/ruling có xác nhận số tiền, complaint form chỉ mở khi chọn khiếu nại. Vai trò phản ánh ví thực, không có giả chuyển vai.
-
-Backwards compatibility: Deal876 và các field cũ không đổi; thêm workflow_version1 byte sau fee_version trong padding. Registry123 là account riêng. Fund/Bond thêm seed-bound optional organization account ở cuối danh sách; legacy client cũ cần reload. Phí1+1 và treasury giữ nguyên.
+UI4bước: tạo link → buyer nạp → seller bàn giao → xác nhận/tranh chấp. Đăng ký trọng tài là flow riêng. Điều kiện/fee/late-policy xem trước fund; buyer xác nhận payout hiển thị recipients và số tiền. Deal legacy giữ workflow0/policy0, không thu phí hay cấp quyền xử muộn hồi tố. [Kiến trúc ABI](../architecture/v06.md), [trạng thái đã kiểm](../evidence/v06/README.md).

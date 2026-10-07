@@ -8,6 +8,7 @@ import {
   PROGRAM_ID,
   FEE_CONFIG,
   organizationAddress,
+  MANAGER_CONFIG,
   u64,
   i64,
 } from "../../src/escrow/client";
@@ -154,3 +155,25 @@ fs.writeFileSync(
   ),
 );
 console.log("ORG_GENESIS", organizationAddress(arb.publicKey).toBase58());
+
+fs.writeFileSync(
+  "work/validator/manager.json",
+  JSON.stringify(
+    account(
+      MANAGER_CONFIG,
+      PROGRAM_ID,
+      Buffer.concat([
+        (await digest("account:ManagerConfig")).subarray(0, 8),
+        buyer.publicKey.toBuffer(),
+        PublicKey.default.toBuffer(),
+        Buffer.from([
+          PublicKey.findProgramAddressSync(
+            [Buffer.from("manager_v1")],
+            PROGRAM_ID,
+          )[1],
+        ]),
+      ]),
+      1_398_960,
+    ),
+  ),
+);

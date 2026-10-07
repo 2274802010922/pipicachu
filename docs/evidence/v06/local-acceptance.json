@@ -1,0 +1,52 @@
+{
+  "at": "2026-10-07",
+  "network": "synthetic-local-validator",
+  "binarySha256": "eab6bf0c451e3028250af24fcd89c057465385a936f62e3dd1f4fc0939c2a0a9",
+  "nativeTests": 2,
+  "lifecycleChecks": 39,
+  "organizationChecks": 13,
+  "governanceChecks": 21,
+  "coldBootstrap": "unauthorized exact6000; authorized local with own initializer; CI deny-only then synthetic ManagerConfig genesis (no Devnet key in CI)",
+  "aliases": {
+    "independent": {
+      "network": "synthetic-local",
+      "treasuryRole": "independent",
+      "checks": [
+        "payout conservation and alias aggregation",
+        "fee-free refund and alias aggregation"
+      ]
+    },
+    "buyer": {
+      "network": "synthetic-local",
+      "treasury": "DwTKmg68k39b8jZWt1CHypfoPs5JuJsuP88SfKcbW3uj",
+      "treasuryRole": "buyer",
+      "checks": [
+        "payout conservation and alias aggregation",
+        "fee-free refund and alias aggregation"
+      ]
+    },
+    "seller": {
+      "network": "synthetic-local",
+      "treasury": "BbftECvBKTHMm6t3Sejyz7E9HmBmcRp7NvEYnAnzb7F3",
+      "treasuryRole": "seller",
+      "checks": [
+        "payout conservation and alias aggregation",
+        "fee-free refund and alias aggregation"
+      ]
+    },
+    "arbitrator": {
+      "network": "synthetic-local",
+      "treasury": "Ht5k38ysGyt2VKoddxbACCeLoVngQFojNeXzACGz9dEP",
+      "treasuryRole": "arbitrator",
+      "checks": [
+        "payout conservation and alias aggregation",
+        "fee-free refund and alias aggregation"
+      ]
+    }
+  },
+  "webUnitIntegrationTests": 105,
+  "browserTests": 31,
+  "browserWidths": [375, 768, 1024, 1440],
+  "phantomExtensionVerified": false,
+  "note": "Local receipts/mocked browser provider are not live Devnet or Phantom evidence"
+}

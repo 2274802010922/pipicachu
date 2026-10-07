@@ -1,22 +1,8 @@
 "use client";
 import { useLanguage } from "../i18n/provider";
 import type { Deal } from "@/escrow/client";
-export function currentDealStep(
-  deal: Pick<Deal, "state" | "approvals" | "workflowVersion">,
-  bondReady: boolean,
-): number {
-  if (deal.workflowVersion === 1) {
-    if (deal.state === "created") return 1;
-    if (deal.state === "funded") return 2;
-    if (["delivered", "disputed"].includes(deal.state)) return 3;
-    return -1;
-  }
-  if (deal.state === "created")
-    return deal.approvals === 1 && bondReady ? 2 : 1;
-  if (deal.state === "funded") return 3;
-  if (deal.state === "delivered" || deal.state === "disputed") return 4;
-  return -1;
-}
+import { currentDealStep, completedDealSteps } from "@/escrow/view-model";
+export { currentDealStep } from "@/escrow/view-model";
 export function DealProgress({
   deal,
   bondReady,
@@ -46,19 +32,21 @@ export function DealProgress({
             : t("Kiểm tra & trả tiền", "Review & payout"),
         ];
   const finished = (i: number) =>
-    deal.workflowVersion === 1
-      ? deal.state === "completed" || i === 0 || (current >= 0 && i < current)
-      : deal.state === "completed" ||
-        i === 0 ||
-        (i === 1 &&
-          ["funded", "delivered", "disputed", "refunded"].includes(
-            deal.state,
-          )) ||
-        (i === 2 &&
-          ["funded", "delivered", "disputed", "refunded"].includes(
-            deal.state,
-          )) ||
-        (i === 3 && ["delivered", "disputed"].includes(deal.state));
+    ["completed", "cancelled", "refunded"].includes(deal.state)
+      ? completedDealSteps(deal).includes(i)
+      : deal.workflowVersion === 1
+        ? deal.state === "completed" || i === 0 || (current >= 0 && i < current)
+        : deal.state === "completed" ||
+          i === 0 ||
+          (i === 1 &&
+            ["funded", "delivered", "disputed", "refunded"].includes(
+              deal.state,
+            )) ||
+          (i === 2 &&
+            ["funded", "delivered", "disputed", "refunded"].includes(
+              deal.state,
+            )) ||
+          (i === 3 && ["delivered", "disputed"].includes(deal.state));
   const list = (
     <ol
       className="deal-flow"

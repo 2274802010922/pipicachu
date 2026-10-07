@@ -1,8 +1,10 @@
+import { readiness, keeperStatus } from "@/backend/readiness";
 import packageInfo from "../../../../package.json";
 import { NextResponse } from "next/server";
 import deployment from "@/escrow/deployment.json";
 import keeperConfig from "@/escrow/keeper-config.json";
 export async function GET() {
+  const [ready, service] = await Promise.all([readiness(), keeperStatus()]);
   return NextResponse.json(
     {
       app: "pipicachu",
@@ -26,7 +28,7 @@ export async function GET() {
       mainnetWrites: false,
       serverCustody: false,
       subjectiveSlashing: false,
-      automaticKeeper: keeperConfig.enabled,
+      keeperConfigured: keeperConfig.enabled,
       keeper: {
         configuration: keeperConfig.enabled ? "configured" : "disabled",
         intervalMinutes: keeperConfig.intervalMinutes,
@@ -34,7 +36,12 @@ export async function GET() {
         workflowUrl: keeperConfig.workflowUrl,
         exactDeadlineGuarantee: false,
       },
-      limiter: "per-instance-best-effort",
+      readiness: ready,
+      service,
+      limiter:
+        ready.limiter && ready.mode !== "local-test"
+          ? "shared-redis"
+          : "per-instance-degraded",
       upgradeAuthority: "retained-for-devnet-demo",
     },
     { headers: { "Cache-Control": "no-store" } },

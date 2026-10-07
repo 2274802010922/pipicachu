@@ -3,6 +3,11 @@ on:
   schedule:
     - cron: "3-58/5 * * * *"
   workflow_dispatch:
+    inputs:
+      deal:
+        description: "Public deal address to recheck (optional)"
+        required: false
+        type: string
 permissions:
   contents: read
 concurrency:
@@ -22,6 +27,9 @@ jobs:
       - run: npm ci
       - name: Release eligible undisputed Devnet deals
         env:
+          RATE_LIMIT_REDIS_URL: ${{ secrets.RATE_LIMIT_REDIS_URL }}
+          RATE_LIMIT_REDIS_TOKEN: ${{ secrets.RATE_LIMIT_REDIS_TOKEN }}
+          KEEPER_FORCE_DEAL: ${{ inputs.deal }}
           DEVNET_KEEPER_KEYPAIR: ${{ secrets.DEVNET_KEEPER_KEYPAIR }}
           SOLANA_DEVNET_RPC_URL: https://api.devnet.solana.com
           KEEPER_REPORT_PATH: work/keeper/latest.json

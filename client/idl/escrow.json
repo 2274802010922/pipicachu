@@ -2,7 +2,7 @@
   "address": "4Xds5m5JtWR8HbNLdGeF7e3Qh3akKMHwMfjKsQeVXnrb",
   "metadata": {
     "name": "pipicachu_escrow",
-    "version": "0.3.0",
+    "version": "0.6.0",
     "spec": "0.1.0"
   },
   "instructions": [
@@ -32,6 +32,29 @@
                 "kind": "account",
                 "path": "deal.nonce",
                 "account": "Deal"
+              }
+            ]
+          }
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "accept_manager",
+      "discriminator": [212, 23, 254, 58, 51, 238, 232, 67],
+      "accounts": [
+        {
+          "name": "actor",
+          "signer": true
+        },
+        {
+          "name": "manager_config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [109, 97, 110, 97, 103, 101, 114, 95, 118, 49]
               }
             ]
           }
@@ -149,6 +172,128 @@
       ]
     },
     {
+      "name": "approve_arbitrator_application",
+      "discriminator": [110, 147, 197, 143, 126, 186, 100, 217],
+      "accounts": [
+        {
+          "name": "manager",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "manager_config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [109, 97, 110, 97, 103, 101, 114, 95, 118, 49]
+              }
+            ]
+          }
+        },
+        {
+          "name": "application",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  97, 112, 112, 108, 105, 99, 97, 116, 105, 111, 110, 95, 118,
+                  49
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "arbitrator.authority",
+                "account": "Arbitrator"
+              }
+            ]
+          }
+        },
+        {
+          "name": "arbitrator",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [97, 114, 98]
+              },
+              {
+                "kind": "account",
+                "path": "arbitrator.authority",
+                "account": "Arbitrator"
+              }
+            ]
+          }
+        },
+        {
+          "name": "config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [99, 111, 110, 102, 105, 103]
+              }
+            ]
+          }
+        },
+        {
+          "name": "mint",
+          "relations": ["arbitrator", "config"]
+        },
+        {
+          "name": "organization",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  111, 114, 103, 97, 110, 105, 122, 97, 116, 105, 111, 110
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "arbitrator.authority",
+                "account": "Arbitrator"
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "minimum_deposit",
+          "type": "u64"
+        },
+        {
+          "name": "maximum_deal",
+          "type": "u64"
+        },
+        {
+          "name": "funding_seconds",
+          "type": "i64"
+        },
+        {
+          "name": "delivery_seconds",
+          "type": "i64"
+        },
+        {
+          "name": "review_seconds",
+          "type": "i64"
+        },
+        {
+          "name": "arbitration_seconds",
+          "type": "i64"
+        }
+      ]
+    },
+    {
       "name": "approve_organization",
       "discriminator": [173, 131, 141, 145, 220, 194, 126, 6],
       "accounts": [
@@ -186,6 +331,17 @@
         {
           "name": "system_program",
           "address": "11111111111111111111111111111111"
+        },
+        {
+          "name": "manager_config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [109, 97, 110, 97, 103, 101, 114, 95, 118, 49]
+              }
+            ]
+          }
         }
       ],
       "args": [
@@ -627,6 +783,10 @@
         {
           "name": "terms",
           "type": "string"
+        },
+        {
+          "name": "resolution_policy_version",
+          "type": "u8"
         }
       ]
     },
@@ -1056,6 +1216,68 @@
       ]
     },
     {
+      "name": "initialize_manager",
+      "discriminator": [79, 37, 249, 89, 35, 188, 238, 111],
+      "accounts": [
+        {
+          "name": "initializer",
+          "writable": true,
+          "signer": true,
+          "address": "DwTKmg68k39b8jZWt1CHypfoPs5JuJsuP88SfKcbW3uj"
+        },
+        {
+          "name": "manager_config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [109, 97, 110, 97, 103, 101, 114, 95, 118, 49]
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "authority",
+          "type": "pubkey"
+        }
+      ]
+    },
+    {
+      "name": "propose_manager",
+      "discriminator": [182, 178, 222, 226, 6, 122, 251, 116],
+      "accounts": [
+        {
+          "name": "actor",
+          "signer": true
+        },
+        {
+          "name": "manager_config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [109, 97, 110, 97, 103, 101, 114, 95, 118, 49]
+              }
+            ]
+          }
+        }
+      ],
+      "args": [
+        {
+          "name": "authority",
+          "type": "pubkey"
+        }
+      ]
+    },
+    {
       "name": "propose_settlement",
       "discriminator": [228, 149, 56, 61, 137, 43, 106, 25],
       "accounts": [
@@ -1265,6 +1487,53 @@
       "args": []
     },
     {
+      "name": "reject_arbitrator_application",
+      "discriminator": [88, 190, 82, 173, 19, 237, 255, 235],
+      "accounts": [
+        {
+          "name": "manager",
+          "signer": true
+        },
+        {
+          "name": "manager_config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [109, 97, 110, 97, 103, 101, 114, 95, 118, 49]
+              }
+            ]
+          }
+        },
+        {
+          "name": "application",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  97, 112, 112, 108, 105, 99, 97, 116, 105, 111, 110, 95, 118,
+                  49
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "application.authority",
+                "account": "ArbitratorApplication"
+              }
+            ]
+          }
+        }
+      ],
+      "args": [
+        {
+          "name": "reason_code",
+          "type": "u8"
+        }
+      ]
+    },
+    {
       "name": "resolve",
       "discriminator": [246, 150, 236, 206, 108, 63, 58, 10],
       "accounts": [
@@ -1426,6 +1695,30 @@
         {
           "name": "accepting",
           "type": "bool"
+        },
+        {
+          "name": "minimum_deposit",
+          "type": "u64"
+        },
+        {
+          "name": "maximum_deal",
+          "type": "u64"
+        },
+        {
+          "name": "funding_seconds",
+          "type": "i64"
+        },
+        {
+          "name": "delivery_seconds",
+          "type": "i64"
+        },
+        {
+          "name": "review_seconds",
+          "type": "i64"
+        },
+        {
+          "name": "arbitration_seconds",
+          "type": "i64"
         }
       ]
     },
@@ -1455,12 +1748,157 @@
               }
             ]
           }
+        },
+        {
+          "name": "manager_config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [109, 97, 110, 97, 103, 101, 114, 95, 118, 49]
+              }
+            ]
+          }
         }
       ],
       "args": [
         {
           "name": "approved",
           "type": "bool"
+        }
+      ]
+    },
+    {
+      "name": "submit_arbitrator_application",
+      "discriminator": [221, 103, 50, 105, 39, 14, 44, 236],
+      "accounts": [
+        {
+          "name": "authority",
+          "writable": true,
+          "signer": true,
+          "relations": ["arbitrator"]
+        },
+        {
+          "name": "arbitrator",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [97, 114, 98]
+              },
+              {
+                "kind": "account",
+                "path": "authority"
+              }
+            ]
+          }
+        },
+        {
+          "name": "application",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  97, 112, 112, 108, 105, 99, 97, 116, 105, 111, 110, 95, 118,
+                  49
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "authority"
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        },
+        {
+          "name": "organization",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  111, 114, 103, 97, 110, 105, 122, 97, 116, 105, 111, 110
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "authority"
+              }
+            ]
+          }
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "update_organization_policy",
+      "discriminator": [138, 224, 162, 159, 45, 41, 9, 59],
+      "accounts": [
+        {
+          "name": "manager",
+          "signer": true
+        },
+        {
+          "name": "organization",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  111, 114, 103, 97, 110, 105, 122, 97, 116, 105, 111, 110
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "organization.authority",
+                "account": "Organization"
+              }
+            ]
+          }
+        },
+        {
+          "name": "manager_config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [109, 97, 110, 97, 103, 101, 114, 95, 118, 49]
+              }
+            ]
+          }
+        }
+      ],
+      "args": [
+        {
+          "name": "minimum_deposit",
+          "type": "u64"
+        },
+        {
+          "name": "maximum_deal",
+          "type": "u64"
+        },
+        {
+          "name": "funding_seconds",
+          "type": "i64"
+        },
+        {
+          "name": "delivery_seconds",
+          "type": "i64"
+        },
+        {
+          "name": "review_seconds",
+          "type": "i64"
+        },
+        {
+          "name": "arbitration_seconds",
+          "type": "i64"
         }
       ]
     },
@@ -1549,6 +1987,10 @@
       "discriminator": [85, 123, 106, 57, 25, 249, 89, 192]
     },
     {
+      "name": "ArbitratorApplication",
+      "discriminator": [206, 174, 60, 121, 180, 4, 115, 146]
+    },
+    {
       "name": "Config",
       "discriminator": [155, 12, 170, 224, 30, 250, 204, 130]
     },
@@ -1559,6 +2001,10 @@
     {
       "name": "FeeConfig",
       "discriminator": [143, 52, 146, 187, 219, 123, 76, 155]
+    },
+    {
+      "name": "ManagerConfig",
+      "discriminator": [13, 179, 0, 84, 52, 244, 25, 92]
     },
     {
       "name": "Organization",
@@ -1600,6 +2046,16 @@
       "code": 6006,
       "name": "OrganizationUnavailable",
       "msg": "Approved organization is not accepting eligible deals"
+    },
+    {
+      "code": 6007,
+      "name": "ApplicationNotPending",
+      "msg": "Application is not pending review"
+    },
+    {
+      "code": 6008,
+      "name": "AlreadyApproved",
+      "msg": "This organization is already approved"
     }
   ],
   "types": [
@@ -1623,6 +2079,38 @@
           {
             "name": "locked",
             "type": "u64"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ArbitratorApplication",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "authority",
+            "type": "pubkey"
+          },
+          {
+            "name": "status",
+            "type": "u8"
+          },
+          {
+            "name": "submitted_at",
+            "type": "i64"
+          },
+          {
+            "name": "updated_at",
+            "type": "i64"
+          },
+          {
+            "name": "reason_code",
+            "type": "u8"
           },
           {
             "name": "bump",
@@ -1769,6 +2257,10 @@
           {
             "name": "workflow_version",
             "type": "u8"
+          },
+          {
+            "name": "resolution_policy_version",
+            "type": "u8"
           }
         ]
       }
@@ -1780,6 +2272,26 @@
         "fields": [
           {
             "name": "treasury",
+            "type": "pubkey"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ManagerConfig",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "authority",
+            "type": "pubkey"
+          },
+          {
+            "name": "pending_authority",
             "type": "pubkey"
           },
           {

@@ -1,38 +1,41 @@
-# Vercel và Devnet
+# Triển khai pipicachu v0.6
 
-Vercel: Next.js, npm ci, npm run build, .next; project pipicachu riêng. Program/mint pin trong src/escrow/deployment.json, cập nhật cùng IDL/source, không env override tùy ý.
+Chỉ USDC Devnet. Website và program là hai cổng triển khai riêng. Program/mint/treasury ở `src/escrow/deployment.json`; quyền manager đọc từ ManagerConfig trên chain. Không private key quản trị/treasury trên Vercel.
 
-| Biến                  | Value                                               |
-| --------------------- | --------------------------------------------------- |
-| NEXT_PUBLIC_SITE_URL  | https://pipicachu.vercel.app                        |
-| SOLANA_DEVNET_RPC_URL | https://api.devnet.solana.com hoặc RPC Devnet riêng |
+## Biến Vercel — Production và Preview
 
-Không cần AI/OpenRouter, Redis, SOLANA_MAINNET_RPC_URL, DEMO_RECEIVER_ADDRESS. Biến cũ có thể xóa; code không đọc. Không private key trên Vercel.
+| Biến                   | Value / nơi lấy                                              |
+| ---------------------- | ------------------------------------------------------------ |
+| NEXT_PUBLIC_SITE_URL   | `https://pipicachu.vercel.app`                               |
+| SOLANA_DEVNET_RPC_URL  | `https://api.devnet.solana.com` hoặc RPC Devnet của provider |
+| RATE_LIMIT_REDIS_URL   | REST URL từ database Upstash của pipicachu                   |
+| RATE_LIMIT_REDIS_TOKEN | REST token cùng database; đánh dấu Secret                    |
+| RATE_LIMIT_IP_SALT     | 32 byte ngẫu nhiên, hex 64 ký tự; đánh dấu Secret            |
 
-Anchor 1.1.2, Solana 3.1.10, Rust và Cargo.lock pin. Build `cargo build-sbf --manifest-path programs/pipicachu-escrow/Cargo.toml`. Kiểm log không Stack offset error vì CLI có thể exit 0.
+Không dựng URL/token giả. Không cần OpenRouter, mainnet RPC hoặc ví trọng tài trong env. Giữ credential ở môi trường riêng, không chat/Git. Chạy `node scripts/checks/setup-env.mjs` để tạo salt trong `work/private/`; thêm cùng salt vào Vercel rồi redeploy. Cấu hình RedisURL cần có ở cả Preview nếu muốn preview thao tác tiền.
 
-Deploy chỉ key pipicachu mới trong vùng ignore, kiểm genesis Devnet. `solana program deploy target/deploy/pipicachu_escrow.so --program-id work/private/escrow-single-program.json --buffer work/private/escrow-buffer.json --keypair work/private/fixture-signer.json --url https://api.devnet.solana.com`. Initializer DwTKmg68k39b8jZWt1CHypfoPs5JuJsuP88SfKcbW3uj; mint Config immutable. Để fork: key mới, sửa initializer, declare_id/deployment/Anchor.toml, build IDL và test lại. Upgrade authority demo còn giữ.
+Redis namespace riêng pipicachu/Devnet/v06; limiter read240/phút/IP &2400 toàn app; simulate/send30 &120. Redis/salt thiếu hoặc Redis lỗi: production chặn simulate/send, read dùng fallback60/IP &600/app và health báo degraded. Memory limiter local không chứng minh limiter nhiều instance.
 
-[Circle Faucet](https://faucet.circle.com/): Solana Devnet USDC, mint 4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU. SOL trả rent/fee. Không bypass CAPTCHA.
+## GitHub Actions keeper
 
-## Keeper tự giải ngân
+Repository Settings → Secrets and variables → Actions: giữ `DEVNET_KEEPER_KEYPAIR` (ví service Devnet hiện có), thêm `RATE_LIMIT_REDIS_URL` và `RATE_LIMIT_REDIS_TOKEN` cùng database. Không cần IP salt cho keeper. Workflow khoảng5 phút/lượt, có thể trễ; manual input `deal` kiểm lại một địa chỉ đủ điều kiện.
 
-Workflow `.github/workflows/devnet-keeper.yml` chạy mỗi khoảng 5 phút (offset phút 3, 8, 13...). [GitHub schedule](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule) có thể bị trễ; không cam kết chuyển đúng giây hết hạn. Vercel Hobby cron chỉ một lần/ngày nên không dùng cho flow này.
+Mỗi lượt tối đa5 deal sau lọc retry; per-deal lease120s, retry/report TTL7 ngày. Lỗi một deal được cô lập. Pending signature/expiry lưu trước broadcast để tránh chi lặp khi restart. Keeper chỉ finalize giao dịch Delivered quá review, không resolve tranh chấp hoặc đổi recipient. Giữ tối thiểu0,01 SOL Devnet cho service.
 
-Secret GitHub Actions `DEVNET_KEEPER_KEYPAIR` chứa **ví service mới, chỉ SOL Devnet**, đã cấu hình cho repo hiện tại. Không dùng ví seller/buyer/trọng tài, không đưa key vào Vercel hoặc public bundle. Wallet public và workflow URL nằm ở src/escrow/keeper-config.json. Không cần biến Vercel mới.
+## Thứ tự nâng cấp
 
-Keeper chỉ scan Program ID/mint đã pin trên Devnet, lọc Delivered + review deadline, đọc lại trước ký và gọi finalize. Không resolve/cancel/fund hoặc đổi địa chỉ nhận/số tiền. Contract kiểm điều kiện lại, nên tranh chấp/terminal/giải ngân lặp bị chặn. Mỗi lượt tối đa 5 deal, ưu tiên deadline cũ; cần bổ sung SOL service nếu thấp hơn 0,01 SOL. Keeper/RPC/scheduler lỗi có thể trì hoãn giải ngân, không phải bảo hiểm SLA.
+1. `npm ci`, `npm run verify`; Linux/WSL `bash scripts/checks/program.sh` (native + executable, synthetic fixtures).
+2. Snapshot toàn bộ deal876byte: `npx tsx scripts/devnet/snapshot-v06.ts work/v06-before.json`.
+3. Build pinned Anchor1.1.2/Solana3.1.10; kiểm SBF không có Stack offset, hash binary/IDL.
+4. Deploy Devnet bằng key nâng cấp riêng pipicachu trong vùng ignore. Không copy key dự án cũ.
+5. `npx tsx scripts/devnet/bootstrap-manager.ts` bootstrap một lần bằng initializer vào manager owner `CXjK…1pJN`. Script chỉ nhận key initializer riêng trong ignore, không có manager key trên server.
+6. Đối chiếu snapshot: tiền/phí/terms/deadlines/policy deal cũ không đổi. Publish web/IDL tương ứng, smoke `/api/ready` và Phantom.
+7. Manager owner vào `/manage`, ký duyệt một application thật. Owner trọng tài tự nạp cọc và bật nhận. Approval là allowlist, không phải KYC.
 
-Fork phải tạo ví service mới và secret riêng; workflow mặc định chặn chạy ở fork khác owner. `workflow_dispatch` dùng để kiểm vận hành. Không log key; artifact chỉ receipt/trạng thái public. Nếu không chạy service, contract vẫn permissionless finalize sau hạn nhưng không được quảng cáo tự động.
+Client cũ không có policy byte và policy consent mới bị từ chối tạo/enable; không âm thầm thay quyền xử đã ký. Deal cũ vẫn đọc/settle tương thích. Không rollback bytecode không hiểu policy1 sau khi có deal policy1; khi lỗi ngừng intake, giữ settlement.
 
-## Ví nhận phí hệ thống
+## Kiểm vận hành
 
-Ví owner chọn: `CXjKGEBNTTotzoF26nGPfAG4AFicGgP72SMqUQKY1pJN`. Treasury lưu tại FeeConfig PDA trên Devnet; không cần thêm biến môi trường/private key. `npm run check:live` đối chiếu treasury on-chain với deployment public. Không đổi recipient bằng env. Script `scripts/devnet/fee-rollout.ts` ghi legacy trước upgrade và initialize sau upgrade, chỉ dùng key pipicachu trong vùng ignore.
+`/api/health`: cấu hình và hoạt động tách riêng. `/api/ready`:503 khi RPC/program/ManagerConfig/limiter chưa sẵn sàng. `/api/keeper/status`: report thật có thời điểm, pending/blocked/degraded; không coi flag enable là uptime. CSP report-only tới khi Phantom extension thật pass; chưa tuyên bố enforce.
 
-## Organization registry v0.5
-
-Không env mới. `scripts/devnet/setup-organization.ts` chỉ dùng key pipicachu trong ignore để initializer duyệt Demo A và trọng tài ký standing consent. Không tự chọn công ty thật hoặc đưa key lên Vercel. Policy demo min1/max10 USDC,30m/30m/5m/30m. Người dùng thông thường không được tự approve registry; wallet/deal cũ cần reload sau nâng cấp account list.
-
-### Duyệt public wallet đã được owner chỉ định
-
-`npx tsx scripts/devnet/approve-arbitrator.ts <PUBLIC_WALLET>` kiểm genesis Devnet và profile có sẵn, rồi initializer ký approval. Không lấy key ví trọng tài, không ký deposit/enable thay họ. Cấu hình mới mặc địnhmin1/max10USDC và30m/30m/5m/30m. Wallet được duyệt vẫn cần chủ ví nạp cọc và ký bật nhận trên/admin; các deal cũ không đổi participant. Receipt ở docs/evidence/user-arbitrator-approval.json. Đây là công cụ maintainer, chưa phải UI onboarding/duyệt mới đã plan.
+Video hiện có là happy-path v0.5, không chứng minh v0.6. Manager/Phantom thật, Redis shared, Vercel và user validation phải có receipt riêng; test local không thay thế.

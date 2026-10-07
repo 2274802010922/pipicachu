@@ -167,7 +167,14 @@ for (const payout of [true, false]) {
 }
 const report = {
   network: "synthetic-local",
-  treasuryRole: process.env.LOCAL_TREASURY_ROLE || "independent",
+  treasury: treasury.toBase58(),
+  treasuryRole: treasury.equals(buyer.publicKey)
+    ? "buyer"
+    : treasury.equals(seller.publicKey)
+      ? "seller"
+      : treasury.equals(arb.publicKey)
+        ? "arbitrator"
+        : "independent",
   checks,
 };
 fs.mkdirSync("work/aliases", { recursive: true });

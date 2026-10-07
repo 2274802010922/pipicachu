@@ -54,5 +54,7 @@ jobs:
           path: |
             docs/evidence/local-escrow-cycle.json
             docs/evidence/local-organization-checks.json
-            work/validator/validator.log
+            work/validator/*-validator.log
+            work/v06/program-checks.json
+            work/aliases/*.json
           retention-days: 7

@@ -1,0 +1,20 @@
+{
+  "at": "2026-10-07T12:24:55.283Z",
+  "network": "devnet",
+  "version": "0.6.0",
+  "upgradeSignature": "625Rz2HZLThBJx5gAkBmdapnfzu6n6Z4LysSggT9i1fykXVnwEAro22at4yy4ABm9nRqumzHCuZo7Jpb49jFfTN8",
+  "programId": "4Xds5m5JtWR8HbNLdGeF7e3Qh3akKMHwMfjKsQeVXnrb",
+  "binarySha256": "eab6bf0c451e3028250af24fcd89c057465385a936f62e3dd1f4fc0939c2a0a9",
+  "idlSha256": "6d295cf32f768b6754edd00a00df7872da71ab312376cdf5daf0ffc7aaea0474",
+  "rustSourceSha256": "33e0ac1aac04f2895b185d33ac5d6e2e41c0b398a8774a17d30969ff72b8d774",
+  "deployedPrefixEqualsLocal": true,
+  "reserveTailZero": true,
+  "unchangedLegacyDeals": 46,
+  "immutableChecks": "money/fees/workflow/terms hash/state/deadlines unchanged",
+  "treasury": "CXjKGEBNTTotzoF26nGPfAG4AFicGgP72SMqUQKY1pJN",
+  "managerBootstrapSignature": "5Fn3HTFao2x8rwExoK7MFm4A41pNGqXtGP16GduvV5yY8nWu5RUTfYnwrSKz2fndUeRMfVthsG61xxwe9rPra84Y",
+  "managerAuthority": "CXjKGEBNTTotzoF26nGPfAG4AFicGgP72SMqUQKY1pJN",
+  "ownerApplicationApprovalVerified": false,
+  "newPolicyLiveBranchesVerified": false,
+  "phantomV06Verified": false
+}

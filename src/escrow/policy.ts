@@ -19,7 +19,10 @@ export function actions(d: Deal, who: string | null, now: number): string[] {
     if (now >= d.reviewBy) result.push("finalize");
   }
   if (d.state === "disputed") {
-    if (now < d.arbitrateBy && who === d.arbitrator)
+    if (
+      (d.resolutionPolicyVersion === 1 || now < d.arbitrateBy) &&
+      who === d.arbitrator
+    )
       result.push("resolve_seller", "resolve_buyer");
     if (now >= d.arbitrateBy) {
       if (who === d.buyer) result.push("propose_seller", "propose_buyer");

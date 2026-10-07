@@ -1,7 +1,7 @@
 use anchor_lang::prelude::*;
 use anchor_spl::token::{self, Mint, Token, TokenAccount, TransferChecked};
 
-declare_id!("4Xds5m5JtWR8HbNLdGeF7e3Qh3akKMHwMfjKsQeVXnrb"); // replaced by scripts/devnet/bootstrap.ts
+declare_id!("4Xds5m5JtWR8HbNLdGeF7e3Qh3akKMHwMfjKsQeVXnrb");
 const INITIALIZER: Pubkey = pubkey!("DwTKmg68k39b8jZWt1CHypfoPs5JuJsuP88SfKcbW3uj");
 const MAX_SECONDS: i64 = 30 * 86400;
 
@@ -44,7 +44,7 @@ pub mod pipicachu_escrow {
     ) -> Result<()> {
         require_keys_eq!(
             ctx.accounts.manager.key(),
-            INITIALIZER,
+            ctx.accounts.manager_config.authority,
             EscrowError::Unauthorized
         );
         require!(
@@ -84,7 +84,7 @@ pub mod pipicachu_escrow {
     ) -> Result<()> {
         require_keys_eq!(
             ctx.accounts.manager.key(),
-            INITIALIZER,
+            ctx.accounts.manager_config.authority,
             EscrowError::Unauthorized
         );
         ctx.accounts.organization.approved = approved;
@@ -96,8 +96,32 @@ pub mod pipicachu_escrow {
     pub fn set_organization_accepting(
         ctx: Context<OrganizationAction>,
         accepting: bool,
+        minimum_deposit: u64,
+        maximum_deal: u64,
+        funding_seconds: i64,
+        delivery_seconds: i64,
+        review_seconds: i64,
+        arbitration_seconds: i64,
     ) -> Result<()> {
         if accepting {
+            let org = &ctx.accounts.organization;
+            require!(
+                minimum_deposit == org.minimum_deposit
+                    && maximum_deal == org.maximum_deal
+                    && [
+                        funding_seconds,
+                        delivery_seconds,
+                        review_seconds,
+                        arbitration_seconds
+                    ] == [
+                        org.funding_seconds,
+                        org.delivery_seconds,
+                        org.review_seconds,
+                        org.arbitration_seconds
+                    ],
+                EscrowError::InvalidTerms
+            );
+
             require!(
                 ctx.accounts.organization.approved,
                 EscrowError::OrganizationUnavailable
@@ -110,6 +134,170 @@ pub mod pipicachu_escrow {
         ctx.accounts.organization.accepting = accepting;
         Ok(())
     }
+    pub fn initialize_manager(ctx: Context<InitializeManager>, authority: Pubkey) -> Result<()> {
+        require_keys_eq!(
+            ctx.accounts.initializer.key(),
+            INITIALIZER,
+            EscrowError::Unauthorized
+        );
+        require!(authority != Pubkey::default(), EscrowError::InvalidTerms);
+        let m = &mut ctx.accounts.manager_config;
+        m.authority = authority;
+        m.pending_authority = Pubkey::default();
+        m.bump = ctx.bumps.manager_config;
+        Ok(())
+    }
+    pub fn propose_manager(ctx: Context<ManagerAction>, authority: Pubkey) -> Result<()> {
+        require_keys_eq!(
+            ctx.accounts.actor.key(),
+            ctx.accounts.manager_config.authority,
+            EscrowError::Unauthorized
+        );
+        require!(
+            authority != Pubkey::default() && authority != ctx.accounts.actor.key(),
+            EscrowError::InvalidTerms
+        );
+        ctx.accounts.manager_config.pending_authority = authority;
+        Ok(())
+    }
+    pub fn accept_manager(ctx: Context<ManagerAction>) -> Result<()> {
+        require_keys_eq!(
+            ctx.accounts.actor.key(),
+            ctx.accounts.manager_config.pending_authority,
+            EscrowError::Unauthorized
+        );
+        require!(
+            ctx.accounts.manager_config.pending_authority != Pubkey::default(),
+            EscrowError::InvalidTerms
+        );
+        ctx.accounts.manager_config.authority = ctx.accounts.actor.key();
+        ctx.accounts.manager_config.pending_authority = Pubkey::default();
+        Ok(())
+    }
+    pub fn submit_arbitrator_application(ctx: Context<SubmitApplication>) -> Result<()> {
+        if let Some(org) = load_organization(&ctx.accounts.organization.to_account_info())? {
+            require!(!org.approved, EscrowError::AlreadyApproved);
+        }
+        let a = &mut ctx.accounts.application;
+        if a.authority != Pubkey::default() {
+            require_keys_eq!(
+                a.authority,
+                ctx.accounts.authority.key(),
+                EscrowError::Unauthorized
+            );
+            if a.status == 0 {
+                return Ok(());
+            }
+        }
+        let now = Clock::get()?.unix_timestamp;
+        a.authority = ctx.accounts.authority.key();
+        a.status = 0;
+        a.submitted_at = now;
+        a.updated_at = now;
+        a.reason_code = 0;
+        a.bump = ctx.bumps.application;
+        Ok(())
+    }
+    pub fn approve_arbitrator_application(
+        ctx: Context<ApproveApplication>,
+        minimum_deposit: u64,
+        maximum_deal: u64,
+        funding_seconds: i64,
+        delivery_seconds: i64,
+        review_seconds: i64,
+        arbitration_seconds: i64,
+    ) -> Result<()> {
+        require_keys_eq!(
+            ctx.accounts.manager.key(),
+            ctx.accounts.manager_config.authority,
+            EscrowError::Unauthorized
+        );
+        require!(
+            ctx.accounts.application.status == 0,
+            EscrowError::ApplicationNotPending
+        );
+        require_keys_eq!(
+            ctx.accounts.application.authority,
+            ctx.accounts.arbitrator.authority,
+            EscrowError::Unauthorized
+        );
+        configure_organization(
+            &mut ctx.accounts.organization,
+            ctx.accounts.arbitrator.authority,
+            ctx.accounts.mint.key(),
+            minimum_deposit,
+            maximum_deal,
+            [
+                funding_seconds,
+                delivery_seconds,
+                review_seconds,
+                arbitration_seconds,
+            ],
+            ctx.bumps.organization,
+        )?;
+        ctx.accounts.application.status = 1;
+        ctx.accounts.application.reason_code = 0;
+        ctx.accounts.application.updated_at = Clock::get()?.unix_timestamp;
+        Ok(())
+    }
+    pub fn reject_arbitrator_application(
+        ctx: Context<RejectApplication>,
+        reason_code: u8,
+    ) -> Result<()> {
+        require_keys_eq!(
+            ctx.accounts.manager.key(),
+            ctx.accounts.manager_config.authority,
+            EscrowError::Unauthorized
+        );
+        require!(
+            ctx.accounts.application.status == 0,
+            EscrowError::ApplicationNotPending
+        );
+        require!((1..=3).contains(&reason_code), EscrowError::InvalidTerms);
+        ctx.accounts.application.status = 2;
+        ctx.accounts.application.reason_code = reason_code;
+        ctx.accounts.application.updated_at = Clock::get()?.unix_timestamp;
+        Ok(())
+    }
+    pub fn update_organization_policy(
+        ctx: Context<ManageOrganization>,
+        minimum_deposit: u64,
+        maximum_deal: u64,
+        funding_seconds: i64,
+        delivery_seconds: i64,
+        review_seconds: i64,
+        arbitration_seconds: i64,
+    ) -> Result<()> {
+        require_keys_eq!(
+            ctx.accounts.manager.key(),
+            ctx.accounts.manager_config.authority,
+            EscrowError::Unauthorized
+        );
+        require!(
+            !ctx.accounts.organization.accepting,
+            EscrowError::OrganizationUnavailable
+        );
+        let org = &mut ctx.accounts.organization;
+        let approved = org.approved;
+        let (authority, mint, bump) = (org.authority, org.mint, org.bump);
+        configure_organization(
+            org,
+            authority,
+            mint,
+            minimum_deposit,
+            maximum_deal,
+            [
+                funding_seconds,
+                delivery_seconds,
+                review_seconds,
+                arbitration_seconds,
+            ],
+            bump,
+        )?;
+        org.approved = approved;
+        Ok(())
+    }
+
     pub fn register(ctx: Context<Register>) -> Result<()> {
         let a = &mut ctx.accounts.arbitrator;
         a.authority = ctx.accounts.authority.key();
@@ -226,6 +414,7 @@ pub mod pipicachu_escrow {
         d.bump = ctx.bumps.deal;
         d.terms = terms;
         d.workflow_version = 0;
+        d.resolution_policy_version = 0;
         Ok(())
     }
     pub fn create_organization_deal(
@@ -238,7 +427,9 @@ pub mod pipicachu_escrow {
         review_seconds: i64,
         arbitration_seconds: i64,
         terms: String,
+        resolution_policy_version: u8,
     ) -> Result<()> {
+        require_eq!(resolution_policy_version, 1, EscrowError::InvalidTerms);
         let org = &ctx.accounts.organization;
         require!(
             org.approved && org.accepting,
@@ -318,6 +509,7 @@ pub mod pipicachu_escrow {
         d.bump = ctx.bumps.deal;
         d.terms = terms;
         d.workflow_version = 1;
+        d.resolution_policy_version = 1;
         Ok(())
     }
     pub fn accept_deal(ctx: Context<Act>) -> Result<()> {
@@ -444,7 +636,11 @@ pub mod pipicachu_escrow {
         let now = Clock::get()?.unix_timestamp;
         let actor = ctx.accounts.actor.key();
         require!(d.state == State::Disputed, EscrowError::WrongState);
-        require!(now < d.arbitrate_by, EscrowError::WrongState);
+        require!(d.resolution_policy_version <= 1, EscrowError::InvalidTerms);
+        require!(
+            d.resolution_policy_version == 1 || now < d.arbitrate_by,
+            EscrowError::WrongState
+        );
         require_keys_eq!(actor, d.arbitrator, EscrowError::Unauthorized);
         require!(reason_hash != [0; 32], EscrowError::InvalidTerms);
         d.resolution_hash = reason_hash;
@@ -495,6 +691,7 @@ fn settle(ctx: Context<Settle>, pay_seller: bool) -> Result<()> {
     let fee = if pay_seller { d.fee } else { 0 };
     require!(
         d.workflow_version <= 1
+            && d.resolution_policy_version <= 1
             && d.fee_version <= 1
             && (d.fee_version != 0 || d.platform_fee == 0),
         EscrowError::InvalidTerms
@@ -766,6 +963,7 @@ pub struct Deal {
     pub platform_fee: u64,
     pub fee_version: u8,
     pub workflow_version: u8,
+    pub resolution_policy_version: u8,
 }
 #[derive(AnchorSerialize, AnchorDeserialize, Clone, PartialEq, Eq)]
 pub enum State {
@@ -793,6 +991,10 @@ pub enum EscrowError {
     Overflow,
     #[msg("Approved organization is not accepting eligible deals")]
     OrganizationUnavailable,
+    #[msg("Application is not pending review")]
+    ApplicationNotPending,
+    #[msg("This organization is already approved")]
+    AlreadyApproved,
 }
 
 fn load_organization(info: &AccountInfo) -> Result<Option<Organization>> {
@@ -827,12 +1029,16 @@ pub struct ApproveOrganization<'info> {
     #[account(init,payer=manager,space=8+115,seeds=[b"organization",arbitrator.authority.as_ref()],bump)]
     pub organization: Box<Account<'info, Organization>>,
     pub system_program: Program<'info, System>,
+    #[account(seeds=[b"manager_v1"],bump=manager_config.bump)]
+    pub manager_config: Account<'info, ManagerConfig>,
 }
 #[derive(Accounts)]
 pub struct ManageOrganization<'info> {
     pub manager: Signer<'info>,
     #[account(mut,seeds=[b"organization",organization.authority.as_ref()],bump=organization.bump)]
     pub organization: Box<Account<'info, Organization>>,
+    #[account(seeds=[b"manager_v1"],bump=manager_config.bump)]
+    pub manager_config: Account<'info, ManagerConfig>,
 }
 #[derive(Accounts)]
 pub struct OrganizationAction<'info> {
@@ -869,7 +1075,109 @@ mod compatibility_tests {
         assert_eq!(account.platform_fee, 0);
         assert_eq!(account.fee_version, 0);
         assert_eq!(account.workflow_version, 0);
+        assert_eq!(account.resolution_policy_version, 0);
         assert_eq!(account.terms.len(), 512);
         assert_eq!(account.amount - account.fee, 99_000_000);
     }
+}
+
+fn configure_organization(
+    org: &mut Organization,
+    authority: Pubkey,
+    mint: Pubkey,
+    minimum: u64,
+    maximum: u64,
+    times: [i64; 4],
+    bump: u8,
+) -> Result<()> {
+    require!(
+        (1_000_000..=1_000_000_000_000).contains(&minimum)
+            && (1_000_000..=1_000_000_000_000).contains(&maximum),
+        EscrowError::InvalidTerms
+    );
+    for time in times {
+        require!(
+            (10..=MAX_SECONDS).contains(&time),
+            EscrowError::InvalidTerms
+        );
+    }
+    org.authority = authority;
+    org.mint = mint;
+    org.approved = true;
+    org.accepting = false;
+    org.minimum_deposit = minimum;
+    org.maximum_deal = maximum;
+    org.funding_seconds = times[0];
+    org.delivery_seconds = times[1];
+    org.review_seconds = times[2];
+    org.arbitration_seconds = times[3];
+    org.bump = bump;
+    Ok(())
+}
+#[account]
+pub struct ManagerConfig {
+    pub authority: Pubkey,
+    pub pending_authority: Pubkey,
+    pub bump: u8,
+}
+#[account]
+pub struct ArbitratorApplication {
+    pub authority: Pubkey,
+    pub status: u8,
+    pub submitted_at: i64,
+    pub updated_at: i64,
+    pub reason_code: u8,
+    pub bump: u8,
+}
+#[derive(Accounts)]
+pub struct InitializeManager<'info> {
+    #[account(mut,address=INITIALIZER @ EscrowError::Unauthorized)]
+    pub initializer: Signer<'info>,
+    #[account(init,payer=initializer,space=8+65,seeds=[b"manager_v1"],bump)]
+    pub manager_config: Account<'info, ManagerConfig>,
+    pub system_program: Program<'info, System>,
+}
+#[derive(Accounts)]
+pub struct ManagerAction<'info> {
+    pub actor: Signer<'info>,
+    #[account(mut,seeds=[b"manager_v1"],bump=manager_config.bump)]
+    pub manager_config: Account<'info, ManagerConfig>,
+}
+#[derive(Accounts)]
+pub struct SubmitApplication<'info> {
+    #[account(mut)]
+    pub authority: Signer<'info>,
+    #[account(seeds=[b"arb",authority.key().as_ref()],bump=arbitrator.bump,has_one=authority)]
+    pub arbitrator: Account<'info, Arbitrator>,
+    #[account(init_if_needed,payer=authority,space=8+51,seeds=[b"application_v1",authority.key().as_ref()],bump)]
+    pub application: Account<'info, ArbitratorApplication>,
+    pub system_program: Program<'info, System>,
+    /// CHECK: Optional registry with seed, owner and discriminator validation.
+    #[account(seeds=[b"organization",authority.key().as_ref()],bump)]
+    pub organization: UncheckedAccount<'info>,
+}
+#[derive(Accounts)]
+pub struct ApproveApplication<'info> {
+    #[account(mut)]
+    pub manager: Signer<'info>,
+    #[account(seeds=[b"manager_v1"],bump=manager_config.bump)]
+    pub manager_config: Account<'info, ManagerConfig>,
+    #[account(mut,seeds=[b"application_v1",arbitrator.authority.as_ref()],bump=application.bump)]
+    pub application: Account<'info, ArbitratorApplication>,
+    #[account(seeds=[b"arb",arbitrator.authority.as_ref()],bump=arbitrator.bump,has_one=mint)]
+    pub arbitrator: Box<Account<'info, Arbitrator>>,
+    #[account(seeds=[b"config"],bump=config.bump,has_one=mint)]
+    pub config: Account<'info, Config>,
+    pub mint: Box<Account<'info, Mint>>,
+    #[account(init_if_needed,payer=manager,space=8+115,seeds=[b"organization",arbitrator.authority.as_ref()],bump)]
+    pub organization: Box<Account<'info, Organization>>,
+    pub system_program: Program<'info, System>,
+}
+#[derive(Accounts)]
+pub struct RejectApplication<'info> {
+    pub manager: Signer<'info>,
+    #[account(seeds=[b"manager_v1"],bump=manager_config.bump)]
+    pub manager_config: Account<'info, ManagerConfig>,
+    #[account(mut,seeds=[b"application_v1",application.authority.as_ref()],bump=application.bump)]
+    pub application: Account<'info, ArbitratorApplication>,
 }

@@ -19,3 +19,9 @@ Form tạo giữ 4 trường chính; time nâng cao, preview tiền nhận/phí 
 Token ở src/frontend/styles/tokens.css; controls.css là nguồn nút/form; header.css quản lý shell responsive, không patch global nav. Header controls44px/14px/line-height1.4/radius8, gaps8 trong nhóm và16 giữa nhóm. Desktop>=1024 một hàng; tablet768–1023 hai hàng; mobile<768 hai hàng có Menu, workspace luôn thấy. Native dialog menu có Tab loop, Escape/close/outside, trả focus và tự đóng khi lên desktop. Keyed slots giữ WalletButton khi reorder breakpoint; không reset kết nối.
 
 Container max1200, desktoppadding32/mobile16; cardpadding24/mobile16, radius12. Primary lime, secondarywhite/blue outline, active step lime-soft không glow; không heavy shadow cho controls. Heading/content giữ light terminal, body16 và helper14. Flow/API/contract không thay đổi. Onboarding trọng tài và lỗi2040 còn pending riêng.
+
+## v0.6 — trạng thái, quyền và khôi phục
+
+DealViewModel là nguồn progress/actor/action/deadline. Seller tạifund chờngười mua, khôngchờtrọng tài trongworkflow1. Policy1 cho đúngtrọng tàixửmuộn; legacy0giữcutoff. Refund/cancel khôngđánh dấu các bước chưa thực hiện thành công. Mộtprimaryaction, recoveryfinalize nằmngoài happy-path.
+
+/admin làworkspace trọng tài; /managechỉquản trị registry. Pendingapproval khôngđòinạp cọc; approvalkhôngKYC. Nạp/rút vàenable có dialog tiền/policy. RPCdata20sgiới hạnmoneyaction; đổi ví/reset draft vàfeedback, VIENđổi khôngmấtinput. Pendingchưa đượcsuccess; khóa thao tác lặp vàchotheodõi signature. Evidencepackage tải trước ký vànói rõplaintext/no upload/hashkhôngchứng minh chất lượng.

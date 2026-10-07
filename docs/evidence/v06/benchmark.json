@@ -1,0 +1,29 @@
+{
+  "at": "2026-10-07T12:19:04.138Z",
+  "network": "devnet",
+  "provider": "public Solana Devnet RPC",
+  "environment": "Node v24.16.0; Windows/WSL workspace",
+  "programId": "4Xds5m5JtWR8HbNLdGeF7e3Qh3akKMHwMfjKsQeVXnrb",
+  "mint": "4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU",
+  "read": {
+    "method": "getAccountInfo",
+    "samples": 10,
+    "address": "BZXdtrci9wJEEVeaZYdyF2D2z7STPssaTAKTBEvDoKN9",
+    "milliseconds": [105, 124, 144, 116, 98, 97, 114, 104, 78, 123],
+    "median": 109.5,
+    "p95": 144,
+    "measurement": "sequential repeated finalized reads of one historical account; no concurrency/load claim"
+  },
+  "historicalHotfixTransaction": {
+    "signature": "3yZqU7hxxAZusYqwW3XMefMFdJAXKVT8zcRzhMmqoXzyTpQaUUu4gqmN1tRP5qR6FNw7WfPfMPY9fpd6hfrvjT77",
+    "unitsConsumed": 40896,
+    "feeLamports": 5000,
+    "transactionBytes": 718,
+    "version": "v0.5.1 alias-recovery; not a v0.6 transaction benchmark"
+  },
+  "rpcCalls": {
+    "getGenesisHash": 1,
+    "getAccountInfo": 10,
+    "getTransaction": 1
+  }
+}

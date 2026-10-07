@@ -1,4 +1,5 @@
 import { it, expect } from "vitest";
+import { SystemProgram } from "@solana/web3.js";
 import idl from "../../client/idl/escrow.json";
 import {
   digest,
@@ -24,6 +25,7 @@ it("instruction account order remains explicit", async () => {
     key(PROGRAM_ID, true, true),
     key(CONFIG, true),
     key(MINT),
+    key(SystemProgram.programId),
   ]);
   expect(ix.keys[0].isSigner).toBe(true);
   expect(ix.keys[1].pubkey.equals(CONFIG)).toBe(true);

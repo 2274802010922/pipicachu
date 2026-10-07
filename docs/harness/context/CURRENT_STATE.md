@@ -1,19 +1,19 @@
-# pipicachu — checkpoint hotfix v0.5.1 / tiếp tục v0.6
+# pipicachu v0.6 — checkpoint đang nghiệm thu · 07/10/2026
 
-## Trạng thái hiện tại
+## Đã kiểm
 
-Hotfix settlement đã build và deploy Devnet. Recipient platform được phép alias có kiểm soát, CPI gộp theo ATA thực và dedup ATA init. Deal BZXd…DoKN9 đã finalized, vault0, mở cọc0,1; seller=treasury nhận0,99 và arb0,01. 46 deal giữ nguyên principal/fee/workflow/terms/deadlines. Evidence: docs/evidence/hotfix-alias-recovery.json và hotfix-v051.json.
+Hotfix v0.5.1 commit2e06f2c, CI37583984049 pass, BZXd…DoKN9 đã phục hồi finalized. v0.6 contract đã deploy Devnet, binary prefix bằng local và tail reserve0; 46 deal snapshot không đổi tiền/phí/terms/workflow/state/deadlines. ManagerConfig bootstrap finalized vào CXjKGEBNTTotzoF26nGPfAG4AFicGgP72SMqUQKY1pJN; xem docs/evidence/v06/protocol-rollout.json và manager-bootstrap.json.
 
-Local39 lifecycle +13 registry pass; alias payout/refund ở4 cấu hình treasury pass8 cases. Negative destination tests dùng attacker ATA riêng và kiểm exact error. SBF prefix deployed khớp binary local. Web verify/CI được ghi theo checkpoint thực tế; không coi hotfix là đã hoàn thành v0.6.
+Local native2, executable39lifecycle+13organization+21governance/capacity/late-ruling, coldbootstrap unauthorized6000, alias payout/refund4roles. Web npm run verify pass:105 unit/integration,31 browser, build/lint/typecheck/format/audit gate/docs. Báo cáo docs/evidence/v06/local-acceptance.json; chưa dùng thay kiểm owner/production.
 
-## Kế hoạch user đã duyệt, bắt buộc tiếp tục
+Code mới: policy1 xử muộn (legacy0 giữ cutoff), manager/application/transfer2sig, enable binds policy snapshot, feature UI/view-model, operation recovery, evidence export/importsalt, RPCbounds/sharedlimiter, keeper isolatedretry/Redisreport, ready/health, CSP report-only. Docs architecture/deployment/judge/tester kit và benchmark read10mẫu có sẵn. Benchmark tx hiện là historicalhotfix, không v0.6live.
 
-Chỉ pipicachu, không Picachu cũ, USDC Devnet, phí1+1/refund0, không AI. v0.6: resolutionPolicyVersion1 cho deal mới xử muộn (legacy0 giữ cutoff); ManagerConfig do initializer bootstrap rồi managerCXjKGEBNTTotzoF26nGPfAG4AFicGgP72SMqUQKY1pJN duyệt application bằng Phantom; manager không có quyền tiền. Profile7PpWKXsjxR6f7Zu8Se11h2nWkEyaaNVxLLd6XF9K39CG giữ nguyên.
+## Chưa được tính hoàn tất
 
-Tiếp tục: application/manager protocol+IDL/tests, operation lifecycle/session recovery, keeper isolation/shared Redis/readiness, UI modules/view model/mobile/role/onboarding, evidence package local salt/export/verify, dependency reachability/CSP/benchmarks, judge guide/README VIEN/deck12+6 appendix VIEN/PPTXPDF, Devnet+Vercel checks/release0.6. EN video chờ footage; WTP chờ người dùng thực. Không fake audit/Phantom/business validation.
+Web v0.6 đang chuẩn bị commit/push; website hiện vẫn v0.5.1. Redis URL/token local trống; Vercel Production đã có hai biến cũ, salt mới đã thêm Production+Preview; RedisURLPreview/GHkeeper cần owner đăng nhậpUpstash hoặc tự nhập secrets. Async question đang chờ, tabChromeUpstashlogin phảimarkHandoff khi kết thúc.
 
-## Runtime và hành động
+Cần actual manager application approvalCXj bằngPhantom, các nhánhv0.6live/keeper restart/sharedRedis, Phantomextension accept/reject, CI+Vercelsmoke, performancev0.6tx, READMEshowcase/status cuối, deck18slideVIEN/PPTXPDF visualQA, release0.6tag. Business chưatester/WTP; ENvideo chờfootage. Không đánh dấu toàn release hoàn tất khi thiếu cổng trên.
 
-WSL Ubuntu-22.04 root Solana CLI ở/root/.local/share/solana/install/active_release/bin và cargo ở/root/.cargo/bin. Windows Node24/npm; ledger tests port8897. work/start-local.ps1 là helper local ignored; validator phải stop trước restart. Key chỉ work/private pipicachu, không in hoặc commit. Chưa nhập manager key vào server. Commit tiếng Việt, push main, kiểm CI mỗi checkpoint. Đọc user plan đầy đủ trong conversation.
+## Workflow
 
-Lịch sử trước hotfix ở docs/archive/v0.5-context/. Review detailed ở work/review-2026-10-07/SENIOR_REVIEW.md. Không dùng lịch sử như current status.
+Chỉ pipicachu, không Picachu cũ/keys/password/deployment cũ. Current arb7PpWKXsjxR6f7Zu8Se11h2nWkEyaaNVxLLd6XF9K39CG giữ nguyên; manager không phải treasury authority. Commit tiếng Việt/pushmain/checkCI, không yêu cầu xác nhận lại việc userđãduyệt. NoAI/noMainnet/noinsurance/slashing/backup arb. UpgradeauthorityDevnet còn giữ. State/history source chung và money rights do Rust.

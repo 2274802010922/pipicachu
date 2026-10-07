@@ -1,3 +1,4 @@
+import { readManager } from "../../src/escrow/governance";
 // Approve a user-supplied PUBLIC wallet. Never loads or signs with its private key.
 import fs from "node:fs";
 import assert from "node:assert/strict";
@@ -39,6 +40,12 @@ if (!org || !org.approved) {
   assert.equal(
     manager.publicKey.toBase58(),
     "DwTKmg68k39b8jZWt1CHypfoPs5JuJsuP88SfKcbW3uj",
+  );
+  const liveManager = await readManager(c);
+  assert.equal(
+    liveManager?.authority,
+    manager.publicKey.toBase58(),
+    "Use /manage with the on-chain manager; initializer has no approval bypass",
   );
   const ix = org
     ? await organizationApprovalIx(manager.publicKey, authority, true)

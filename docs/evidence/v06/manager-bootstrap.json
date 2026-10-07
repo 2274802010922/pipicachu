@@ -1,0 +1,11 @@
+{
+  "at": "2026-10-07T12:24:51.787Z",
+  "network": "devnet",
+  "programId": "4Xds5m5JtWR8HbNLdGeF7e3Qh3akKMHwMfjKsQeVXnrb",
+  "managerConfig": "B7CUY6dLyHAGCtxnwHHSiS5h2SKJsfJdNW5eZbxnkG8c",
+  "authority": "CXjKGEBNTTotzoF26nGPfAG4AFicGgP72SMqUQKY1pJN",
+  "signature": "5Fn3HTFao2x8rwExoK7MFm4A41pNGqXtGP16GduvV5yY8nWu5RUTfYnwrSKz2fndUeRMfVthsG61xxwe9rPra84Y",
+  "alreadyInitialized": false,
+  "verifiedFinalized": true,
+  "managerApplicationApprovalVerified": false
+}

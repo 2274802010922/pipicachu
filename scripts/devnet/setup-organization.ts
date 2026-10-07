@@ -1,3 +1,4 @@
+import { readManager } from "../../src/escrow/governance";
 import fs from "node:fs";
 import assert from "node:assert/strict";
 import {
@@ -37,6 +38,11 @@ assert.equal(
   manager.publicKey.toBase58(),
   "DwTKmg68k39b8jZWt1CHypfoPs5JuJsuP88SfKcbW3uj",
 );
+const liveManager = await readManager(c);
+if (!liveManager || liveManager.authority !== manager.publicKey.toBase58())
+  throw Error(
+    "MANAGER_WALLET_REQUIRED: use /manage with the on-chain manager; initializer has no approval bypass",
+  );
 const send = (k: Keypair, ixs: Awaited<ReturnType<typeof bondIx>>[]) =>
   sendAndConfirmTransaction(c, new Transaction().add(...ixs), [k], {
     commitment: "finalized",
@@ -71,7 +77,7 @@ if (!org.accepting)
   receipt.push({
     action: "arbitrator signs standing consent",
     signature: await send(arb, [
-      await organizationAcceptingIx(arb.publicKey, true),
+      await organizationAcceptingIx(arb.publicKey, true, c),
     ]),
   });
 const before = JSON.parse(

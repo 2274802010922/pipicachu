@@ -1,4 +1,8 @@
-# Bằng chứng v0.5 — trọng tài được duyệt, cọc trước
+# Bằng chứng
+
+Trạng thái hiện tại: [v0.6 đang nghiệm thu](v06/README.md). [Protocol/binary/snapshot](v06/protocol-rollout.json), [Manager bootstrap](v06/manager-bootstrap.json), [hotfix alias](hotfix-alias-recovery.json).
+
+## Lịch sử v0.5 — trọng tài được duyệt, cọc trước
 
 - [Registry rollout](organization-rollout.json): initializer duyệt Demo A, trọng tài ký standing consent thật. 39 account cũ giữ fee/workflow snapshot. Tổ chức thử nghiệm, không phải đối tác công ty thật.
 - [13 checks local](local-organization-checks.json) và [13 checks Devnet](devnet-organization-checks.json): authority, policy, pause/fund, withdrawal lock, reserve/double fund, settle khi paused, phí và double payout.

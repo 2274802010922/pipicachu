@@ -11,13 +11,15 @@ stop_validator() {
 trap stop_validator EXIT
 start_validator() {
   local role="$1"
+  local mode="${2:-manager}"
   stop_validator
   if [ "$role" = independent ]; then unset LOCAL_TREASURY_ROLE; else export LOCAL_TREASURY_ROLE="$role"; fi
   npx tsx scripts/devnet/prepare-local.ts
   local ledger="$PWD/work/validator/$role-ledger"
   case "$ledger" in "$PWD"/work/validator/*) ;; *) exit 1 ;; esac
   local args=()
-  for name in mint config fee-config organization; do
+  for name in mint config fee-config organization manager; do
+    if [ "$mode" = cold ] && [ "$name" = manager ]; then continue; fi
     local address
     address="$(node --input-type=module -e 'import fs from "node:fs";console.log(JSON.parse(fs.readFileSync(process.argv[1],"utf8")).pubkey)' "work/validator/$name.json")"
     args+=(--account "$address" "work/validator/$name.json")
@@ -33,9 +35,12 @@ start_validator() {
   done
   [ "$ready" = 1 ] || { cat "work/validator/$role-validator.log"; exit 1; }
 }
+start_validator independent cold
+npx tsx tests/program/bootstrap.ts --deny-only
 start_validator independent
 npm run test:program
 npx tsx tests/program/organizations.ts
+npx tsx tests/program/v06.ts
 npx tsx tests/program/aliases.ts
 for role in buyer seller arbitrator; do
   start_validator "$role"

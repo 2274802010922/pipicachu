@@ -54,9 +54,25 @@ const send = (k: Keypair, ixs: Awaited<ReturnType<typeof act>>[]) =>
     commitment: "confirmed",
   });
 async function reject(name: string, run: () => Promise<unknown>) {
-  await assert.rejects(run, (e: unknown) =>
-    /custom program error/.test(e instanceof Error ? e.message : String(e)),
-  );
+  const code =
+    name === "non-manager cannot revoke registry"
+      ? 6000
+      : name === "wrong signer cannot toggle service"
+        ? 2006
+        : /withdrawal|withdrawals/.test(name)
+          ? 6003
+          : /policy|deadlines/.test(name)
+            ? 6001
+            : /paused/.test(name)
+              ? 6006
+              : 6002;
+  await assert.rejects(run, (e: unknown) => {
+    assert.match(
+      e instanceof Error ? e.message : String(e),
+      new RegExp(`custom program error: 0x${code.toString(16)}\\b`),
+    );
+    return true;
+  });
   checks.push({ case: name });
   console.log("PASS rejected", name);
 }
@@ -84,14 +100,20 @@ async function create() {
   });
   return data;
 }
-await send(arb, [await organizationAcceptingIx(arb.publicKey, true)]);
+await send(arb, [await organizationAcceptingIx(arb.publicKey, true, c)]);
 await reject("non-manager cannot revoke registry", async () =>
   send(seller, [
     await organizationApprovalIx(seller.publicKey, arb.publicKey, false),
   ]),
 );
 await reject("wrong signer cannot toggle service", async () =>
-  send(seller, [await organizationAcceptingIx(seller.publicKey, true)]),
+  send(seller, [
+    await (async () => {
+      const ix = await organizationAcceptingIx(arb.publicKey, true, c);
+      ix.keys[0].pubkey = seller.publicKey;
+      return ix;
+    })(),
+  ]),
 );
 await reject(
   "withdrawal locked while accepting even with unused capacity",
@@ -129,7 +151,7 @@ await send(arb, [await organizationAcceptingIx(arb.publicKey, false)]);
 await reject("paused service blocks new funding", async () =>
   send(buyer, [await fundIx(buyer.publicKey, d)]),
 );
-await send(arb, [await organizationAcceptingIx(arb.publicKey, true)]);
+await send(arb, [await organizationAcceptingIx(arb.publicKey, true, c)]);
 const before = (await readArbitrator(c, arb.publicKey))!.locked;
 checks.push({
   case: "buyer funds without arbitrator acceptance",
@@ -193,7 +215,7 @@ await reject("double payout rejected", async () =>
 await send(arb, [await bondIx("withdraw_bond", arb.publicKey, 1n)]);
 checks.push({ case: "withdraw only when paused and all obligations settled" });
 await send(arb, [await bondIx("deposit_bond", arb.publicKey, 1n)]);
-await send(arb, [await organizationAcceptingIx(arb.publicKey, true)]);
+await send(arb, [await organizationAcceptingIx(arb.publicKey, true, c)]);
 fs.writeFileSync(
   `docs/evidence/${live ? "devnet" : "local"}-organization-checks.json`,
   JSON.stringify(

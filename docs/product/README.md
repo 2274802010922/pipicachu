@@ -1,11 +1,15 @@
-# Phạm vi và chính sách
+# Phạm vi và chính sách v0.6
 
-Người dùng giả định: admin trung gian hàng/dịch vụ số và buyer/seller. WTP chưa xác thực. Không gộp P2P VND vì flow nạp/bằng chứng khác.
+Người dùng mục tiêu: người mua/bán sản phẩm số qua cộng đồng đã có ví Solana và dùng USDC. Admin/trọng tài cộng đồng hỗ trợ dispute. Đây là giả thuyết nhóm người dùng; WTP và doanh thu chưa xác thực. Không gộp P2P VND.
 
-Buyer nạp USDC Devnet, SOL trả phí. 3 ví khác nhau; trọng tài đăng ký và chấp thuận trước funding. Deal mới thu 1% trọng tài + 1% hệ thống (seller nhận 98%); deal cũ giữ phí 1%, bond trọng tài ceil(amount/10). Principal tối thiểu 1, tối đa 1 triệu USDC thử nghiệm. Thời hạn 10 giây đến 30 ngày.
+Ba role khác ví: người bán, người mua, một trọng tài. Treasury có thể trùng role. USDC Devnet giữ trong deal vault; SOL trả phí/rent. Payout người bán98% +trọng tài1% +hệ thống1%, từng phí làm tròn xuống atom USDC; refund100% principal, không phí. Deal fee legacy0 giữ phí cũ. Bond ceil(principal/10) nằm trong pool riêng, không bảo hiểm.
 
-Unix timestamp từ Clock. Funding/delivery/dispute dùng `< deadline`, timeout `>=`. Một vòng trọng tài. Khi hết hạn, trọng tài mất quyền phán quyết; buyer đề nghị, seller ký đồng ý đúng đề nghị đang lưu. Không operator tùy ý rút.
+Trọng tài đăng ký application → manager duyệt → chủ ví nạp cọc → ký bật nhận policy. ManagerConfig đọc từ chain, không suy từ treasury. Duyệt là allowlist, không KYC; manager không được rút principal/phán quyết. Standing consent bỏ ký accept từng deal workflow1. Create không reserve; buyer fund kiểm capacity và reserve nguyên tử. Pause/revoke chặn funding mới, settlement nghĩa vụ đang có vẫn được hỗ trợ.
 
-Payout/refund toàn phần. Phí trả trọng tài duy nhất khi seller nhận tiền; refund không phí. Settlement unlock một bond một lần trong cùng token transfer transaction. Terminal giữ account/vault để tra cứu, chưa đóng/hoàn rent.
+Principal theo policy organization; demo min1/max10 USDC, funding/delivery/SLA30 phút, review5 phút. Global program bounds1–1 triệu USDC thử nghiệm, cửa sổ10 giây–30 ngày; giới hạn tổ chức chặt hơn. Timestamp từ Clock: tác vụ trước hạn dùng `<`; timeout dùng `>=`.
 
-Không phạt xử sai, bảo hiểm, kháng nghị. Trọng tài bỏ xử và hai bên bất đồng có thể khóa tiền vô thời hạn. Không bảo đảm hàng ngoài chuỗi/account game không reclaim/quy định nền tảng cho phép mua bán.
+Deal resolution policy0 giữ cutoff trọng tài cũ. Deal mới policy1 dùng arbitrateBy làm SLA, đúng trọng tài vẫn được xử muộn khi Disputed. Sau SLA người mua có thể đề nghị payout/refund, người bán ký đồng ý; phán quyết/đồng thuận terminal đầu tiên thắng. Không arbitrator dự phòng hoặc partial refund.
+
+Không giữ file hàng/bằng chứng ở server. Nội dung on-chain chỉ terms công khai tối đa512 UTF8 byte và commitment; envelope salted tải plaintext và gửi qua kênh ngoài. Hash không xác minh chất lượng/lời trình bày đúng. Trọng tài bỏ xử và hai bên bất đồng vẫn có thể khóa tiền. Terminal giữ account/vault để tra cứu; chưa hoàn rent. Upgrade authority Devnet còn giữ, chưa audit/Mainnet.
+
+[Trạng thái nghiệm thu](../evidence/v06/README.md) · [Kiến trúc/ABI](../architecture/v06.md) · [Bộ dùng thử](validation-kit.md).

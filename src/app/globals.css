@@ -23,6 +23,7 @@ a {
 }
 
 label {
+  min-width: 0;
   display: grid;
   gap: 8px;
   font-weight: 500;
@@ -95,6 +96,7 @@ p {
 }
 .stack {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 24px;
 }
 .actions {
