@@ -7,5 +7,9 @@
   "writeQuotaAvailable": false,
   "errorCode": "RATE_LIMIT_UNAVAILABLE",
   "readinessFalsePositive": "PING passed but actual EVAL-protected simulation was unavailable; readiness fix adds exact limiter script probe",
-  "secretsExposed": false
+  "secretsExposed": false,
+  "diagnosticRevision": "00c164d549aa73ccc213a88f88757d9fc64364f6",
+  "limiterError": "permissions",
+  "readinessAfterFix": false,
+  "ownerAction": "Use a Redis token permitting EVAL/INCR/EXPIRE and GET/SET/DEL; configure matching URL/token in Vercel and GitHub."
 }

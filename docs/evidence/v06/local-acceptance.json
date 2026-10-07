@@ -44,9 +44,12 @@
       ]
     }
   },
-  "webUnitIntegrationTests": 105,
-  "browserTests": 31,
+  "webUnitIntegrationTests": 107,
+  "browserTests": 32,
   "browserWidths": [375, 768, 1024, 1440],
   "phantomExtensionVerified": false,
-  "note": "Local receipts/mocked browser provider are not live Devnet or Phantom evidence"
+  "note": "Local receipts/mocked browser provider are not live Devnet or Phantom evidence",
+  "webRevision": "00c164d549aa73ccc213a88f88757d9fc64364f6",
+  "ciRun": "https://github.com/2274802010922/pipicachu/actions/runs/37654711035",
+  "ciConclusion": "success"
 }

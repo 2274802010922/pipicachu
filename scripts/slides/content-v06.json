@@ -177,7 +177,7 @@
     "vi": {
       "title": "Đã kiểm kỹ thuật, đang kiểm nhu cầu sử dụng",
       "body": [
-        "105 test unit/integration · 32 test browser",
+        "107 test unit/integration · 32 test browser",
         "39 lifecycle · 13 registry · 21 governance/capacity",
         "46 deal cũ giữ nguyên dữ liệu khi nâng cấp",
         "Còn cổng owner/Phantom/Redis/keeper và tester thật."
@@ -186,7 +186,7 @@
     "en": {
       "title": "Technical evidence and remaining gates",
       "body": [
-        "105 unit/integration tests · 32 browser tests",
+        "107 unit/integration tests · 32 browser tests",
         "39 lifecycle · 13 registry · 21 governance/capacity",
         "46 legacy deals unchanged during upgrade",
         "Owner, Phantom, Redis/keeper and real-user gates remain."

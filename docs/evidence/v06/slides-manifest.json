@@ -1,0 +1,53 @@
+{
+  "version": "0.6.0-acceptance-candidate",
+  "revisionBase": "00c164d549aa73ccc213a88f88757d9fc64364f6",
+  "languages": ["vi", "en"],
+  "slidesPerDeck": 18,
+  "mainSlides": 12,
+  "appendixSlides": 6,
+  "nativeTableOwnerSlides": [8, 15],
+  "editablePPTX": true,
+  "PDF": "visual export",
+  "font": "Arial",
+  "checks": [
+    "package integrity",
+    "18 slides",
+    "native tables",
+    "font policy",
+    "artifact-tool import",
+    "rendered all slides; repaired wrap and small screenshot",
+    "final PDF page count and rendered changed slides"
+  ],
+  "powerPointDesktopOpened": false,
+  "googleSlidesOpened": false,
+  "technicalReleaseComplete": false,
+  "pending": [
+    "Redis permission fix and keeper credentials",
+    "owner manager application approval",
+    "new-policy live branches and keeper/Phantom",
+    "real user data/WTP",
+    "English video footage"
+  ],
+  "files": [
+    {
+      "name": "pipicachu-v06-vi-r6.pptx",
+      "bytes": 137303,
+      "sha256": "2213e9f90222adeb3c5603f4b71cbf32361d100fc57eace7ce43bc05b78652fd"
+    },
+    {
+      "name": "pipicachu-v06-vi-r6.pdf",
+      "bytes": 621485,
+      "sha256": "1a7a1cae13bbe5a126c197e58960ef3258af05d4f421aed2ccee62552eddeddc"
+    },
+    {
+      "name": "pipicachu-v06-en-r6.pptx",
+      "bytes": 136961,
+      "sha256": "3dd1c42ddcd34590e411721d6158a8da68a7c10e53ef72c5527ecabd549db0dd"
+    },
+    {
+      "name": "pipicachu-v06-en-r6.pdf",
+      "bytes": 624934,
+      "sha256": "792ab3b830e8787eb814f5b38c383e53d66731ed77f82c674d562f5a252e21cc"
+    }
+  ]
+}

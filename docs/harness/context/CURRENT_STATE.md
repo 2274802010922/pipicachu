@@ -25,3 +25,11 @@ main383757f, CI37622854442 pass cả web/program; Vercel đúng revision, smoke 
 Application test riêng2dakRFzAYG6qrWenyNUt5uCAGLhDYJMUhLBfXJn5XeC8 đã register/submit pending thật; không thayprimary7Pp. Chrome /manage kết nối managerCXj, đã điền min1/max10USDC, times300/60/60/60; ownerapprovalquestion pending. Không bấm ký khi gatewaywrite chưa hoạt động. Script accept-v06.ts chỉ chạy nếu applicationapproved, min/max/times phù hợp; giữkeytestignore. Manager never loaded onserver.
 
 Frontend thêm finalized reads cho deal, epochguardkhi đổi ví, nhãn pendingvícũ, Creatorrefresh/guard policysnapshot. Browserrecoverypass và full32 đãpass trướcdiagnosticRedis; unit107 với2Redisdiagnostic tests. DeckVIEN18slides @oai/artifact-tool; R5PPTX trong work/deck-v06/output, PDFR3cũ cần xuấtR5/R6 cậpnhậtcount107. MarkersPresentationscreate2pptx vàPDFcreate2pdf ĐÃCHẠY, không chạy lại khi sửa. Đã visualQA cảdeckVI vàEN; vòngcuối chỉsửa sốtest/title9. PPTXnative tables8,15 valid, chưa mởPowerPoint.
+
+## Bàn giao candidate cuối
+
+main00c164d (CI37654711035success) đã deploy. Readiness trả503 đúng vì limiterError permissions; provider từchối quyền lệnhEVAL, unsignedsimulationchặn antoàn. Ownercần Tokenwrite/EVAL đúngtrongVercel Production/Preview và2GHsecretsRedisURL/token. Không gọicheckpointReleasecompleted.
+
+Candidatefiles work/deck-v06/output/pipicachu-v06-{vi,en}-r6.{pptx,pdf}; zipacceptancecandidate cùngfolder. 18slides mỗi language,12main+6appendix; nativeeditabletables8/15, fontArial, sourcesnotes, PDFvisualexport. Đãrender/QA allslides trước, chỉsửa số107/32 vàtitle9ởR6; kiểm lạichangedPDFpages. ChưaPowerPointdesktop. Manifestdocs/evidence/v06/slides-manifest.json, ownerchecklistdocs/deployment/OWNER_CHECKS.md. Không markerartifact lại.
+
+Code/script/harness107unitintegration32browserpasses. App chưađượcwrite vìRedispermission; actualmanagerapproval,6livebranches(newprobe), keeper/report/restart vàPhantom thậtchưaqua. Business/testerdata chưathu, ENfootage chờowner. Hoàn tấtCredential vàownerSig mới tiếp tụcaccept-v06.ts, kiểmKeeper+benchmarkv06tx, updateevidence vàtagfinal0.6.0.

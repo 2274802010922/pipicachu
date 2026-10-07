@@ -136,7 +136,7 @@ function table(slide, body, lang, fees = false) {
 }
 for (const lang of ["vi", "en"]) {
   const p = Presentation.create({ slideSize: { width: 1280, height: 720 } });
-  const renderDir = path.join(privateRoot, "render-r5", lang);
+  const renderDir = path.join(privateRoot, "render-r6", lang);
   await fs.mkdir(renderDir, { recursive: true });
   for (const entry of data) {
     const slide = p.slides.add();
@@ -282,10 +282,10 @@ for (const lang of ["vi", "en"]) {
       muted,
     );
   }
-  const staging = path.join(privateRoot, "staging-r5", lang);
+  const staging = path.join(privateRoot, "staging-r6", lang);
   await fs.mkdir(staging, { recursive: true });
   const candidate = path.join(staging, "candidate.pptx"),
-    final = path.join(privateRoot, "output", `pipicachu-v06-${lang}-r5.pptx`);
+    final = path.join(privateRoot, "output", `pipicachu-v06-${lang}-r6.pptx`);
   await (await PresentationFile.exportPptx(p)).save(candidate);
   await finalizePresentation({
     workspaceDir,
