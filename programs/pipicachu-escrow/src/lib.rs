@@ -505,41 +505,54 @@ fn settle(ctx: Context<Settle>, pay_seller: bool) -> Result<()> {
         .checked_sub(fee)
         .and_then(|value| value.checked_sub(platform_fee))
         .ok_or(EscrowError::Overflow)?;
-    transfer(
-        &ctx.accounts.token_program,
-        &ctx.accounts.vault,
-        destination,
-        d.to_account_info(),
-        &ctx.accounts.mint,
-        net,
-        &[seeds],
-    )?;
-    if fee > 0 {
-        let fee_token = &ctx.accounts.arbitrator_token;
+    // Only the fee recipient may intentionally alias a participant token account.
+    // Aggregate the logical legs before CPI so each actual recipient is paid once.
+    let legs = [
+        (destination.as_ref(), net),
+        (ctx.accounts.arbitrator_token.as_ref(), fee),
+        (ctx.accounts.platform_token.as_ref(), platform_fee),
+    ];
+    let mut payments: Vec<(&Account<TokenAccount>, u64)> = Vec::new();
+    for (recipient, value) in legs {
+        require_keys_neq!(
+            recipient.key(),
+            ctx.accounts.vault.key(),
+            EscrowError::Unauthorized
+        );
+        if value == 0 {
+            continue;
+        }
+        if let Some(existing) = payments
+            .iter_mut()
+            .find(|(account, _)| account.key() == recipient.key())
+        {
+            existing.1 = existing.1.checked_add(value).ok_or(EscrowError::Overflow)?;
+        } else {
+            payments.push((recipient, value));
+        }
+    }
+    let total = payments
+        .iter()
+        .try_fold(0u64, |sum, (_, value)| sum.checked_add(*value))
+        .ok_or(EscrowError::Overflow)?;
+    require_eq!(total, d.amount, EscrowError::InvalidTerms);
+    for (recipient, value) in payments {
         transfer(
             &ctx.accounts.token_program,
             &ctx.accounts.vault,
-            fee_token,
+            recipient,
             d.to_account_info(),
             &ctx.accounts.mint,
-            fee,
+            value,
             &[seeds],
         )?;
     }
-    for a in [&mut ctx.accounts.arbitrator] {
-        if platform_fee > 0 {
-            transfer(
-                &ctx.accounts.token_program,
-                &ctx.accounts.vault,
-                &ctx.accounts.platform_token,
-                d.to_account_info(),
-                &ctx.accounts.mint,
-                platform_fee,
-                &[seeds],
-            )?;
-        }
-        a.locked = a.locked.checked_sub(d.bond).ok_or(EscrowError::Overflow)?;
-    }
+    ctx.accounts.arbitrator.locked = ctx
+        .accounts
+        .arbitrator
+        .locked
+        .checked_sub(d.bond)
+        .ok_or(EscrowError::Overflow)?;
     ctx.accounts.deal.state = if pay_seller {
         State::Completed
     } else {
@@ -694,7 +707,7 @@ pub struct Settle<'info> {
     pub token_program: Program<'info, Token>,
     #[account(seeds=[b"platform_fee_v1"],bump=fee_config.bump)]
     pub fee_config: Account<'info, FeeConfig>,
-    #[account(mut,token::mint=mint,constraint=platform_token.owner==fee_config.treasury @ EscrowError::Unauthorized)]
+    #[account(mut,dup,token::mint=mint,constraint=platform_token.owner==fee_config.treasury @ EscrowError::Unauthorized,constraint=platform_token.key()!=vault.key() @ EscrowError::Unauthorized)]
     pub platform_token: Box<Account<'info, TokenAccount>>,
 }
 #[account]

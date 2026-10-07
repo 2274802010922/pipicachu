@@ -1,0 +1,23 @@
+{
+  "network": "devnet",
+  "accountsVerified": 46,
+  "immutableFieldsUnchanged": true,
+  "stateChanges": [
+    {
+      "deal": "BZXdtrci9wJEEVeaZYdyF2D2z7STPssaTAKTBEvDoKN9",
+      "before": "delivered",
+      "after": "completed"
+    }
+  ],
+  "binaryPrefixMatch": true,
+  "localSha256": "152d317be8d3d28eb6be3108f4107d1fb746618d128dc6d880ecc6289523561e",
+  "reservedTailZero": true,
+  "aliasLocalRoles": ["independent", "buyer", "seller", "arbitrator"],
+  "aliasCases": 8,
+  "existingCycleCases": 39,
+  "organizationCases": 13,
+  "nativeTests": 2,
+  "webUnitTests": 55,
+  "webBrowserTests": 26,
+  "upgradeSignature": "YwRkfQbc1sUHcMMGd8mxerVEoNNajxprcthKy5zhnJfWn1CVJyhyvgv7r3gtUNahnMkdF3TXN2CC2s6PRYqdufX"
+}

@@ -1,0 +1,45 @@
+{
+  "at": "2026-10-07T06:46:28.002Z",
+  "network": "devnet",
+  "target": "BZXdtrci9wJEEVeaZYdyF2D2z7STPssaTAKTBEvDoKN9",
+  "signature": "3yZqU7hxxAZusYqwW3XMefMFdJAXKVT8zcRzhMmqoXzyTpQaUUu4gqmN1tRP5qR6FNw7WfPfMPY9fpd6hfrvjT77",
+  "commitment": "finalized",
+  "source": "permissionless keeper CLI; not Phantom",
+  "beforeState": "delivered",
+  "afterState": "completed",
+  "logical": {
+    "sellerNet": "980000",
+    "arbitratorFee": "10000",
+    "platformFee": "10000"
+  },
+  "actualTransfers": [
+    {
+      "authority": "BZXdtrci9wJEEVeaZYdyF2D2z7STPssaTAKTBEvDoKN9",
+      "destination": "8Sf4GdWLnY7eP6qAsewJPaWbNzDpkgTvpkrRAUNbRDks",
+      "mint": "4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU",
+      "source": "8LSJkMbV6KxYnWqQPSsCtpyDrKe3afPWqei8JyJGmxZN",
+      "tokenAmount": {
+        "amount": "990000",
+        "decimals": 6,
+        "uiAmount": 0.99,
+        "uiAmountString": "0.99"
+      }
+    },
+    {
+      "authority": "BZXdtrci9wJEEVeaZYdyF2D2z7STPssaTAKTBEvDoKN9",
+      "destination": "CRGDNamp6qRG31RFmWxSxSoKeT3GaLzpzqro7vh9dNfu",
+      "mint": "4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU",
+      "source": "8LSJkMbV6KxYnWqQPSsCtpyDrKe3afPWqei8JyJGmxZN",
+      "tokenAmount": {
+        "amount": "10000",
+        "decimals": 6,
+        "uiAmount": 0.01,
+        "uiAmountString": "0.01"
+      }
+    }
+  ],
+  "beforeLocked": "100000",
+  "afterLocked": "0",
+  "simulationUnits": 40896,
+  "vaultAtomic": "0"
+}

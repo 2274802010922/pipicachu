@@ -1,17 +1,19 @@
-# Video escrow VI đã lên YouTube · 05/10/2026
+# pipicachu — checkpoint hotfix v0.5.1 / tiếp tục v0.6
 
-Owner upload và cung cấp https://www.youtube.com/watch?v=mTY3e3qX_4k. Đã nối README VI/EN và trang Demo, kèm poster/kịch bản/script dựng. Footage owner: seller trái, buyer phải, Phantom thật, 2 USDC → seller1,96 + arb0,02 + platform0,02. Persona minh họa; không quay giao file/tranh chấp/keeper. EN chờ footage riêng. Không sửa contract, không nâng bằng chứng thành full Phantom QA; lỗi2040/onboarding còn nguyên. MP4/build ignored, Picachu cũ nguyên trạng.
+## Trạng thái hiện tại
 
-# Bàn giao v0.5
+Hotfix settlement đã build và deploy Devnet. Recipient platform được phép alias có kiểm soát, CPI gộp theo ATA thực và dedup ATA init. Deal BZXd…DoKN9 đã finalized, vault0, mở cọc0,1; seller=treasury nhận0,99 và arb0,01. 46 deal giữ nguyên principal/fee/workflow/terms/deadlines. Evidence: docs/evidence/hotfix-alias-recovery.json và hotfix-v051.json.
 
-Đọc CURRENT_STATE, docs/product/organization-flow.md và evidence/README. Implementation3a1c4e7 đã deploy Devnet/Vercel, CI web/program pass. Final docs/samples/copy checkpoint giữ nguyên logic tiền.
+Local39 lifecycle +13 registry pass; alias payout/refund ở4 cấu hình treasury pass8 cases. Negative destination tests dùng attacker ATA riêng và kiểm exact error. SBF prefix deployed khớp binary local. Web verify/CI được ghi theo checkpoint thực tế; không coi hotfix là đã hoàn thành v0.6.
 
-Registry whitelist+prepaid pool+standing consent chỉ initializer quản lý approval; quyền ví tổ chức sign accepting. Không user self-approve. Policy demo min1/max10USDC và30m/30m/5m/30m. Muốn duyệt ví tổ chức khác cần onboarding/initializer ký qua SDK, không nhập key vào Vercel. Demo A không phải công ty thật.
+## Kế hoạch user đã duyệt, bắt buộc tiếp tục
 
-Legacy deal giữ consent/fees; sameProgramId/876 allocation. Workflow1 bỏ accept từng deal. Treasury CXjKGEBNTTotzoF26nGPfAG4AFicGgP72SMqUQKY1pJN immutable không đổi. Keeper permissionless giữ SLA best-effort. Paused organization vẫn xử nghĩa vụ đã funded. Cọc không phải insurance/slashing; arbiters bỏ xử không đồng thuận vẫn có thể kẹt tiền.
+Chỉ pipicachu, không Picachu cũ, USDC Devnet, phí1+1/refund0, không AI. v0.6: resolutionPolicyVersion1 cho deal mới xử muộn (legacy0 giữ cutoff); ManagerConfig do initializer bootstrap rồi managerCXjKGEBNTTotzoF26nGPfAG4AFicGgP72SMqUQKY1pJN duyệt application bằng Phantom; manager không có quyền tiền. Profile7PpWKXsjxR6f7Zu8Se11h2nWkEyaaNVxLLd6XF9K39CG giữ nguyên.
 
-55 unit21 browser,52 executable local checks,13 live org checks + finalized transfers, native compatibility, UI-to-program Vercel provider test và keeper workflow1 thật đã kiểm. Phantom extension actual chưa kiểm lại; không gọi injected provider là Phantom proof. Key chỉ pipicachu work/private ignore. Không env mới, không Mainnet, không video hoặc sửa Picachu cũ.
+Tiếp tục: application/manager protocol+IDL/tests, operation lifecycle/session recovery, keeper isolation/shared Redis/readiness, UI modules/view model/mobile/role/onboarding, evidence package local salt/export/verify, dependency reachability/CSP/benchmarks, judge guide/README VIEN/deck12+6 appendix VIEN/PPTXPDF, Devnet+Vercel checks/release0.6. EN video chờ footage; WTP chờ người dùng thực. Không fake audit/Phantom/business validation.
 
-User chốt workspace trọng tài riêng; không thay flow tạo deal. Header CTA đậm vào/admin là thay đổi hiện tại. Onboarding tự đăng ký/duyệt/cọc riêng và lỗi2040 alias seller=treasury còn pending, xem CURRENT_STATE; không coi nav CTA là đã hoàn thành các plan đó.
+## Runtime và hành động
 
-Visual refresh: CSS nguồn tokens/controls/header riêng, header44px vàlayout rõ breakpoint; mobile menu vàwallet state có regression tests. Flow vàcontract giữ nguyên; onboarding/arbitrator registration và duplicate token account2040 vẫn pending.
+WSL Ubuntu-22.04 root Solana CLI ở/root/.local/share/solana/install/active_release/bin và cargo ở/root/.cargo/bin. Windows Node24/npm; ledger tests port8897. work/start-local.ps1 là helper local ignored; validator phải stop trước restart. Key chỉ work/private pipicachu, không in hoặc commit. Chưa nhập manager key vào server. Commit tiếng Việt, push main, kiểm CI mỗi checkpoint. Đọc user plan đầy đủ trong conversation.
+
+Lịch sử trước hotfix ở docs/archive/v0.5-context/. Review detailed ở work/review-2026-10-07/SENIOR_REVIEW.md. Không dùng lịch sử như current status.

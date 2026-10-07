@@ -25,7 +25,7 @@ if (!fs.existsSync(treasuryFile))
     treasuryFile,
     JSON.stringify([...Keypair.generate().secretKey]),
   );
-const treasury = Keypair.fromSecretKey(
+let treasury = Keypair.fromSecretKey(
   Uint8Array.from(JSON.parse(fs.readFileSync(treasuryFile, "utf8"))),
 );
 const mint = Buffer.alloc(82);
@@ -41,6 +41,23 @@ MintLayout.encode(
   },
   mint,
 );
+const aliasRole = process.env.LOCAL_TREASURY_ROLE;
+if (aliasRole) {
+  if (!["buyer", "seller", "arbitrator"].includes(aliasRole))
+    throw new Error("Invalid local alias role");
+  const name =
+    aliasRole === "buyer"
+      ? "fixture-signer"
+      : aliasRole === "seller"
+        ? "escrow-seller"
+        : "escrow-arbitrator";
+  const target = `work/private/${name}.json`;
+  if (!fs.existsSync(target))
+    fs.writeFileSync(target, JSON.stringify([...Keypair.generate().secretKey]));
+  treasury = Keypair.fromSecretKey(
+    Uint8Array.from(JSON.parse(fs.readFileSync(target, "utf8"))),
+  );
+}
 function account(
   address: PublicKey,
   owner: PublicKey,

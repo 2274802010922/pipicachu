@@ -359,17 +359,14 @@ export async function settleIxs(
     (p) => new PublicKey(p),
   );
   const atas = parties.map((p) => getAssociatedTokenAddressSync(MINT, p));
-  const creates = parties.map((p, i) =>
-    createAssociatedTokenAccountIdempotentInstruction(actor, atas[i], p, MINT),
-  );
   const platformAta = getAssociatedTokenAddressSync(MINT, treasury, true);
-  creates.push(
-    createAssociatedTokenAccountIdempotentInstruction(
-      actor,
-      platformAta,
-      treasury,
-      MINT,
-    ),
+  const recipients = new Map<string, { owner: PublicKey; ata: PublicKey }>();
+  [...parties, treasury].forEach((owner) => {
+    const ata = getAssociatedTokenAddressSync(MINT, owner, true);
+    recipients.set(ata.toBase58(), { owner, ata });
+  });
+  const creates = [...recipients.values()].map(({ owner, ata }) =>
+    createAssociatedTokenAccountIdempotentInstruction(actor, ata, owner, MINT),
   );
   const ix = await instruction(
     name,

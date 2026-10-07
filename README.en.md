@@ -15,7 +15,7 @@
 
 ## Current status · 5 October 2026
 
-**v0.5, Devnet only**, with the UI deployed at the [visual checkpoint](https://github.com/2274802010922/pipicachu/commit/4530c03). This is an evolving MVP, **not a complete implementation of every flow or edge case**.
+**v0.5.1, Devnet only**, with the UI deployed at the [visual checkpoint](https://github.com/2274802010922/pipicachu/commit/4530c03). This is an evolving MVP, **not a complete implementation of every flow or edge case**.
 
 | Area                              | Current status                                                                                                                                     |
 | --------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -23,7 +23,7 @@
 | Create / fund / deliver           | Existing flow preserved; prepaid organization registry implemented on-chain                                                                        |
 | User-wallet arbitrator onboarding | **Not implemented** as a separate registration → approval → deposit → enable UI flow                                                               |
 | Current arbitrator                | Owner-supplied `7PpWKXsjxR6f7Zu8Se11h2nWkEyaaNVxLLd6XF9K39CG`, approved; its owner must deposit and enable. Previous Demo A disabled for new deals |
-| Seller equals platform treasury   | **Known error 2040, not fixed**; see outstanding work below                                                                                        |
+| Seller equals platform treasury   | Alias fixed; [recovery receipt](docs/evidence/hotfix-alias-recovery.json)                                                                          |
 | Actual Phantom extension          | Owner recording shows actual Phantom signing and a 2 USDC payout; not testing every case                                                           |
 
 ## UI showcase
@@ -180,7 +180,7 @@ Program tests require Linux/WSL, Solana CLI 3.1.10 and Rust; see [testing](docs/
 
 ## Outstanding fixes and work
 
-- **Confirmation error 2040:** `ConstraintDuplicateMutableAccount` at `platform_token` was reproduced when the seller equals the platform treasury. Buyer SOL was sufficient. This alias can block seller payout/keeper; adding funds or swapping wallets is not the fix. No contract fix is deployed; the passing suite does not cover this case.
+- **Alias hotfix 0.5.1:** recovered the seller=treasury deal, emptied the vault and unlocked its bond once. Four treasury-role payout/refund configurations passed local tests; see [hotfix proof](docs/evidence/hotfix-v051.json).
 - **Funding-state wording:** a new-workflow screen still says “Waiting for the arbitrator” instead of “Waiting for the buyer to fund escrow”. This known UI issue was not changed by the visual refresh.
 - **Arbitrator onboarding:** user-wallet registration → manager approval → separate bond deposit → enable deals is planned. Current registry setup uses maintainer tooling; Demo A is not presented as user registration or a real partner.
 - **Phantom/video evidence:** owner-recorded actual Phantom happy path for 2 USDC is available; dispute/keeper and every wallet combination are not covered. Previous Picachu videos are not escrow evidence.

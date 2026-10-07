@@ -15,7 +15,7 @@
 
 ## Trạng thái hiện tại · 05/10/2026
 
-Bản **v0.5 trên Devnet**, UI đã cập nhật tại [checkpoint visual](https://github.com/2274802010922/pipicachu/commit/4530c03). Đây là MVP đang phát triển, **chưa hoàn tất mọi luồng và trường hợp**.
+Bản **v0.5.1 trên Devnet**, UI đã cập nhật tại [checkpoint visual](https://github.com/2274802010922/pipicachu/commit/4530c03). Đây là MVP đang phát triển, **chưa hoàn tất mọi luồng và trường hợp**.
 
 | Hạng mục                             | Trạng thái hiện tại                                                                                                                          |
 | ------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -23,7 +23,7 @@ Bản **v0.5 trên Devnet**, UI đã cập nhật tại [checkpoint visual](http
 | Tạo deal / ký quỹ / bàn giao         | Flow hiện tại giữ nguyên; registry cọc trước đã có trên contract                                                                             |
 | Đăng ký trọng tài bằng ví người dùng | **Chưa triển khai** luồng riêng đăng ký → duyệt → nạp cọc → bật nhận trên UI                                                                 |
 | Ví trọng tài hiện tại                | `7PpWKXsjxR6f7Zu8Se11h2nWkEyaaNVxLLd6XF9K39CG` do owner cung cấp, đã duyệt; cần chủ ví nạp cọc và bật nhận. Demo A cũ đã ngừng nhận deal mới |
-| Payout khi seller trùng ví hệ thống  | **Lỗi 2040 đã biết, chưa sửa**; xem phần giới hạn bên dưới                                                                                   |
+| Payout khi seller trùng ví hệ thống  | Đã sửa alias recipient; [receipt phục hồi](docs/evidence/hotfix-alias-recovery.json)                                                         |
 | Phantom extension thực               | Video owner quay có ký Phantom thật và payout 2 USDC; không thay thế kiểm mọi trường hợp                                                     |
 
 ## UI showcase
@@ -180,7 +180,7 @@ Program tests cần Linux/WSL, Solana CLI 3.1.10 và Rust: xem [hướng dẫn h
 
 ## Việc còn chờ sửa / triển khai
 
-- **Lỗi xác nhận 2040:** đã tái hiện `ConstraintDuplicateMutableAccount` ở `platform_token` khi seller dùng cùng ví với treasury. Buyer có SOL; không nên xử lý bằng cách nạp thêm tiền hoặc đổi ví để né lỗi. Payout/keeper của trường hợp này có thể bị chặn. Contract chưa có fix cho alias này; bộ kiểm đã pass không bao gồm ca này.
+- **Hotfix alias 0.5.1:** đã phục hồi deal seller=treasury, vault0 và bond mở đúng một lần. Bốn cấu hình treasury payout/refund đã có test local; xem [hotfix proof](docs/evidence/hotfix-v051.json).
 - **Nhãn bước ký quỹ:** workflow mới vẫn có chỗ ghi “Chờ trọng tài” thay vì “Chờ người mua nạp tiền vào quỹ”. Đây là lỗi UI đã biết, chưa sửa trong visual refresh.
 - **Onboarding trọng tài:** plan riêng đăng ký bằng ví của người dùng → quản trị duyệt → nạp cọc riêng → bật nhận deal. Registry hiện được thiết lập bằng công cụ maintainer; không trình bày Demo A như tổ chức người dùng đăng ký.
 - **Bằng chứng Phantom/video:** đã có video escrow do owner quay bằng Phantom thật cho happy-path 2 USDC; chưa quay tranh chấp/keeper hoặc kiểm mọi tổ hợp ví. Không dùng video Picachu cũ để thay thế.

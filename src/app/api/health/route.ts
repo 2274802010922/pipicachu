@@ -1,3 +1,4 @@
+import packageInfo from "../../../../package.json";
 import { NextResponse } from "next/server";
 import deployment from "@/escrow/deployment.json";
 import keeperConfig from "@/escrow/keeper-config.json";
@@ -5,7 +6,7 @@ export async function GET() {
   return NextResponse.json(
     {
       app: "pipicachu",
-      version: "0.5.0",
+      version: packageInfo.version,
       product: "escrow",
       cluster: "devnet",
       programId: deployment.programId,

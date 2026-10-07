@@ -80,9 +80,22 @@ async function send(signer: Keypair, ixs: Awaited<ReturnType<typeof act>>[]) {
   );
 }
 async function expectReject(scenario: string, fn: () => Promise<unknown>) {
+  const expected =
+    /wrong buyer|only buyer|cannot arbitrate|cannot accept own|destination/.test(
+      scenario,
+    )
+      ? 6000
+      : /reserved bond/.test(scenario)
+        ? 6003
+        : /unrelated vault/.test(scenario)
+          ? 2006
+          : 6002;
   await assert.rejects(fn, (error: unknown) => {
     const message = error instanceof Error ? error.message : String(error);
-    assert.match(message, /custom program error|Signature verification failed/);
+    assert.match(
+      message,
+      new RegExp(`custom program error: 0x${expected.toString(16)}\\b`),
+    );
     return true;
   });
   results.push({
@@ -356,11 +369,16 @@ async function settle(
 const confirmed = await create("buyer confirmation");
 await delivered(confirmed);
 const deliveredDeal = await readDeal(connection, confirmed.toBase58());
+const attackerAta = (
+  await getOrCreateAssociatedTokenAccount(
+    connection,
+    buyer,
+    MINT,
+    Keypair.generate().publicKey,
+  )
+).address;
 const redirected = await settleIxs("confirm", buyer.publicKey, deliveredDeal);
-redirected.at(-1)!.keys[6].pubkey = getAssociatedTokenAddressSync(
-  MINT,
-  buyer.publicKey,
-);
+redirected.at(-1)!.keys[6].pubkey = attackerAta;
 await expectReject(
   "seller destination cannot be replaced by buyer account",
   async () => send(buyer, redirected),
@@ -370,10 +388,7 @@ const redirectedFee = await settleIxs(
   buyer.publicKey,
   deliveredDeal,
 );
-redirectedFee.at(-1)!.keys[7].pubkey = getAssociatedTokenAddressSync(
-  MINT,
-  buyer.publicKey,
-);
+redirectedFee.at(-1)!.keys[7].pubkey = attackerAta;
 await expectReject("fee destination cannot be redirected", async () =>
   send(buyer, redirectedFee),
 );
@@ -382,18 +397,12 @@ const redirectedPlatform = await settleIxs(
   buyer.publicKey,
   deliveredDeal,
 );
-redirectedPlatform.at(-1)!.keys[10].pubkey = getAssociatedTokenAddressSync(
-  MINT,
-  buyer.publicKey,
-);
+redirectedPlatform.at(-1)!.keys[10].pubkey = attackerAta;
 await expectReject("platform fee destination cannot be redirected", async () =>
   send(buyer, redirectedPlatform),
 );
 const wrongVault = await settleIxs("confirm", buyer.publicKey, deliveredDeal);
-wrongVault.at(-1)!.keys[4].pubkey = getAssociatedTokenAddressSync(
-  MINT,
-  buyer.publicKey,
-);
+wrongVault.at(-1)!.keys[4].pubkey = attackerAta;
 await expectReject("unrelated vault cannot substitute deal vault", async () =>
   send(buyer, wrongVault),
 );

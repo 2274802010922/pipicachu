@@ -1,8 +1,8 @@
 {
-  "at": "2026-10-05T07:39:03.789Z",
+  "at": "2026-10-07T06:38:53.799Z",
   "network": "local-validator",
   "source": "Synthetic local genesis approved registry",
-  "deal": "G1ZJxCBbGdzy6wfG8TTVTi5mBLArfQGnharpamSPoAuX",
+  "deal": "BbiXctR7UAq5rx1b6MjS6ArUTKa6fPmqVxGCXXhPpQy3",
   "checks": [
     {
       "case": "non-manager cannot revoke registry"
@@ -21,14 +21,14 @@
     },
     {
       "case": "standing consent, no per-deal arbitrator signature",
-      "signature": "2VJrjKD7S43z6F7AAe98rg7rwiUSpZ7ZJx6qWKb3ePZqiA5du7CXwEsSU4hNwpr3haTxNmvtRhNZQfmBBuLHu8gw"
+      "signature": "53oFFqFNZREG82WKhNy4mjg8TvH1A9A5BVXMpEckkgmRALMXxofv8gKFsctE6weiJxAh8kiBCbUmhxgSU3yQcFUJ"
     },
     {
       "case": "paused service blocks new funding"
     },
     {
       "case": "buyer funds without arbitrator acceptance",
-      "signature": "51qswddYuQ8jiHbTEUuwiEHwhBuoX9imWQfJatDFi3jJyGd6cMGXu7WR6KkCwbPGsTUw7qrhsnEadDFpsz5emFhE"
+      "signature": "493afMKngJXvUdC65mUMN3o4LkwMnueXCdDoH2vCtaoYRgA22CRFRuEPVRoGHdYVV775AFzXyWd6LRXEnxdXFubs"
     },
     {
       "case": "duplicate fund cannot reserve bond twice"
@@ -38,7 +38,7 @@
     },
     {
       "case": "paused organization still settles existing obligations 98/1/1",
-      "signature": "4KoPzC9WHohtPWjTYbitromtkQse5qAX5aVqRjQCf3oqJ6877dJs4aRYLHQvzyU7yAQZVrmgDo7wgcDFuog6kv4"
+      "signature": "537CmzrhCTWrxbg7DAo3N3Psp4fhdze3WR4ATTUiULSH7sdY72yPMG8KskUBwDBEMhYoUjcryL6iWyY577GHcKrL"
     },
     {
       "case": "double payout rejected"
