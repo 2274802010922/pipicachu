@@ -1,10 +1,8 @@
 "use client";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { PublicKey, SYSVAR_CLOCK_PUBKEY } from "@solana/web3.js";
+import { PublicKey } from "@solana/web3.js";
 import {
-  readDeal,
-  readArbitrator,
-  readOrganization,
+  readDealSnapshot,
   type Deal,
   type Organization,
   type Arbitrator,
@@ -27,29 +25,18 @@ export function useDeal(id: string) {
       { signature: string; err: unknown; confirmationStatus?: string }[]
     >([]);
   const generation = useRef(0),
-    monotonic = useRef(0);
+    monotonic = useRef(0),
+    historyRead = useRef({ key: "", at: 0 });
   const refresh = useCallback(async () => {
     const revision = ++generation.current;
     try {
-      const c = connection(),
-        d = await readDeal(c, id, "finalized");
-      const [arb, org, clock] = await Promise.all([
-        d.state === "created"
-          ? readArbitrator(c, new PublicKey(d.arbitrator)).catch(
-              () => undefined,
-            )
-          : undefined,
-        d.workflowVersion === 1
-          ? readOrganization(c, new PublicKey(d.arbitrator))
-          : null,
-        c.getAccountInfo(SYSVAR_CLOCK_PUBKEY),
-      ]);
-      const time =
-        clock?.data.length === 40
-          ? Number(clock.data.readBigInt64LE(32))
-          : await c.getBlockTime(await c.getSlot());
-      if (time === null || !Number.isSafeInteger(time))
-        throw Error("RPC_UNAVAILABLE");
+      const c = connection();
+      const {
+        deal: d,
+        profile: arb,
+        organization: org,
+        chainTime: time,
+      } = await readDealSnapshot(c, id);
       if (revision !== generation.current) return;
       setDeal(d);
       setProfile(arb);
@@ -60,10 +47,28 @@ export function useDeal(id: string) {
       setReadAt(Date.now());
       setError("");
       setLoading(false);
-      const history = await c
-        .getSignaturesForAddress(new PublicKey(id), { limit: 10 })
-        .catch(() => []);
-      if (revision === generation.current) setReceipts(history);
+      const historyKey =
+        id +
+        ":" +
+        d.state +
+        ":" +
+        d.deliveryHash +
+        ":" +
+        d.disputeHash +
+        ":" +
+        d.resolutionHash;
+      if (
+        historyRead.current.key !== historyKey ||
+        Date.now() - historyRead.current.at >= 30000
+      ) {
+        const history = await c
+          .getSignaturesForAddress(new PublicKey(id), { limit: 10 })
+          .catch(() => []);
+        if (revision === generation.current) {
+          historyRead.current = { key: historyKey, at: Date.now() };
+          setReceipts(history);
+        }
+      }
     } catch (e) {
       if (revision !== generation.current) return;
       setError(errorMessage(e, locale === "vi"));

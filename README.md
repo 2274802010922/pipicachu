@@ -22,7 +22,7 @@ Nhóm mục tiêu và mức phí vẫn là giả thuyết. Cảnh báo scam mua/
 
 [![Video tiếng Việt](docs/demo/video-vi-2026-10-05/thumbnail-vi.png)](https://www.youtube.com/watch?v=mTY3e3qX_4k)
 
-**Footage v0.5:** ký Phantom thật,2 USDC Devnet; người bán nhận1,96, trọng tài và hệ thống mỗi bên0,02. Người bán trái, người mua phải. Persona minh họa; không quay quản trịv0.6, xử muộn, dispute hoặc keeper. Video EN chờ footage UIEN riêng.
+**Footage v0.5:** ký Phantom thật, 2 USDC Devnet; người bán nhận 1,96, trọng tài và hệ thống mỗi bên 0,02. Người bán trái, người mua phải. Persona minh họa; không quay quản trị v0.6, xử muộn, dispute hoặc keeper. Video EN chờ footage UI EN riêng.
 
 ## Bốn bước giao dịch
 
@@ -35,17 +35,17 @@ Trọng tài có workspace riêng: đăng ký → manager duyệt → nạp cọ
 
 ## Điểm mạnh và nơi kiểm chứng
 
-| Phần tự xây                                                       | Bằng chứng                                                                                          |
-| ----------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
-| Payout98/1/1 nguyên tử, refund100%, mở cọc đúng một lần           | [Rust](programs/pipicachu-escrow/src/lib.rs), [test executable](tests/program/cycle.ts)             |
-| Treasury trùng vai trò có kiểm soát; CPI gộp theo ATA thật        | [Receipt phục hồi](docs/evidence/hotfix-alias-recovery.json), [test4role](tests/program/aliases.ts) |
-| Policy1 xử muộn, deal cũ0 giữ deadline                            | [Protocol](docs/architecture/v06.md), [test governance/capacity](tests/program/v06.ts)              |
-| Manager riêng, application, chuyển quyền hai chữ ký               | [IDL](client/idl/escrow.json), [bootstrap thật](docs/evidence/v06/manager-bootstrap.json)           |
-| Phục hồi pending theo signature, chặn data cũ trước thao tác tiền | [Operation](src/escrow/operation.ts), [UX](docs/design/system.md)                                   |
-| Package bằng chứng có salt, kiểm local, không upload nội dung     | [Verifier](src/escrow/evidence.ts), [test vectors](tests/unit/evidence.test.ts)                     |
-| RPC có giới hạn, quota chia sẻ, keeper retry từng deal            | [Backend](src/backend/), [keeper](scripts/devnet/keeper.ts)                                         |
+| Phần tự xây                                                       | Bằng chứng                                                                                           |
+| ----------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| Payout 98/1/1 nguyên tử, refund 100%, mở cọc đúng một lần         | [Rust](programs/pipicachu-escrow/src/lib.rs), [test executable](tests/program/cycle.ts)              |
+| Treasury trùng vai trò có kiểm soát; CPI gộp theo ATA thật        | [Receipt phục hồi](docs/evidence/hotfix-alias-recovery.json), [test 4 vai](tests/program/aliases.ts) |
+| Policy 1 xử muộn, deal cũ 0 giữ deadline                          | [Protocol](docs/architecture/v06.md), [test governance/capacity](tests/program/v06.ts)               |
+| Manager riêng, application, chuyển quyền hai chữ ký               | [IDL](client/idl/escrow.json), [bootstrap thật](docs/evidence/v06/manager-bootstrap.json)            |
+| Phục hồi pending theo signature, chặn data cũ trước thao tác tiền | [Operation](src/escrow/operation.ts), [UX](docs/design/system.md)                                    |
+| Package bằng chứng có salt, kiểm local, không upload nội dung     | [Verifier](src/escrow/evidence.ts), [test vectors](tests/unit/evidence.test.ts)                      |
+| RPC có giới hạn, quota chia sẻ, keeper retry từng deal            | [Backend](src/backend/), [keeper](scripts/devnet/keeper.ts)                                          |
 
-Code đã triển khai khác bằng chứng chạy live. **Còn cổng owner duyệt application, Phantomv0.6, Redis/keeper và các nhánh policy mới Devnet.** [Một bảng trạng thái hiện tại](docs/evidence/v06/README.md).
+Code đã triển khai khác bằng chứng chạy live. **Còn cổng owner duyệt application, Phantom v0.6, Redis/keeper và các nhánh policy mới Devnet.** [Một bảng trạng thái hiện tại](docs/evidence/v06/README.md).
 
 ## Vì sao dùng Solana?
 
@@ -53,11 +53,11 @@ Vault PDA giữ principal; SPL Token CPI chuyển USDC/phí nguyên tử. Ví k�
 
 ## UI showcase
 
-Ảnh website v0.5 đang deploy chụp05/10, giữ làm lịch sử giao diện. Workspace mới có kiểm riêng; ảnh không chứng minh các luồngv0.6 đã duyệt live.
+Ảnh website v0.5 đang deploy chụp 05/10, giữ làm lịch sử giao diện. Workspace mới có kiểm riêng; ảnh không chứng minh các luồng v0.6 đã duyệt live.
 
 ![Trang chủ desktop](docs/assets/showcase/home-desktop-vi.png)
 
-<table><tr><td><img src="docs/assets/showcase/home-mobile-vi.png" width="280" alt="Trang chủ mobileVI"></td><td><img src="docs/assets/showcase/create-mobile-en.png" width="280" alt="Form mobileEN"></td></tr></table>
+<table><tr><td><img src="docs/assets/showcase/home-mobile-vi.png" width="280" alt="Trang chủ mobile VI"></td><td><img src="docs/assets/showcase/create-mobile-en.png" width="280" alt="Form mobile EN"></td></tr></table>
 
 Ảnh workspace v0.6 từ app chạy local với **fixture application chờ duyệt** (07/10); chứng minh bố cục, không phải receipt duyệt thật:
 
@@ -69,18 +69,28 @@ Frontend theo feature → proxy RPC Devnet cố định → program Solana. Mana
 
 [Kiến trúc](docs/architecture/v06.md) · [Dependency exceptions](docs/legal/dependency-exceptions.md) · [Cổng nghiệm thu](docs/testing/v06-gates.md) · [Benchmark đọc](docs/evidence/v06/benchmark.json).
 
+## Chất lượng triển khai
+
+Đợt 08/10 tách client Solana và Rust theo trách nhiệm, tách controller khỏi giao diện, kiểm UTF-8/account layout và cải thiện phục hồi transaction. Giữ nguyên chức năng và ABI.
+
+- CI đối chiếu IDL sinh từ Rust, pin Action SHA và checksum Agave; lint không warning, kiểm secret pattern và dependency exception có hạn.
+- Snapshot đầy đủ giảm 4 RPC xuống 2. Sáu cặp đo Devnet: median 216,5 → 180 ms; không phải cam kết hiệu năng production.
+- Báo cáo tách test tự động, receipt Devnet, Phantom và dịch vụ production; phần chưa kiểm được ghi rõ.
+
+[Báo cáo chất lượng](docs/evidence/quality/README.md) · [Ranh giới mã nguồn](docs/architecture/quality.md) · [Tái hiện từ checkout mới](docs/testing/reproduce.md) · [Checklist kiểm thủ công](docs/deployment/OWNER_CHECKS.md).
+
 ## Chạy và tái hiện
 
-Node24, npm/dependency pin và lockfile. `npm ci`, copy `.env.example` vào `.env.local` trong ignore, rồi `npm run dev`. Limiter memory local không chứng minh nhiều instance. `npm run verify`; Linux/WSL `bash scripts/checks/program.sh` build và chạy synthetic local tests. Devnet writes dùng ví test riêng.
+Node 24, npm/dependency pin và lockfile. `npm ci`, copy `.env.example` vào `.env.local` trong ignore, rồi `npm run dev`. Limiter memory local không chứng minh nhiều instance. `npm run verify`; Linux/WSL `bash scripts/checks/program.sh` build và chạy synthetic local tests. Devnet writes dùng ví test riêng.
 
 [Triển khai và secrets](docs/deployment/README.md) · [Ngữ cảnh harness](docs/harness/context/CURRENT_STATE.md) · [IDL](client/idl/escrow.json).
 
 ## Phí và giới hạn
 
-Giả thuyết thu1%platform+1%trọng tài khi payout; refund toàn tiền không phí. Chưa validation người dùng trả tiền hoặc doanh thu. So sánh chuyển thẳng, admincustody, Escrow.com, Kleros; không tuyên bố thị trường trống hay moat đã có.
+Giả thuyết thu 1% hệ thống + 1% trọng tài khi payout; refund toàn tiền không phí. Chưa validation người dùng trả tiền hoặc doanh thu. So sánh chuyển thẳng, trung gian giữ tiền, Escrow.com, Kleros; không tuyên bố thị trường trống hay moat đã có.
 
-Hash không chứng minh hàng đúng. Cọc không phạt xử sai. Trọng tài bỏ xử và hai bên bất đồng vẫn có thể khóa tiền. Không marketplace/USDT/đổiVND/AI/trọng tài dự phòng/Mainnet trong đợt này. Dependency exceptions và CSP report-only được ghi rõ.
+Hash không chứng minh hàng đúng. Cọc không phạt xử sai. Trọng tài bỏ xử và hai bên bất đồng vẫn có thể khóa tiền. Không marketplace/USDT/đổi VND/AI/trọng tài dự phòng/Mainnet trong đợt này. Dependency exceptions và CSP report-only được ghi rõ.
 
 ## Giấy phép
 
-Code/tài liệu tự xây: [Apache2.0](LICENSE). [Third-party notices](THIRD_PARTY_NOTICES.md). Logo pixel được loại trừ; không cấp quyền đối với artwork, nhân vật hoặc trademark bên thứ ba.
+Code/tài liệu tự xây: [Apache 2.0](LICENSE). [Third-party notices](THIRD_PARTY_NOTICES.md). Logo pixel được loại trừ; không cấp quyền đối với artwork, nhân vật hoặc trademark bên thứ ba.

@@ -36,6 +36,6 @@ Client cũ không có policy byte và policy consent mới bị từ chối tạ
 
 ## Kiểm vận hành
 
-`/api/health`: cấu hình và hoạt động tách riêng. `/api/ready`:503 khi RPC/program/ManagerConfig/limiter chưa sẵn sàng. `/api/keeper/status`: report thật có thời điểm, pending/blocked/degraded; không coi flag enable là uptime. CSP report-only tới khi Phantom extension thật pass; chưa tuyên bố enforce.
+`/api/health`: cấu hình và hoạt động tách riêng. `/api/ready`:503 khi RPC/program/ManagerConfig/limiter chưa sẵn sàng. `/api/keeper/status`: report thật có thời điểm, pending/blocked/degraded; không coi flag enable là uptime. CSP mặc định report-only. Chỉ đặt tùy chọn `CSP_ENFORCE=1` sau khi Phantom extension thật pass rồi redeploy; không phải biến bắt buộc.
 
 Video hiện có là happy-path v0.5, không chứng minh v0.6. Manager/Phantom thật, Redis shared, Vercel và user validation phải có receipt riêng; test local không thay thế.

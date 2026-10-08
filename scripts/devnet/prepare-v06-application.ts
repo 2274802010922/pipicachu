@@ -4,7 +4,6 @@ import assert from "node:assert/strict";
 import {
   Connection,
   Keypair,
-  PublicKey,
   SystemProgram,
   Transaction,
   sendAndConfirmTransaction,

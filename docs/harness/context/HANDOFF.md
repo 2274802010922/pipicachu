@@ -1,25 +1,18 @@
-# Tiếp tục pipicachu v0.6
+# Handoff pipicachu · 08/10/2026
 
-Đọc CURRENT_STATE.md và user plan đầy đủ. main hiện2e06f2c; nhiều codev0.6 chưacommit. RustSBF/IDLv0.6 đã deploy, ManagerConfigCXj bootstrap thật;46account tiền/terms/state/deadlines giữ nguyên. Không rollback vềbytecode cũ saudealpolicy1.
+Đọc [CURRENT_STATE](CURRENT_STATE.md), [quality evidence](../../evidence/quality/README.md) và [owner checklist](../../deployment/OWNER_CHECKS.md). User đã yêu cầu hoàn tất đợt tối ưu hiện có, không thêm tính năng; phần cần kiểm thủ công họ làm sau.
 
-Tiếp tục từ work/v06-*.log: native2, program39+13+21, coldbootstrap và8alias. SBFbuild work/v06-build.log khôngStackoffset. Web101unit/31browser cũ; saufreshness/dialog/evidencemanifest/import tests cần npmrunverify. .sh giữLF. WSLcargo=/root/.cargo/bin, SolanaCLI=/root/.local/share/solana/install/active_release/bin; WindowsNode24. Keys riêngpipicachu trong work/private, không đọc/in/copyraGit. Kết thúcvalidator đúngPID/ledger; khôngkill rộng.
+## Tiếp tục từ bằng chứng
 
-OwnerquestionUpstashsignin đang chờ: localRedisvalues trống; salt đãSaveVercelProduction+Preview, không invalue. CUA dùngbrowser3 vàtabupstashDeployTab, markHandoff. Không tựbypassToS/login. GHkeeper cần đúngURL/tokencùngDB. Managerapproval actual cần víCXj, không cóprivatekey trongrepo. Chuẩn bịUI/testrequest trước khiowner ký. 7Ppprimaryarb giữ nguyên, khôngđưa testarb thay nó.
+Revision/CI/build/source/IDL/binary được ghi trong evidence; không suy pass từ log cũ. Không sửa Picachu cũ hoặc dùng key/secret của nó. Key riêng pipicachu chỉ ở `work/private/` Git ignore. Không in hoặc copy key ra Git/chat.
 
-Cổng còn lại: client/testfinal/CI/Vercel/Redis/keeper; actualmanagerPhantom vàlivev0.6branches; dependencyexceptions đầyđủ/benchmarkv0.6; docs/READMEstatus/UIshowcase; VIEN18slidedecksPPTXPDF vàrenderQA;0.6releaseexactcommit. Presentationsskill dùng @oai/artifact-tool, khôngpython-pptx/PptxGenJS; markerstarted đúngmộtlầntrướcauthoring (chưa chạy marker).
+Web: `npm ci`, `npm run verify`. Program Linux/WSL: `bash scripts/checks/program.sh`, Node 24, Agave 3.1.10 và Cargo trong PATH. Local key/mint/config là synthetic; không thay Devnet receipts. Windows WSL runtime có thể nằm trong `work/senior/runtime/`; artifact dựng không commit.
 
-YTmTY3e3qX_4k giữhappy-pathv0.5. Không gọivideo/receiptscũ làv0.6pass; ENchờfootage, userWTPchưathu. Owner mời tester, khôngnhắncho người ngoài.
+## Phần owner thực hiện sau
 
-## Điểm nối mới
+1. Sửa Redis token đủ EVAL/INCR/EXPIRE/GET/SET/DEL, áp dụng Production/Preview và GitHub keeper, redeploy; `/api/ready` phải pass.
+2. Manager `CXjK…1pJN` ký duyệt test application `2dak…n5XeC8`, policy 1/10 USDC và 300/60/60/60 giây. Không đổi/revoke primary `7Pp…K39CG`.
+3. Sau đó chạy acceptance CLI có guard, kiểm Phantom thật và keeper riêng; lưu receipt thật theo revision. Không coi inject wallet là extension proof.
+4. User tester, WTP và EN video vẫn chưa thu thập. Video cũ giữ phạm vi v0.5; không gọi v0.6 đã quay/đã validation.
 
-main383757f đãpush/CI37622854442 pass/Vercelsmoke. Nhiều polish/slide/helpers/Redisdiagnostic chưacommit. Quan trọng: prodreadinessPINGfalsepositive, simulateRATE_LIMIT_UNAVAILABLE; backendreadinessgiờprobe exactLua, RedisServiceError.reason chỉenumpermissions/quota/command/network. Đang npmrunverify work/v06-redis-ready-verify.log, phảipushdiagnosticđểđọc reason trênprod trướcownerSig. GitHubsecretlist chỉDEVNET_KEEPER_KEYPAIR, localRedisempty; Upstashsignin pending.
-
-Cua v06ManagerTab đang/manage walletCXj; policy fields300/60/60/60,min1,max10 cho2daktestapplicationpending. Userasyncquestion xinownerkýduyệt chưatrảlời, genericheartbeat khôngapproval. upstashDeployTab vàManagerTab markHandoff khiends. Khôngre-usepassword/keysPicachu. Preparetest funds0.1SOL+1USDC từ ownpipicachufixtureDwT, keywork/private/v06-live-arbitrator.json ignored. Primary7Ppunmodified. Publicproof docs/evidence/v06/test-application.json. accept-v06.ts ownerapprovalguard +exactapproveinstruction/signermanager,6branchesCLI afterapproval, pauseprobe afterward; policy guardexcludesfunding300,others60. Keeperseparate chưaverified.
-
-Slides source scripts/slides/content-v06.json vàbuild-v06.mjs; artifactmodulejunction work/deck-v06/build/node_modules pointsbundled. R5filesPPTX generated, render-r5 exists. VIall18/PDFR3 andENall18/R4 visualQA. Remainingfinal title/count107/32, exportPDFfromfinalPNGandrender; markersalreadyrun once2pptx+once2pdf, khôngrepeat. BundledPythonreportlab/pypdf, systemPythonqrcode alreadyavailable (bundledmissingqrcode). finalizer requires RUNTIME_NODE_MODULES/runtimeNode/Python env. FinalsavoidoverwriteuseR6 filenames. Sourceflowdiagrams native, tables8&15 native,sourcecitesnotes, noAIillustrations.
-
-## Handoff candidateR6
-
-CI00c164d run37654711035success. ProductiondiagnosticlimiterErrorpermissions, readyfalse503, simRATE_LIMIT_UNAVAILABLE. Cần ownerloginUpstash hoặc đổiFullTokenEVAL/write (khôngReadonly) +GHRedisURL/token. Cua tabsUpstashloginvàv06ManagerTab /manage managerCXj marksHandoff; ownerquestionspending, heartbeatkhôngapproval. OwnerSigchờsauRedisfix.
-
-R6PPTX/PDF đãready trongwork/deck-v06/output; zipcandidate đãtạo, manifestscommitdocs. Presenter/PDFmarkersđãchạyexactonce2outputs mỗi loại; khôngrepeatkhi sửa. ToànVI/ENslides đãQA, PDF finalpage9bothlangs checkedcount107/32. KhôngPowerPointopened. Tiếp tụcfullobjective: Secretconfig→actualapproveProbe2dak(policy300/60/60/60,min1,max10)→liveacceptscript→keeper→Phantom→benchmarkv06→finaltag. BusinessData/ENfootageownerdependent khôngfake. KhôngPicachuoldchanges.
+Không đánh dấu release kỹ thuật hoàn tất khi owner/production gates còn thiếu. Hoàn tất tự động và business validation là hai kết luận khác nhau.

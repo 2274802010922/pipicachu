@@ -1,0 +1,51 @@
+{
+  "at": "2026-10-08",
+  "scope": "automated quality acceptance; owner/production gates pending",
+  "unitIntegration": 119,
+  "browser": 33,
+  "nativeRust": 5,
+  "moneyPropertySamples": 4096,
+  "lifecycleChecks": 39,
+  "organizationChecks": 13,
+  "governanceCapacityLateRulingChecks": 21,
+  "treasuryAliasChecks": 8,
+  "coldBootstrapUnauthorizedCode": 6000,
+  "formatLintTypecheckBuildDocs": "pass; ESLint max-warnings=0",
+  "sourceDerivedIdl": "identical address/instructions/accounts/types/errors including account order and PDA seeds",
+  "binarySha256": "0e5efb8dad587ee58f2952aec1ca0fa992cb074ec30d895402a49c18f3201861",
+  "idlSha256": "6d295cf32f768b6754edd00a00df7872da71ab312376cdf5daf0ffc7aaea0474",
+  "programSources": {
+    "Anchor.toml": "f2dea43bdbd8a6eebba6e7552d52259e883a426738f9a609c0ff84ca93fb5917",
+    "Cargo.lock": "1bd2e45060da0586b2863d01a80ce6636e4782e4ea3794ff25cf148e8ed12e7d",
+    "Cargo.toml": "e817be69d0a72b428aa0658f1d30f27e37dc251a9db2fda6a9c2886a58f59244",
+    "programs/pipicachu-escrow/Cargo.toml": "c422bd2eb576f08a74b80eb6e9f557364d66f051a2b4d6cfaaf81112e1589631",
+    "programs/pipicachu-escrow/src/compatibility_tests.rs": "6bb17d461706fa20d707fa0de7866e39c407dff8179958f5b1c4389d7be99d59",
+    "programs/pipicachu-escrow/src/contexts.rs": "f1dab141d2c7264fd85b67caff5282a6189dd1f1ef8a20fe703123f6c521b9f3",
+    "programs/pipicachu-escrow/src/error.rs": "51bab09cbb61df3e79d324089b61815f634c27e514a98ff001e7767d82db65bc",
+    "programs/pipicachu-escrow/src/lib.rs": "75337bd79303f0ce24d125a74a33c6e35e3f3b140a48bcac6f245fa16a15b212",
+    "programs/pipicachu-escrow/src/math.rs": "abea26ef5db17ab10dba19ddd295ca3b93178f857501fbdd29cba8c39ca7b58c",
+    "programs/pipicachu-escrow/src/registry.rs": "6ecd7696a96dfad20bf3caa3acc73684ff772392a436edceceba419eedf68061",
+    "programs/pipicachu-escrow/src/settlement.rs": "512002c4b9acf14b73351df3f705c1709538aff0c39c7663c51f92d60961edb5",
+    "programs/pipicachu-escrow/src/state.rs": "aaab6197b0620b65334d4f74caed75453094f6691120eaa0be6a3cf4494a4934"
+  },
+  "webEnvironment": "Windows; Node v24.16.0",
+  "programEnvironment": "Ubuntu-22.04 WSL; Node v24.13.0; Agave v3.1.10",
+  "productionAudit": {
+    "high": 0,
+    "critical": 0,
+    "moderate": 2
+  },
+  "fullAuditIncludingDev": {
+    "high": 8,
+    "moderate": 2
+  },
+  "pending": [
+    "owner application approval",
+    "real Phantom v0.6 accept/reject",
+    "Redis shared service and keeper credentials",
+    "new-policy Devnet branch acceptance and keeper restart",
+    "real user testing and willingness to pay"
+  ],
+  "ci": "Required Quality workflow on the published commit; no previous-run pass reused",
+  "binaryReproducibility": "Hash of local SBF from these sources. Source IDL checked in CI; cross-machine byte-for-byte determinism not claimed."
+}

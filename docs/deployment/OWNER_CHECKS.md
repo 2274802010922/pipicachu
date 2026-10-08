@@ -1,4 +1,6 @@
-# Các bước owner còn cần làm cho v0.6
+# Checklist kiểm thủ công sau bàn giao · v0.6
+
+Code và kiểm tự động được hoàn tất trước; các bước dưới đây do owner thực hiện sau theo yêu cầu. Không cần thêm tính năng để làm checklist.
 
 ## 1. Sửa quyền Redis trước khi ký
 
@@ -18,10 +20,23 @@ Sau khi gateway write đã hoạt động, vào [Manage](https://pipicachu.verce
 
 Ví cần duyệt để nghiệm thu: `2dakRFzAYG6qrWenyNUt5uCAGLhDYJMUhLBfXJn5XeC8` (ví test riêng, không thay trọng tài chính).
 
-Mở Policy và điền: cọc tối thiểu1 USDC, deal tối đa10 USDC, hạn nạp300 giây, giao60, kiểm tra60, SLA60. Bấm Duyệt cho đúng ví test, xem dialog và ký Phantom. Không bấm revoke hoặc update policy của ví chính `7Pp…K39CG`.
+Mở Policy và điền: cọc tối thiểu 1 USDC, deal tối đa 10 USDC, hạn nạp 300 giây, giao 60, kiểm tra 60, SLA 60. Bấm Duyệt cho đúng ví test, xem dialog và ký Phantom. Không bấm revoke hoặc update policy của ví chính `7Pp…K39CG`.
 
 Manager phải ký thật; application pending không có quyền nhận deal. Agent không có key manager và không dùng initializer để duyệt tắt. [Application receipt](../evidence/v06/test-application.json). Sau approval, script `npx tsx scripts/devnet/accept-v06.ts` dùng các ví test riêng để kiểm six branches, bảo toàn tiền/cọc và pause test arbitrator. CLI không thay Phantom proof.
 
 ## 3. Keeper, browser và business
 
 Sau khi secret đã có, agent kiểm keeper manual/schedule/report/restart và receipt riêng. Nếu Phantom yêu cầu xác nhận thao tác hoặc mở khóa, owner thực hiện; không gửi password/seed phrase. EN video chờ footage riêng. [Bộ dùng thử](../product/validation-kit.md) chờ owner mời tester; chưa có dữ liệu WTP hoặc doanh thu.
+
+## 4. Checklist nghiệm thu ký và kết quả
+
+- [ ] Kết nối đúng ví Phantom Devnet; từ chối một lượt ký: không tạo giao dịch và không báo hoàn tất.
+- [ ] Tạo deal → buyer fund → seller deliver → buyer confirm. Principal 2 USDC: seller 1,96, trọng tài 0,02, hệ thống 0,02; phí SOL riêng.
+- [ ] Mở tranh chấp trước review deadline; trọng tài chọn payout/refund. Refund phải trả đủ principal, không phí.
+- [ ] Với policy 1, xử sau SLA vẫn dùng đúng trọng tài. Với policy 0, giữ cutoff cũ.
+- [ ] Trong khi đang xác nhận, tải lại tab và đổi ví: không ký lại ngay hoặc tạo deal/nạp cọc lặp.
+- [ ] Sau review deadline không dispute, keeper có receipt finalized; report có timestamp mới. Thử manual workflow theo đúng một deal đủ điều kiện.
+- [ ] Mở Explorer, đối chiếu recipient/mint/amount và cọc unlocked; transaction failed không dùng làm receipt thành công.
+- [ ] Test VI/EN trên máy có Phantom thật. CSP chỉ enforce sau khi kiểm luồng này; nếu không kiểm thì giữ report-only.
+
+Lưu signature công khai, thời điểm, revision và kết quả pass/fail. Không gửi password, seed phrase, token Redis hoặc package bằng chứng riêng tư. Dữ liệu tester/khả năng trả phí là cổng business riêng.

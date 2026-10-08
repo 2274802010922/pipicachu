@@ -6,6 +6,7 @@ import {
   preparationAddress,
   arbAccountAddress,
   preparationFixture,
+  snapshotBatchFixture,
 } from "../fixtures/preparation";
 for (const width of [375, 768, 1024, 1440])
   test(`current step glows and review keeps dispute visible at ${width}`, async ({
@@ -25,6 +26,16 @@ for (const width of [375, 768, 1024, 1440])
     }, parties.buyer);
     await page.route("**/api/rpc", async (route) => {
       const b = route.request().postDataJSON();
+      if (b.method === "getMultipleAccounts") {
+        await route.fulfill({
+          json: {
+            jsonrpc: "2.0",
+            id: b.id,
+            result: snapshotBatchFixture(fixtures, fixtureTime),
+          },
+        });
+        return;
+      }
       let result: unknown;
       if (b.method === "getAccountInfo")
         result = {
@@ -90,6 +101,16 @@ test("keeper wait has no misleading glowing payment button", async ({
   const fixtures = preparationFixture(1, 2_000_000n, 0n, 2);
   await page.route("**/api/rpc", async (route) => {
     const b = route.request().postDataJSON();
+    if (b.method === "getMultipleAccounts") {
+      await route.fulfill({
+        json: {
+          jsonrpc: "2.0",
+          id: b.id,
+          result: snapshotBatchFixture(fixtures, fixtureTime + 601),
+        },
+      });
+      return;
+    }
     const result =
       b.method === "getAccountInfo"
         ? { context: { slot: 1 }, value: fixtures.deal }
@@ -115,6 +136,16 @@ test("new fee version shows 98 percent seller net and separate platform fee", as
   const fixtures = preparationFixture(1, 2_000_000n, 0n, 4, 100_000n);
   await page.route("**/api/rpc", async (route) => {
     const b = route.request().postDataJSON();
+    if (b.method === "getMultipleAccounts") {
+      await route.fulfill({
+        json: {
+          jsonrpc: "2.0",
+          id: b.id,
+          result: snapshotBatchFixture(fixtures, fixtureTime),
+        },
+      });
+      return;
+    }
     const result =
       b.method === "getAccountInfo"
         ? { context: { slot: 1 }, value: fixtures.deal }

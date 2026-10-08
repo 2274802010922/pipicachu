@@ -22,7 +22,7 @@ The target audience and fee model remain hypotheses. Online-sale scam warnings a
 
 [![Vietnamese demo](docs/demo/video-vi-2026-10-05/thumbnail-vi.png)](https://www.youtube.com/watch?v=mTY3e3qX_4k)
 
-**v0.5 footage:** real Phantom approval, 2 Devnet USDC, seller gets1.96; arbitrator and platform each0.02. Seller left, buyer right. Personas are illustrative. It does not show v0.6 governance, late ruling, dispute or keeper. English video awaits English-UI footage.
+**v0.5 footage:** real Phantom approval, 2 Devnet USDC, seller gets 1.96; arbitrator and platform each 0.02. Seller left, buyer right. Personas are illustrative. It does not show v0.6 governance, late ruling, dispute or keeper. English video awaits English-UI footage.
 
 ## Four steps
 
@@ -37,9 +37,9 @@ Arbitrators separately apply → manager reviews → deposit bond → enable ser
 
 | Capability                                                                | Evidence                                                                                                  |
 | ------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
-| Atomic98/1/1 payout; full fee-free refund; bond unlock once               | [Rust](programs/pipicachu-escrow/src/lib.rs), [executable tests](tests/program/cycle.ts)                  |
+| Atomic 98/1/1 payout; full fee-free refund; bond unlock once              | [Rust](programs/pipicachu-escrow/src/lib.rs), [executable tests](tests/program/cycle.ts)                  |
 | Intentional treasury alias, transfers consolidated by token account       | [Recovery receipt](docs/evidence/hotfix-alias-recovery.json), [four-role tests](tests/program/aliases.ts) |
-| Late ruling for new policy1; legacy0 retains original deadlines           | [Protocol](docs/architecture/v06.md), [governance/capacity tests](tests/program/v06.ts)                   |
+| Late ruling for new policy 1; legacy 0 retains original deadlines         | [Protocol](docs/architecture/v06.md), [governance/capacity tests](tests/program/v06.ts)                   |
 | Separate manager authority, applications, two-step transfer               | [Client/IDL](client/idl/escrow.json), [bootstrap receipt](docs/evidence/v06/manager-bootstrap.json)       |
 | Pending recovery with the same signature; stale data blocks money actions | [Operation](src/escrow/operation.ts), [UX](docs/design/system.md)                                         |
 | Local salted evidence packages, no evidence upload                        | [Verifier](src/escrow/evidence.ts), [test vectors](tests/unit/evidence.test.ts)                           |
@@ -53,7 +53,7 @@ Program-derived vaults hold principal; SPL Token CPI settles USDC and fees atomi
 
 ## UI showcase
 
-These are actual deployed v0.5 captures from05/10, retained as historical visuals. The new workspace is tested separately; screenshots do not imply all v0.6 flows have live approval.
+These are actual deployed v0.5 captures from 05/10, retained as historical visuals. The new workspace is tested separately; screenshots do not imply all v0.6 flows have live approval.
 
 ![Desktop home](docs/assets/showcase/home-desktop-vi.png)
 
@@ -69,18 +69,28 @@ Frontend feature controllers → fixed Devnet RPC proxy → Solana program. Mana
 
 [Architecture](docs/architecture/v06.md) · [Security exceptions](docs/legal/dependency-exceptions.md) · [Acceptance gates](docs/testing/v06-gates.md) · [Read benchmark](docs/evidence/v06/benchmark.json).
 
+## Implementation quality
+
+The 08 October pass separates Solana client and Rust responsibilities, extracts action orchestration from the UI, validates UTF-8/account layouts and improves transaction recovery. Features and ABI remain unchanged.
+
+- CI compares source-generated IDL, pins Action commits and verifies the Agave checksum. Lint warnings fail; credential patterns and expiring advisory exceptions are checked.
+- A full snapshot uses 2 RPCs instead of 4. Six paired Devnet measurements: median 216.5 → 180 ms; no production performance guarantee.
+- Automated tests, Devnet receipts, real Phantom and production services are reported separately with explicit pending gates.
+
+[Quality evidence](docs/evidence/quality/README.md) · [Source boundaries](docs/architecture/quality.md) · [Reproduce from a clean checkout](docs/testing/reproduce.md) · [Owner checks](docs/deployment/OWNER_CHECKS.md).
+
 ## Run and reproduce
 
-Node24 and pinned npm/dependencies/lockfile. `npm ci`, copy `.env.example` into ignored `.env.local`, then `npm run dev`. Local memory limiting is not a multi-instance proof. `npm run verify`; Linux/WSL `bash scripts/checks/program.sh` builds and executes synthetic local tests. Devnet writes require separate test wallets.
+Node 24 and pinned npm/dependencies/lockfile. `npm ci`, copy `.env.example` into ignored `.env.local`, then `npm run dev`. Local memory limiting is not a multi-instance proof. `npm run verify`; Linux/WSL `bash scripts/checks/program.sh` builds and executes synthetic local tests. Devnet writes require separate test wallets.
 
 [Deployment and secrets](docs/deployment/README.md) · [Harness context](docs/harness/context/CURRENT_STATE.md) · [IDL](client/idl/escrow.json).
 
 ## Limits and commercial hypothesis
 
-Platform1% +arbitrator1% on payout; no fee on full refund. No paid-user validation or revenue. We compare direct transfers, intermediary custody, Escrow.com and Kleros; we do not claim no competitors or an established moat.
+Platform 1% + arbitrator 1% on payout; no fee on full refund. No paid-user validation or revenue. We compare direct transfers, intermediary custody, Escrow.com and Kleros; we do not claim no competitors or an established moat.
 
 Evidence hashes do not prove file quality. Bond does not punish bad rulings. Arbitrator abandonment without mutual agreement can lock funds. No marketplace, USDT/VND conversion, AI, backup arbitrator or Mainnet in this release. Known dependency exceptions and report-only CSP are disclosed.
 
 ## License
 
-Original code/docs: [Apache2.0](LICENSE). [Third-party notices](THIRD_PARTY_NOTICES.md). The supplied pixel logo is excluded; this license grants no third-party artwork, character or trademark rights.
+Original code/docs: [Apache 2.0](LICENSE). [Third-party notices](THIRD_PARTY_NOTICES.md). The supplied pixel logo is excluded; this license grants no third-party artwork, character or trademark rights.

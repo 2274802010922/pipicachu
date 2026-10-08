@@ -1,0 +1,52 @@
+{
+  "at": "2026-10-08T02:04:02.938Z",
+  "network": "synthetic-local-validator",
+  "programId": "4Xds5m5JtWR8HbNLdGeF7e3Qh3akKMHwMfjKsQeVXnrb",
+  "binarySha256": "0e5efb8dad587ee58f2952aec1ca0fa992cb074ec30d895402a49c18f3201861",
+  "node": "v24.13.0",
+  "results": [
+    {
+      "action": "confirm",
+      "signature": "2c4qZuQXLtLMczxg7ZgxwwW3UEbMJsM9XQHi7T8STfjTaZ9zvz8vFWfxuEWFzqbiNqC6D4oG7QVuQsnLwxXx8AWk",
+      "unitsConsumed": 66906,
+      "feeLamports": 5000,
+      "transactionBytes": 708
+    },
+    {
+      "action": "fund",
+      "signature": "2FryUogUU2mjDkUUBJ5x36XsrFZjHKDXWfW3NdCLWMJR1mYMniPuDMeumDg1QAf3dfnpGeemjCoDnfnLWaoJJ7c6",
+      "unitsConsumed": 32698,
+      "feeLamports": 5000,
+      "transactionBytes": 409
+    },
+    {
+      "action": "resolve",
+      "signature": "45LJyJpoF9XVq5moDwsgnjZDZ1wk4TGdjb9wyTbhZCT6j4N22Poo9xodXGQcvDjKD5QiqMWf7SbAa3SGQSgBjmec",
+      "unitsConsumed": 62704,
+      "feeLamports": 5000,
+      "transactionBytes": 741
+    },
+    {
+      "action": "accept_settlement",
+      "signature": "2W1YhaK3EFbMSEuGjWkF19ZzGZFx3L5W1rrp54V9MMc5AE87G7qa7obKJ6NmT54ZGi7uDNdiAzzkvYnaEFWHCdzp",
+      "unitsConsumed": 46251,
+      "feeLamports": 5000,
+      "transactionBytes": 709
+    },
+    {
+      "action": "refund_expired",
+      "signature": "4FWqCyBiDGsgaquMxr1e9jkZHGLT7L4mfZ9FK3PXsA6PYKt6T2gVoxkpFkAnyZ9Bk11UrY1aPcHCftZrAJLSK9ug",
+      "unitsConsumed": 46192,
+      "feeLamports": 5000,
+      "transactionBytes": 708
+    },
+    {
+      "action": "finalize",
+      "signature": "vnWoZ4uKS5qxkGEdVyGJgiCGt3qfexSNxMk4FDxrAz61R1t3cA57sCiKBP1RdsNZ8qCB4MyYxHfF4uoJebcQyZZ",
+      "unitsConsumed": 62631,
+      "feeLamports": 5000,
+      "transactionBytes": 708
+    }
+  ],
+  "limits": "One successful sample per action from executable tests; local fees/CU/bytes, not Devnet provider latency or production throughput. Signatures belong to an ephemeral local ledger."
+}

@@ -13,18 +13,19 @@
     "build": "next build",
     "start": "next start",
     "typecheck": "next typegen && tsc --noEmit",
-    "lint": "eslint .",
+    "lint": "eslint . --max-warnings=0",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "test": "vitest run",
     "test:e2e": "playwright test",
     "check": "npm run format:check && npm run lint && npm run typecheck && npm test",
-    "verify": "npm run check && npm run check:dependencies && npm run build && npm run test:e2e && npm run check:docs",
+    "verify": "npm run check:repository && npm run check && npm run check:dependencies && npm run build && npm run test:e2e && npm run check:docs",
     "check:docs": "node scripts/checks/docs.mjs",
     "check:live": "tsx scripts/devnet/health.ts",
     "demo:fixtures": "tsx scripts/devnet/cycle.ts",
     "test:program": "tsx tests/program/cycle.ts",
-    "check:dependencies": "node scripts/checks/dependencies.mjs"
+    "check:dependencies": "node scripts/checks/dependencies.mjs",
+    "check:repository": "node scripts/checks/repository.mjs"
   },
   "dependencies": {
     "@fontsource/be-vietnam-pro": "5.3.0",

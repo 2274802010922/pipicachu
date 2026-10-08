@@ -85,6 +85,15 @@ export async function trackOperation(
           update("expired", "TRANSACTION_EXPIRED");
           throw Error("TRANSACTION_EXPIRED");
         }
+        if (history.err) {
+          update("failed", "TRANSACTION_FAILED");
+          throw Error("TRANSACTION_FAILED");
+        }
+        if (history.confirmationStatus === "finalized") {
+          update("finalized");
+          return current.signature!;
+        }
+        update("confirming");
       }
     } catch (error) {
       if (

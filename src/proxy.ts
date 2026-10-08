@@ -21,7 +21,12 @@ export function proxy(request: NextRequest) {
   headers.set("x-nonce", nonce);
   headers.set("Content-Security-Policy", policy);
   const response = NextResponse.next({ request: { headers } });
-  response.headers.set("Content-Security-Policy-Report-Only", policy);
+  response.headers.set(
+    process.env.CSP_ENFORCE === "1"
+      ? "Content-Security-Policy"
+      : "Content-Security-Policy-Report-Only",
+    policy,
+  );
   return response;
 }
 export const config = {

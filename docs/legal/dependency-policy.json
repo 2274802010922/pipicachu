@@ -1,0 +1,23 @@
+{
+  "advisories": [
+    {
+      "package": "stream-json",
+      "url": "https://github.com/advisories/GHSA-528h-pc64-c93x",
+      "severity": "moderate",
+      "reviewBefore": "2026-10-15T00:00:00Z"
+    },
+    {
+      "package": "stream-json",
+      "url": "https://github.com/advisories/GHSA-hqr4-qq8f-hg3x",
+      "severity": "moderate",
+      "reviewBefore": "2026-10-15T00:00:00Z"
+    },
+    {
+      "package": "stream-json",
+      "url": "https://github.com/advisories/GHSA-mjw6-4jj6-33hc",
+      "severity": "moderate",
+      "reviewBefore": "2026-10-15T00:00:00Z"
+    }
+  ],
+  "propagation": { "jayson": ["stream-json"] }
+}

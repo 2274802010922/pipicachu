@@ -16,32 +16,7 @@ import {
   type Operation,
   type OperationMeta,
 } from "@/escrow/operation";
-import { z } from "zod";
-const recoverySchema = z.object({
-  id: z.string().max(100),
-  owner: z.string().max(44),
-  action: z.string().max(64),
-  dealAddress: z.string().max(44).optional(),
-  phase: z.enum([
-    "checking",
-    "awaiting_signature",
-    "signed",
-    "submitted",
-    "confirming",
-    "unknown",
-    "finalized",
-    "failed",
-    "expired",
-  ]),
-  createdAt: z.number().int(),
-  updatedAt: z.number().int(),
-  signature: z.string().max(90).optional(),
-  messageDigest: z.string().max(64).optional(),
-  blockhash: z.string().max(44).optional(),
-  lastValidBlockHeight: z.number().int().optional(),
-  errorCode: z.string().max(80).optional(),
-});
-const RECOVERY_KEY = "pipicachu_pending_v1";
+import { RECOVERY_KEY, loadRecovery } from "@/escrow/recovery";
 type Phantom = {
   publicKey: PublicKey | null;
   connect: () => Promise<{ publicKey: PublicKey }>;
@@ -79,7 +54,8 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
   const [operations, setOperations] = useState<Record<string, Operation>>({});
   const operationsRef = useRef<Record<string, Operation>>({}),
     whoRef = useRef<PublicKey | null>(null),
-    tracking = useRef(new Set<string>());
+    tracking = useRef(new Set<string>()),
+    rpc = useRef<Connection | null>(null);
   const updateOperation = useCallback((next: Operation) => {
     const active = operationsRef.current[next.owner];
     if (active && active.id !== next.id && next.phase !== "checking") return;
@@ -108,15 +84,15 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
     setWho(pub);
   }, []);
 
-  const connection = useCallback(
-    () =>
-      new Connection(`${location.origin}/api/rpc`, {
+  const connection = useCallback(() => {
+    if (!rpc.current)
+      rpc.current = new Connection(location.origin + "/api/rpc", {
         commitment: "confirmed",
         disableRetryOnRateLimit: true,
         wsEndpoint: "wss://api.devnet.solana.com",
-      }),
-    [],
-  );
+      });
+    return rpc.current;
+  }, []);
   useEffect(() => {
     const p = window.phantom?.solana;
     if (!p) return;
@@ -133,20 +109,12 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const timer = setTimeout(() => {
       try {
-        const parsed = recoverySchema.safeParse(
-          JSON.parse(sessionStorage.getItem(RECOVERY_KEY) || "null"),
-        );
-        if (
-          parsed.success &&
-          parsed.data.signature &&
-          isUnresolved(parsed.data) &&
-          Date.now() - parsed.data.createdAt < 86400000
-        ) {
-          new PublicKey(parsed.data.owner);
-          operationsRef.current[parsed.data.owner] = parsed.data;
+        const pending = loadRecovery(sessionStorage.getItem(RECOVERY_KEY));
+        if (pending) {
+          operationsRef.current[pending.owner] = pending;
           setOperations((current) => ({
             ...current,
-            [parsed.data.owner]: parsed.data,
+            [pending.owner]: pending,
           }));
         } else sessionStorage.removeItem(RECOVERY_KEY);
       } catch {

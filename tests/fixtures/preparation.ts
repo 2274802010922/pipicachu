@@ -120,3 +120,26 @@ export function organizationFixture(accepting = true) {
     ]),
   );
 }
+
+export function clockFixture(time = fixtureTime) {
+  const data = Buffer.alloc(40);
+  data.writeBigInt64LE(BigInt(time), 32);
+  return {
+    ...account(data),
+    owner: "Sysvar1111111111111111111111111111111111111",
+  };
+}
+export function snapshotBatchFixture(
+  fixture: ReturnType<typeof preparationFixture>,
+  time = fixtureTime,
+  organization = false,
+) {
+  return {
+    context: { slot: 1 },
+    value: [
+      fixture.arb,
+      organization ? organizationFixture() : null,
+      clockFixture(time),
+    ],
+  };
+}

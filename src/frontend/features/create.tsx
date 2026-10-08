@@ -16,6 +16,7 @@ import {
   createOrganizationDealIx,
   listOrganizations,
   readArbitrator,
+  readArbitrators,
   readOrganization,
   parseAmount,
   amount,
@@ -60,12 +61,11 @@ export function CreateDeal() {
       try {
         const c = connection();
         const orgs = await listOrganizations(c);
-        const rows = await Promise.all(
-          orgs.map(async (org) => ({
-            org,
-            arb: await readArbitrator(c, new PublicKey(org.authority)),
-          })),
+        const profiles = await readArbitrators(
+          c,
+          orgs.map((org) => new PublicKey(org.authority)),
         );
+        const rows = orgs.map((org, index) => ({ org, arb: profiles[index] }));
         if (rows.length && !(await readManager(c)))
           throw Error("CLIENT_OUTDATED");
         if (revision !== generation.current) return;
@@ -82,17 +82,20 @@ export function CreateDeal() {
     },
     [connection, locale, markFresh, markStale],
   );
+  const invalidate = useCallback(() => {
+    generation.current++;
+  }, []);
   useEffect(() => {
     const timer = setTimeout(() => void load(), 0);
     const poll = setInterval(() => {
       if (document.visibilityState === "visible") void load(false);
     }, 10000);
     return () => {
-      generation.current++;
+      invalidate();
       clearTimeout(timer);
       clearInterval(poll);
     };
-  }, [load]);
+  }, [load, invalidate]);
   const selected = catalog.find((row) => row.org.authority === form.arbitrator);
   const eligible = (row: { org: Organization; arb: Arbitrator | null }) =>
     row.org.approved &&

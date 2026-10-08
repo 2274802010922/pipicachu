@@ -15,15 +15,16 @@ jobs:
     env:
       NEXT_TELEMETRY_DISABLED: "1"
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.3.1
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version-file: .nvmrc
           cache: npm
+      - run: npm install --global npm@11.13.0
       - run: npm ci
       - run: npx playwright install --with-deps chromium
       - run: npm run verify
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         if: always()
         with:
           name: browser-evidence
@@ -35,19 +36,24 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.3.1
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version-file: .nvmrc
           cache: npm
+      - run: npm install --global npm@11.13.0
       - run: npm ci
       - name: Install pinned Solana CLI
         run: |
-          sh -c "$(curl -sSfL https://release.anza.xyz/v3.1.10/install)"
-          echo "$HOME/.local/share/solana/install/active_release/bin" >> "$GITHUB_PATH"
+          curl --fail --location --retry 3 --proto '=https' --tlsv1.2 \
+            https://github.com/anza-xyz/agave/releases/download/v3.1.10/solana-release-x86_64-unknown-linux-gnu.tar.bz2 \
+            --output "$RUNNER_TEMP/agave.tar.bz2"
+          echo "a7205ff29bcf0f7199740225ecae2b85a28ea9668892d5ec21bd9749882984a1  $RUNNER_TEMP/agave.tar.bz2" | sha256sum --check
+          tar --extract --bzip2 --file "$RUNNER_TEMP/agave.tar.bz2" --directory "$RUNNER_TEMP"
+          echo "$RUNNER_TEMP/solana-release/bin" >> "$GITHUB_PATH"
       - name: Execute escrow program tests
         run: bash scripts/checks/program.sh
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         if: always()
         with:
           name: escrow-program-evidence
@@ -57,4 +63,8 @@ jobs:
             work/validator/*-validator.log
             work/v06/program-checks.json
             work/aliases/*.json
+            work/quality/source-idl.log
+            docs/evidence/quality/local-transaction-metrics.json
+            target/deploy/pipicachu_escrow.so
+            client/idl/escrow.json
           retention-days: 7

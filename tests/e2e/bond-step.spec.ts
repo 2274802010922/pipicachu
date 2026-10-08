@@ -6,6 +6,7 @@ import {
   parties,
   fixtureTime,
   preparationFixture,
+  snapshotBatchFixture,
 } from "../fixtures/preparation";
 for (const width of [375, 1440])
   test(`arbitrator bond is step two and buyer cannot fund insufficient bond at ${width}`, async ({
@@ -25,6 +26,16 @@ for (const width of [375, 1440])
     }, parties.buyer);
     await page.route("**/api/rpc", async (route) => {
       const b = route.request().postDataJSON();
+      if (b.method === "getMultipleAccounts") {
+        await route.fulfill({
+          json: {
+            jsonrpc: "2.0",
+            id: b.id,
+            result: snapshotBatchFixture(fixtures, fixtureTime),
+          },
+        });
+        return;
+      }
       let result: unknown;
       if (b.method === "getAccountInfo")
         result = {
@@ -85,6 +96,16 @@ test("arbitrator can prepare missing bond directly from deal link", async ({
   }, parties.arb);
   await page.route("**/api/rpc", async (route) => {
     const b = route.request().postDataJSON();
+    if (b.method === "getMultipleAccounts") {
+      await route.fulfill({
+        json: {
+          jsonrpc: "2.0",
+          id: b.id,
+          result: snapshotBatchFixture(fixtures, fixtureTime),
+        },
+      });
+      return;
+    }
     const result =
       b.method === "getAccountInfo"
         ? {

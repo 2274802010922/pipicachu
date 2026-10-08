@@ -1,4 +1,3 @@
-import { PublicKey } from "@solana/web3.js";
 import {
   PROGRAM_ID,
   CONFIG,
@@ -6,10 +5,10 @@ import {
   FEE_CONFIG,
   MANAGER_CONFIG,
 } from "@/escrow/constants";
-import deployment from "@/escrow/deployment.json";
 import { upstream } from "./rpc";
 import { limiterConfigured, readStored, RedisServiceError } from "./redis";
 import { probeSharedLimiter } from "./rate-limit";
+import { deploymentAccountsReady } from "./deployment-check";
 export type Readiness = {
   ready: boolean;
   mode: "production" | "local-test";
@@ -70,26 +69,8 @@ export async function readiness(): Promise<Readiness> {
       ],
       1,
     );
-    const [program, config, mint, fees, manager] = r.result?.value || [];
     result.rpc = !!r.result;
-    result.program =
-      !!program?.executable &&
-      config?.owner === PROGRAM_ID.toBase58() &&
-      Buffer.from(config.data[0], "base64")
-        .subarray(8, 40)
-        .equals(MINT.toBuffer()) &&
-      mint?.owner === "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA" &&
-      Buffer.from(mint.data[0], "base64")[44] === 6 &&
-      fees?.owner === PROGRAM_ID.toBase58() &&
-      new PublicKey(
-        Buffer.from(fees.data[0], "base64").subarray(8, 40),
-      ).toBase58() === deployment.platformTreasury;
-    result.manager =
-      manager?.owner === PROGRAM_ID.toBase58() &&
-      Buffer.from(manager.data[0], "base64").length === 73 &&
-      !new PublicKey(
-        Buffer.from(manager.data[0], "base64").subarray(8, 40),
-      ).equals(PublicKey.default);
+    Object.assign(result, deploymentAccountsReady(r.result?.value));
   } catch {}
   if (limiterConfigured())
     try {

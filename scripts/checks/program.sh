@@ -3,7 +3,10 @@ set -euo pipefail
 # Run in Linux/WSL from this repository. No deployment or secret copied into Git.
 cargo build-sbf --manifest-path programs/pipicachu-escrow/Cargo.toml 2>&1 | tee /tmp/pipicachu-sbf-build.log
 if grep -q 'Stack offset' /tmp/pipicachu-sbf-build.log; then echo 'Unsafe SBF stack frame'; exit 1; fi
-cargo test --manifest-path programs/pipicachu-escrow/Cargo.toml --lib
+cargo test --locked --manifest-path programs/pipicachu-escrow/Cargo.toml --lib
+mkdir -p work/quality
+ANCHOR_IDL_BUILD_RESOLUTION=TRUE cargo test --locked --manifest-path programs/pipicachu-escrow/Cargo.toml --features idl-build __anchor_private_print_idl -- --nocapture --test-threads=1 > work/quality/source-idl.log 2>&1
+node scripts/checks/idl.mjs work/quality/source-idl.log
 validator_pid=""
 stop_validator() {
   if [ -n "$validator_pid" ]; then kill "$validator_pid" 2>/dev/null || true; wait "$validator_pid" 2>/dev/null || true; validator_pid=""; fi
@@ -41,6 +44,7 @@ start_validator independent
 npm run test:program
 npx tsx tests/program/organizations.ts
 npx tsx tests/program/v06.ts
+npx tsx scripts/checks/benchmark-program.ts
 npx tsx tests/program/aliases.ts
 for role in buyer seller arbitrator; do
   start_validator "$role"

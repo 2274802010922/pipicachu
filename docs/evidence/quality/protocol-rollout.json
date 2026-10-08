@@ -1,0 +1,16 @@
+{
+  "at": "2026-10-08T02:24:36.918Z",
+  "network": "devnet",
+  "programId": "4Xds5m5JtWR8HbNLdGeF7e3Qh3akKMHwMfjKsQeVXnrb",
+  "upgradeSignature": "3jw2NXbeWEAo2hua81MFJJ3WDepS25vDY42fVKNE5Ag53g5TVSSxMr3aD9ELULiVvWyH3carP8A5nzwdTKH915R3",
+  "binarySha256": "0e5efb8dad587ee58f2952aec1ca0fa992cb074ec30d895402a49c18f3201861",
+  "idlSha256": "6d295cf32f768b6754edd00a00df7872da71ab312376cdf5daf0ffc7aaea0474",
+  "binaryBytes": 567352,
+  "deployedPrefixEqualsLocal": true,
+  "reserveTailZero": true,
+  "unchangedDeals": 46,
+  "compatibility": "money/fees/terms/state/workflow/policy/deadlines unchanged",
+  "extensionBytes": 10240,
+  "reasonForExtension": "Loader rejected auto-extension of 536 bytes; minimum expansion is 10240 bytes. No deal account resized.",
+  "ownerApprovalOrPhantomVerified": false
+}

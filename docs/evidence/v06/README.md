@@ -1,4 +1,6 @@
-# Trạng thái v0.6 · 07/10/2026
+# Lịch sử nghiệm thu v0.6 · 07/10/2026
+
+**Trạng thái hiện tại ngày 08/10:** xem [đợt hoàn thiện chất lượng](../quality/README.md). Bảng dưới là snapshot checkpoint trước đó, giữ để đối chiếu lịch sử.
 
 | Hạng mục                            | Trạng thái đã kiểm                                                                                                                |
 | ----------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |

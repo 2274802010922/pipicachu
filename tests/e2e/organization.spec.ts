@@ -6,6 +6,7 @@ import {
   preparationAddress,
   arbAccountAddress,
   preparationFixture,
+  snapshotBatchFixture,
   organizationAccountAddress,
   organizationFixture,
 } from "../fixtures/preparation";
@@ -28,6 +29,16 @@ for (const width of [375, 768, 1024, 1440])
     await page.route("**/api/rpc", async (route) => {
       const b = route.request().postDataJSON();
       const f = preparationFixture(1, 2_000_000n, 0n, state, 100_000n, 1);
+      if (b.method === "getMultipleAccounts") {
+        await route.fulfill({
+          json: {
+            jsonrpc: "2.0",
+            id: b.id,
+            result: snapshotBatchFixture(f, fixtureTime, true),
+          },
+        });
+        return;
+      }
       let result: unknown = [];
       if (b.method === "getAccountInfo" && b.params[0] === preparationAddress)
         expect(b.params[1].commitment).toBe("finalized");

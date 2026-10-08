@@ -1,0 +1,22 @@
+{
+  "at": "2026-10-08T01:54:12.243Z",
+  "network": "devnet",
+  "address": "BZXdtrci9wJEEVeaZYdyF2D2z7STPssaTAKTBEvDoKN9",
+  "node": "v24.16.0",
+  "provider": "public Solana Devnet RPC",
+  "method": "6 paired, order-alternated full public snapshots of the same historical deal; no concurrency/load claim",
+  "baseline": {
+    "callsPerSnapshot": 4,
+    "milliseconds": [476, 178, 158, 217, 216, 233],
+    "median": 216.5,
+    "p95": 476
+  },
+  "optimized": {
+    "callsPerSnapshot": 2,
+    "milliseconds": [154, 233, 167, 172, 190, 188],
+    "median": 180,
+    "p95": 233
+  },
+  "limits": "Old UI only read all four accounts for a created organization deal; other states may already use fewer calls. Baseline profile/organization use the prior confirmed commitment; optimized uses finalized for all. Latency depends on provider/network and is not guaranteed to improve.",
+  "behavior": "No persistent data cache. Equivalent concurrent public reads are coalesced only while in flight; tested separately. History deferred/throttled outside this timed workload."
+}
