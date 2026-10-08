@@ -11,7 +11,7 @@ Web: `npm ci`, `npm run verify`. Program Linux/WSL: `bash scripts/checks/program
 ## Phần owner thực hiện sau
 
 1. Redis credentials đã cấu hình và kiểm GET/SET/EVAL, Production ready true, unsigned simulation pass. GitHub keeper manual 37751655480 và 37754223664 pass, eligible 0. Không yêu cầu owner nhập lại; chưa dùng làm live payout/scheduled uptime proof.
-2. Manager `CXjK…1pJN` ký duyệt test application `2dak…n5XeC8`, policy 1/10 USDC và 300/60/60/60 giây. Không đổi/revoke primary `7Pp…K39CG`.
+2. Manager `CXjK…1pJN` đã duyệt test `2dak…n5XeC8`, finalized receipt trong owner-approval.json. Policy đang mặc định 1800/1800/300/1800. Chrome tab /manage đã điền draft min1/max10 USDC, times300/60/60/60; owner cần áp dụng trên đúng hàng 2dak và ký. Không đổi/revoke primary `7Pp…K39CG`. Khi user báo xong, đọc lại chain trước chạy accept-v06.ts; helper key/balance đủ, locked0.
 3. Sau đó chạy acceptance CLI có guard, kiểm Phantom thật và keeper riêng; lưu receipt thật theo revision. Không coi inject wallet là extension proof.
 4. User tester, WTP và EN video vẫn chưa thu thập. Video cũ giữ phạm vi v0.5; không gọi v0.6 đã quay/đã validation.
 

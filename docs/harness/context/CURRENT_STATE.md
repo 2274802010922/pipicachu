@@ -18,9 +18,9 @@ Bằng chứng và kết quả cuối: [quality](../../evidence/quality/README.m
 
 User yêu cầu hoàn tất code và tự kiểm thủ công sau. Không hỏi lại password/seed phrase, không bypass manager approval hoặc write limiter. Redis đã được xử lý sau khi owner cung cấp cặp REST hợp lệ ngày 08/10. Vercel Production/Preview và GitHub keeper đã cấu hình; `/api/ready` true, unsigned simulation pass. Keeper hai lượt manual pass, healthy với eligible 0; chưa thay live payout/scheduled reliability/Phantom proof.
 
-Application test riêng `2dakRFzAYG6qrWenyNUt5uCAGLhDYJMUhLBfXJn5XeC8` đang pending. Không thay trọng tài chính. Owner duyệt với min 1/max 10 USDC, times 300/60/60/60 rồi mới chạy `scripts/devnet/accept-v06.ts`. Script CLI không thay Phantom extension proof.
+Application test riêng `2dakRFzAYG6qrWenyNUt5uCAGLhDYJMUhLBfXJn5XeC8` đã được owner duyệt, receipt finalized ở `docs/evidence/v06/owner-approval.json`. Policy on-chain hiện min 1/max 10 USDC, times 1800/1800/300/1800. Đã điền sẵn draft 300/60/60/60 ở Chrome /manage; owner còn cần bấm Áp dụng policy trên đúng hàng 2dak và ký. Test key đã có đủ SOL/USDC, total/locked 0. Không thay trọng tài chính. Chỉ chạy `scripts/devnet/accept-v06.ts` sau khi policy ngắn đã lên chain; CLI không thay Phantom extension proof.
 
-[Checklist owner](../../deployment/OWNER_CHECKS.md): phần credentials/Redis/keeper startup đã hoàn tất; còn manager approval, Phantom accept/reject, nhánh mới Devnet, keeper payout và tester. Cọc không bảo hiểm; bỏ xử hoàn toàn và hai bên bất đồng vẫn có thể khóa tiền. CSP mặc định report-only, chưa enforce trước kiểm Phantom.
+[Checklist owner](../../deployment/OWNER_CHECKS.md): phần credentials/Redis/keeper startup đã hoàn tất; manager approval đã kiểm; còn owner cập nhật policy test ngắn, Phantom accept/reject, nhánh mới Devnet, keeper payout và tester. Cọc không bảo hiểm; bỏ xử hoàn toàn và hai bên bất đồng vẫn có thể khóa tiền. CSP mặc định report-only, chưa enforce trước kiểm Phantom.
 
 ## Hồ sơ
 

@@ -1,0 +1,18 @@
+{
+  "at": "2026-10-08T09:34:45.600Z",
+  "network": "devnet",
+  "signature": "2vaJAzv3Jmjagk9LnNUMth96q1xWxCLxXn1qrcP61LMfA2zS83Gm1W3p9yYK1tq8pUiokMc17yiZ6c2ZvKoT6iPX",
+  "finalized": true,
+  "manager": "CXjKGEBNTTotzoF26nGPfAG4AFicGgP72SMqUQKY1pJN",
+  "testArbitrator": "2dakRFzAYG6qrWenyNUt5uCAGLhDYJMUhLBfXJn5XeC8",
+  "application": "7J278jc9GXjF5r4igbVEPxN819FdAAX8UjSYGP9hCCHU",
+  "instruction": "approve_arbitrator_application",
+  "policyObserved": {
+    "minimum": "1000000",
+    "maximum": "10000000",
+    "times": [1800, 1800, 300, 1800],
+    "accepting": false
+  },
+  "shortTestPolicyStillRequired": [300, 60, 60, 60],
+  "scope": "Owner-signed approval receipt; not Phantom transfer-flow or six live-branch acceptance"
+}
