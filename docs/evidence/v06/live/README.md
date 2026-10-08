@@ -8,4 +8,4 @@
 
 Policy thực tế là 1800/1800/300/60 giây; đã chờ deadline thật, không sửa điều kiện đã ký hoặc giả Clock. Target2dak là ví test riêng; sau nghiệm thu ngừng nhận, locked0, pool1USDC còn thuộc chính ví test. Trọng tài chính7Pp không thay.
 
-File evidence có ghi note synthetic, salt và commitment để kiểm bằng verifier; không chứa file khách hàng, secret hoặc privatekey. Phần còn thiếu: Phantom extension toàn luồng, độ ổn định lịch keeper, dữ liệu tester và WTP.
+File evidence lịch sử có note synthetic/salt/commitment cho công cụ kiểm fixture; website hiện đã bỏ JSON/file verifier và chỉ dùng ghi chú/ký. Owner báo Phantom thành công08/10, chưa có receipt riêng từng ca. Cron reliability và dữ liệu tester/WTP vẫn còn. Không có file khách hàng, secret hoặc privatekey trong bộ bằng chứng.

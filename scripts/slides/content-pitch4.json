@@ -1,0 +1,134 @@
+{
+  "date": "2026-10-09",
+  "durationSeconds": 240,
+  "contentSeconds": 225,
+  "bufferSeconds": 15,
+  "liveDemoSeconds": 125,
+  "amountUSDC": "1",
+  "languages": ["vi", "en"],
+  "sources": {
+    "problem": "https://consumer.ftc.gov/consumer-alerts/2022/07/selling-stuff-online-heres-how-avoid-scam",
+    "ci": "https://github.com/2274802010922/pipicachu/actions/runs/37812338693",
+    "live": "https://github.com/2274802010922/pipicachu/blob/main/docs/evidence/v06/live/acceptance.json",
+    "keeper": "https://github.com/2274802010922/pipicachu/blob/main/docs/evidence/v06/live/keeper-payout.json",
+    "protocol": "https://github.com/2274802010922/pipicachu/blob/main/docs/architecture/v06.md",
+    "site": "https://pipicachu.vercel.app",
+    "repo": "https://github.com/2274802010922/pipicachu"
+  },
+  "slides": [
+    {
+      "number": 1,
+      "time": "00:00–00:25",
+      "layout": "problem",
+      "vi": {
+        "title": "Mua bán sản phẩm số bằng USDC",
+        "audience": "Người mua/bán file và template qua cộng đồng, đã có ví Solana",
+        "buyer": "Người mua muốn\nkiểm hàng trước",
+        "seller": "Người bán muốn\nnhận tiền trước",
+        "tension": "Nhờ admin giữ tiền: cả hai phụ thuộc vào ví cá nhân đó",
+        "footer": "Tình huống minh họa · Không phải dữ liệu khách hàng",
+        "speaker": "pipicachu phục vụ người mua và người bán sản phẩm số qua cộng đồng, đã dùng ví Solana và USDC. Người mua muốn kiểm hàng trước, người bán muốn nhận tiền trước. Nhờ một admin giữ tiền giúp được, nhưng cả hai phải tin người đang giữ tiền. Chúng tôi tách việc giữ tiền khỏi việc xử tranh chấp."
+      },
+      "en": {
+        "title": "Digital-goods trades paid in USDC",
+        "audience": "Community buyers and sellers of files and templates who already use Solana wallets",
+        "buyer": "The buyer wants\nto inspect first",
+        "seller": "The seller wants\nto be paid first",
+        "tension": "An admin holding funds creates a shared dependency on that wallet",
+        "footer": "Illustrative scenario · Not customer research",
+        "speaker": "pipicachu serves community buyers and sellers of digital goods who already use Solana wallets and USDC. Buyers want to inspect first; sellers want to be paid first. An admin can hold the funds, but both parties must trust that person's wallet. We separate holding funds from resolving disputes."
+      },
+      "notes": "Source: FTC warning describes fake payment scams in online sales. It establishes context, not demand for this specific USDC product. No claim of interviewed or paid users."
+    },
+    {
+      "number": 2,
+      "time": "00:25–00:55",
+      "layout": "business",
+      "vi": {
+        "title": "Một link giao dịch. Phí khi trả người bán",
+        "subtitle": "Trọng tài xử tranh chấp; chương trình giữ tiền",
+        "buyer": "Người mua",
+        "vault": "Vault chương trình",
+        "seller": "Người bán",
+        "arbitrator": "Trọng tài được duyệt, có cọc sẵn; không giữ principal trong ví riêng",
+        "fees": "98% người bán · 1% trọng tài · 1% hệ thống",
+        "refund": "Thu phí khi trả người bán; hoàn người mua không thu phí",
+        "pilot": "Tiếp cận đề xuất: pilot qua 1–2 admin cộng đồng dùng USDC",
+        "footer": "Mô hình phí đã chạy trên Devnet; nhu cầu trả phí chưa kiểm chứng",
+        "speaker": "Người bán tạo link, người mua nạp USDC vào vault. Trọng tài đã được duyệt và chuẩn bị cọc, nên không phải ký nhận từng deal. Khi trả người bán, hệ thống thu một phần trăm, trọng tài nhận một phần trăm; hoàn người mua thì không thu phí. Hướng tiếp cận đầu tiên là pilot với admin cộng đồng đã dùng USDC. Việc chấp nhận phí vẫn cần kiểm chứng."
+      },
+      "en": {
+        "title": "One deal link. Fees on seller payout",
+        "subtitle": "The arbitrator rules; the program holds funds",
+        "buyer": "Buyer",
+        "vault": "Program vault",
+        "seller": "Seller",
+        "arbitrator": "Approved, prepaid arbitrator; principal stays outside their personal wallet",
+        "fees": "98% seller · 1% arbitrator · 1% platform",
+        "refund": "Fees apply to seller payout; full buyer refunds are fee-free",
+        "pilot": "Proposed acquisition: pilots with 1–2 USDC community admins",
+        "footer": "Fee mechanics work on Devnet; willingness to pay is unvalidated",
+        "speaker": "The seller creates a link and the buyer deposits USDC into the vault. An approved arbitrator has prepaid capacity, removing a separate acceptance signature per deal. Seller payouts allocate one percent to the platform and one percent to the arbitrator. Buyer refunds are fee-free. Our first acquisition hypothesis is pilots with USDC community admins. Willingness to pay still needs validation."
+      },
+      "notes": "Sources: product/README.md; programs/pipicachu-escrow/src/settlement.rs; evidence/v06/live/acceptance.json. Two percent is deducted from seller proceeds. SOL network fees are separate. Prepaid bond is capacity, not insurance or slashing. Pilot counts are a plan, not acquired users."
+    },
+    {
+      "number": 3,
+      "time": "00:55–03:00",
+      "layout": "demo",
+      "vi": {
+        "title": "Demo trực tiếp · 1 USDC",
+        "subtitle": "Deal tạo trước; ví và cọc trọng tài đã chuẩn bị",
+        "flow": "Nạp tiền → Bàn giao → Xác nhận",
+        "caption": "Ảnh: giao dịch mẫu Devnet đã hoàn tất\nTrên sân khấu: chạy một deal mới",
+        "website": "pipicachu.vercel.app",
+        "footer": "1 USDC → 0,98 người bán + 0,01 trọng tài + 0,01 hệ thống",
+        "speaker": "Đây là deal một USDC đã tạo trước buổi trình bày. Ví người mua, người bán và trọng tài khác nhau. Người mua kiểm điều kiện rồi ký nạp tiền. Tiền đã vào quỹ, chưa được trả cho người bán. Người bán gửi file qua kênh đã thống nhất rồi ghi chú và ký bàn giao. Người mua kiểm hàng và xác nhận. Kết quả là không phẩy chín tám USDC cho người bán, hai khoản phí mỗi bên không phẩy không một. Receipt cho phép đối chiếu độc lập. Nếu có khiếu nại trước hạn, giải ngân tự động bị chặn và trọng tài xử lý."
+      },
+      "en": {
+        "title": "Live demo · 1 USDC",
+        "subtitle": "Deal created beforehand; wallets and arbitrator capacity prepared",
+        "flow": "Fund → Deliver → Confirm",
+        "caption": "Image: a completed Devnet test deal\nOn stage: run a new deal live",
+        "website": "pipicachu.vercel.app",
+        "footer": "1 USDC → 0.98 seller + 0.01 arbitrator + 0.01 platform",
+        "speaker": "This one-USDC deal was created before the presentation. Buyer, seller and arbitrator use distinct wallets. The buyer reviews the terms and signs the deposit. Funds are now in escrow, not paid to the seller. The seller shares the files through the agreed channel, enters a note and signs delivery. The buyer inspects and confirms. Settlement pays 0.98 USDC to the seller and 0.01 to each fee recipient. The receipt is independently inspectable. A timely dispute blocks automatic release and goes to the arbitrator."
+      },
+      "notes": "Live demo budget: 125 seconds. Show the actual website, not a staged screen. Use a new deal; never present this completed screenshot as just created live. Seller should differ from platform treasury so the three payout amounts appear separately. Screenshot source: docs/assets/showcase/current/manifest.json; deal 25JTcp8NdyqQoTksumh8hkUszc8SD3Ea3t2SNmor8Buj, CLI-signed finalized test. Goods are transferred outside the app. Do not claim that a note verifies file quality. Show dispute/refund receipts only as previously executed tests if time remains."
+    },
+    {
+      "number": 4,
+      "time": "03:00–03:45",
+      "layout": "technical",
+      "vi": {
+        "title": "Quyền tiền nằm trong chương trình",
+        "wallet": "Phantom ký",
+        "program": "Anchor program",
+        "vault": "PDA + SPL Token CPI",
+        "guard": "Đúng vai · đúng hạn · người nhận cố định",
+        "invariant": "Chi một lần · phí nguyên tử · cọc mở đúng một lần",
+        "tests": "122 + 41",
+        "testLabel": "Unit/integration + browser · CI pass",
+        "live": "6 nhánh + keeper",
+        "liveLabel": "Giao dịch Devnet finalized, có receipt",
+        "footer": "pipicachu.vercel.app · Devnet · Chưa audit độc lập · Còn quyền nâng cấp",
+        "speaker": "Phần tự xây là chương trình Anchor kiểm vai trò, deadline, người nhận và trạng thái trước mỗi chuyển tiền. Payout chia tiền nguyên tử; settlement lặp bị chặn và cọc chỉ mở một lần. Có kiểm pending/recovery, alias treasury và tương thích account cũ. Bản hiện tại có một trăm hai mươi hai test unit và integration, bốn mươi mốt test trình duyệt, cùng sáu nhánh Devnet và payout keeper có receipt. Đây là prototype Devnet, chưa audit độc lập và còn quyền nâng cấp. pipicachu giúp cộng đồng giao dịch với điều kiện và luồng tiền có thể kiểm chứng."
+      },
+      "en": {
+        "title": "Money permissions live in the program",
+        "wallet": "Phantom signs",
+        "program": "Anchor program",
+        "vault": "PDA + SPL Token CPI",
+        "guard": "Authorized role · deadline · fixed recipients",
+        "invariant": "Settle once · atomic fees · unlock bond once",
+        "tests": "122 + 41",
+        "testLabel": "Unit/integration + browser · CI passed",
+        "live": "6 branches + keeper",
+        "liveLabel": "Finalized Devnet transactions with receipts",
+        "footer": "pipicachu.vercel.app · Devnet · Unaudited · Upgrade authority retained",
+        "speaker": "Our Anchor program checks roles, deadlines, recipients and state before transferring funds. Payout fees are atomic, repeated settlement is rejected and the bond unlocks once. We test pending recovery, treasury aliases and compatibility with old accounts. The current revision has 122 unit and integration tests, 41 browser tests, six live Devnet branches and a keeper payout with receipts. This is an unaudited Devnet prototype with retained upgrade authority. pipicachu gives communities shared, inspectable deal terms and settlement."
+      },
+      "notes": "Sources: CI run 37812338693 on implementation 463b3fada2b964b81f9fdaba1711062a9000cfab; quality/simple-notes.json; v06/live/acceptance.json; v06/live/keeper-payout.json. Native Rust 5 and executable/cold/alias checks are separate from 122+41. Six branches are CLI-signed fixtures, not paid users or six Phantom flows. Keeper payout was manual workflow_dispatch: do not claim reliable five-minute cron or exact-time settlement. Business demand is unvalidated. Use the remaining 15 seconds as transition/latency buffer; no separate closing slide."
+    }
+  ]
+}

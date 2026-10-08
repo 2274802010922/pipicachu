@@ -1,28 +1,31 @@
-# Judge guide · khoảng 90 giây
+# Giám khảo: pipicachu trong 90 giây
 
-**pipicachu** là công cụ ký quỹ USDC cho người mua/bán sản phẩm số qua cộng đồng đã dùng Solana. Người bán tạo link; người mua nạp vào vault; bàn giao ngoài ứng dụng; người mua xác nhận hoặc mở tranh chấp.
+**Dành cho người mua/bán sản phẩm số qua cộng đồng đã dùng Solana và USDC.** Người mua muốn kiểm hàng trước; người bán muốn biết tiền đã ký quỹ. pipicachu giữ principal trong program vault và để một trọng tài được duyệt xử dispute.
 
-[Website](https://pipicachu.vercel.app) · [Video happy path v0.5](https://www.youtube.com/watch?v=mTY3e3qX_4k) · [Trạng thái nghiệm thu](../evidence/quality/README.md) · [Quality CI](https://github.com/2274802010922/pipicachu/actions/workflows/quality.yml).
+[Mở website](https://pipicachu.vercel.app) · [Pitch trực tiếp 4 phút](pitch-4min.md) · [Kết quả Devnet thật](https://pipicachu.vercel.app/deals/25JTcp8NdyqQoTksumh8hkUszc8SD3Ea3t2SNmor8Buj) · [Bằng chứng hiện tại](../evidence/quality/README.md).
 
-## Bốn tiêu chí Technical Build
+## Product & Business
 
-| Tiêu chí                                             | Phần cần xem                                                                                                                                                                      |
-| ---------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Technical Difficulty & Depth · 30                    | [Settlement/alias](../../programs/pipicachu-escrow/src/settlement.rs), [race/capacity/late ruling](../../tests/program/v06.ts), [pending recovery](../../src/escrow/operation.ts) |
-| Architecture & Smart Contract Quality · 25           | [Account constraints](../../programs/pipicachu-escrow/src/contexts.rs), [ABI/policy](../architecture/v06.md), [module boundaries](../architecture/quality.md)                     |
-| Solana Stack, Composability & Performance · 25       | PDA vault + SPL Token CPI; Clock và finality; [RPC benchmark](../evidence/quality/snapshot-benchmark.json); transaction metrics trong gói evidence                                |
-| Build Evidence, Documentation & Reproducibility · 20 | [Checkout mới → test](../testing/reproduce.md), source-derived IDL, pinned tools, CI artifacts và receipt/snapshot theo revision                                                  |
+- Seller tạo link → buyer nạp → seller giao ngoài app → buyer xác nhận/tranh chấp.
+- Trọng tài chuẩn bị cọc/standing consent trước, không giữ principal trong ví cá nhân.
+- Payout: 98% seller, 1% trọng tài, 1% hệ thống. Refund toàn principal, không phí dịch vụ.
+- Kênh đề xuất: pilot qua admin cộng đồng đã dùng USDC. Chưa xác thực khách trả phí/doanh thu; [validation kit](../product/validation-kit.md).
 
-Principal và recipient cố định; payout 98/1/1 hoặc refund 100% nguyên tử; cọc reserve/unlock đúng một lần. Treasury trùng vai trò được gộp theo token account. Manager chỉ quản lý registry; trọng tài không rút principal về ví riêng. Không server giữ key người mua/người bán/manager. Keeper chỉ gửi finalize khi đủ điều kiện; contract kiểm lại state và deadline.
+## Technical Build
 
-## Product & UX
+| Tiêu chí                             | Phần đáng kiểm                                                                                                                                                                           |
+| ------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Difficulty & Depth · 30              | [Capacity/race/late ruling](../../tests/program/v06.ts), [signature/pending recovery](../../src/escrow/operation.ts), treasury alias                                                     |
+| Architecture & Contract Quality · 25 | [Account constraints](../../programs/pipicachu-escrow/src/contexts.rs), [ABI/policy](../architecture/v06.md), [module boundaries](../architecture/quality.md)                            |
+| Solana & Performance · 25            | PDA vault + SPL Token CPI, Clock/finality; [six live branches](../evidence/v06/live/acceptance.json), [read benchmark](../evidence/quality/snapshot-benchmark.json)                      |
+| Evidence & Reproducibility · 20      | [CI122+41](https://github.com/2274802010922/pipicachu/actions/runs/37812338693), [binary/snapshot](../evidence/quality/protocol-rollout.json), [clean checkout](../testing/reproduce.md) |
 
-Bốn field tạo deal. Trọng tài đăng ký → manager duyệt → nạp cọc → bật nhận trong workspace riêng; standing consent bỏ lượt ký nhận từng deal. Nút chính theo vai/trạng thái; VI/EN, bàn phím và responsive được kiểm ở 375/768/1024/1440 px.
+Program kiểm role, deadline, state và fixed recipients. Payout/refund nguyên tử, terminal chi một lần, reserve/unlock cọc đúng một lần. Manager duyệt registry, không thay phán quyết hoặc rút principal. Server không giữ key user/manager.
 
-Mô hình phí là giả thuyết 1% hệ thống + 1% trọng tài khi payout; refund không phí. [Bộ dùng thử](../product/validation-kit.md) chưa có dữ liệu tester hoặc khách trả phí. Đợt này không xây AI Product.
+## Đã kiểm và phạm vi tin cậy
 
-## Trust boundary và giới hạn
+CI web/program pass trên 463b3fa; sáu nhánh CLI Devnet finalized và keeper payout có receipt. Owner báo đã test Phantom thành công, chưa cung cấp đầy đủ receipt từng ca. [Ảnh bản deploy hiện tại](../assets/showcase/current/manifest.json) là read-only captures, không thay wallet proof.
 
-Deal 876 byte, policy version giữ điều kiện cũ: policy 0 có cutoff; policy 1 cho xử muộn. Terminal transaction đầu tiên thắng. Hash bằng chứng không xác minh chất lượng hàng; cọc không phải bảo hiểm/phạt xử sai. Trọng tài bỏ xử và hai bên bất đồng có thể khóa tiền.
+Cọc không phải insurance/slashing; trọng tài vẫn có thể xử sai hoặc bỏ xử. Khi bỏ xử và hai bên bất đồng, tiền có thể khóa. Keeper payout đã kiểm bằng dispatch; cron reliability chưa nghiệm thu. Devnet còn upgrade authority, chưa audit độc lập/Mainnet. Hash không kiểm chất lượng file. [Câu hỏi và trả lời](questions.md).
 
-Devnet còn quyền nâng cấp, chưa audit độc lập. Redis/keeper và manager/Phantom cần [owner kiểm riêng](../deployment/OWNER_CHECKS.md). Read-only smoke hoặc provider inject không thay nghiệm thu ký thật. Video hiện có không chứng minh tính năng v0.6.
+Đợt này không có AI trong user flow. [Review hồ sơ](repo-review-2026-10-09.md) ghi rõ phần mạnh/thiếu; không dùng số test để tuyên bố có khách hàng trả tiền.

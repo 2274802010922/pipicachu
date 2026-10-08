@@ -1,0 +1,52 @@
+{
+  "date": "2026-10-09",
+  "kind": "live-pitch-4min",
+  "slidesPerDeck": 4,
+  "languages": ["vi", "en"],
+  "contentSeconds": 225,
+  "liveDemoSeconds": 125,
+  "bufferSeconds": 15,
+  "amountUSDC": "1",
+  "font": "Arial",
+  "PPTX": "native editable text and explanatory diagrams; notes include sources and narration",
+  "PDF": "visual export from final slide renders",
+  "files": [
+    {
+      "name": "pipicachu-pitch4-en-r2.pdf",
+      "bytes": 175066,
+      "sha256": "37eba08774a81725963f255df31a89516c84d90a3e5d99e55901ee94a7211934"
+    },
+    {
+      "name": "pipicachu-pitch4-en-r2.pptx",
+      "bytes": 83397,
+      "sha256": "a4b3dd6f08eb036d8495757bbf7490c118886f6dda44af75a11d76f9a716bdaa"
+    },
+    {
+      "name": "pipicachu-pitch4-vi-r2.pdf",
+      "bytes": 179929,
+      "sha256": "5f6f110796218581f8e45e64325f1db8199be0b16ea0e2fc47dc94eddc1027b8"
+    },
+    {
+      "name": "pipicachu-pitch4-vi-r2.pptx",
+      "bytes": 85244,
+      "sha256": "ab544f5be5ddd3cbe9eb6b479f92b903e1b7d76ecf76d683d4091e546f245d4a"
+    }
+  ],
+  "runtimeCodeRevision": "463b3fada2b964b81f9fdaba1711062a9000cfab",
+  "ci": "https://github.com/2274802010922/pipicachu/actions/runs/37812338693",
+  "captureManifest": "docs/assets/showcase/current/manifest.json",
+  "sourceContent": "scripts/slides/content-pitch4.json",
+  "checks": [
+    "4 slides per language",
+    "package/layout/fonts",
+    "first-party Artifact Tool import",
+    "all eight slide PNGs visually inspected",
+    "PDF four pages 16:9, rendered and inspected",
+    "sources and scope in notes"
+  ],
+  "powerPointDesktopOpened": false,
+  "googleSlidesOpened": false,
+  "ownerRehearsalMeasured": false,
+  "businessWTPValidated": false,
+  "keeperCronReliabilityAccepted": false
+}

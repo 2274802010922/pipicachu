@@ -1,6 +1,6 @@
 # Bằng chứng
 
-Trạng thái hiện tại: [v0.6 đang nghiệm thu](v06/README.md). [Protocol/binary/snapshot](v06/protocol-rollout.json), [Manager bootstrap](v06/manager-bootstrap.json), [hotfix alias](hotfix-alias-recovery.json).
+Trạng thái hiện tại: [quality/current report](quality/README.md), 122 unit/integration +41 browser trên runtime463b3fa và receipts mới. [Pitch4phút](../judging/pitch-4min.md). Các mục dưới là **lịch sử theo checkpoint**, không dùng số test hoặc trạng thái triển khai cũ làm báo cáo hiện tại.
 
 ## Lịch sử v0.5 — trọng tài được duyệt, cọc trước
 

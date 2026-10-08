@@ -1,4 +1,4 @@
-# Handoff pipicachu · 08/10/2026
+# Handoff pipicachu · 09/10/2026
 
 Đọc [CURRENT_STATE](CURRENT_STATE.md), [quality evidence](../../evidence/quality/README.md) và [owner checklist](../../deployment/OWNER_CHECKS.md). User đã yêu cầu hoàn tất đợt tối ưu hiện có, không thêm tính năng; phần cần kiểm thủ công họ làm sau.
 
@@ -17,5 +17,7 @@ Web: `npm ci`, `npm run verify`. Program Linux/WSL: `bash scripts/checks/program
 5. UI Manage thêm policy đang áp dụng và dialog exactvalues; browser test34 có kiểm field→transaction bytes, mocked provider không phải Phantom proof. Chạy verify/CI và cập nhật trạng thái theo revision hiện tại.
 6. User yêu cầu bỏ JSON, không tiếp tục keeper. UI xóa auto-download/export/import, file input và verifier; dùng noteCommitment cho deliver/dispute/resolve, có NOTE_REQUIRED/NOTE_TOO_LONG. Contract/ABI giữ nguyên. Package helper chỉ còn dùng cho fixture lịch sử. Giữ chú giải hash không mã hóa hoặc chứng minh chất lượng.
 7. Bản nháp keeper trước khi pause nằm ở local stash `8c7b36dd7683f4738cf3e732b5eb1c5d83e5c06b`, message “Bản nháp keeper tạm dừng ngày 08/10/2026”. Chưa push/test đủ; chỉ phục hồi nếu user tiếp tục phần đó. Đợt UI không áp dụng module/report/retry keeper mới.
+8. BỏJSON implementation463b3fa, CI37812338693 web/program pass, Vercel đúngrevision/ready true; user không cần thêmenv. Read-only UI có proof localwork/simple-notes.
+9. User chốt **live demo**, slide4phút phải thấy Business và Technical. Bộ mới4slideVIEN/source scripts/slides/content-pitch4.json, artifactswork/pitch-4min/output. Không dùng deck18slideR6 cho pitch. Kịch bản3:45+15sbuffer/live125s, amount1USDC nhất quán; primaryarbitrator7Pp và managerCXj không đổi. Owner rehearsal bằng đồng hồ, không giả kết quả timing hoặcWTP.
 
 Không đánh dấu release kỹ thuật hoàn tất khi owner/production gates còn thiếu. Hoàn tất tự động và business validation là hai kết luận khác nhau.

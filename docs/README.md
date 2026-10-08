@@ -1,5 +1,7 @@
 # Tài liệu pipicachu
 
+Giám khảo bắt đầu từ [guide90giây](judging/README.md), [pitch4phút](judging/pitch-4min.md) và [bằng chứng hiện tại](evidence/quality/README.md). [Review hồ sơ09/10](judging/repo-review-2026-10-09.md) phân biệt điểm mạnh kỹ thuật với business chưa validation.
+
 - [Sản phẩm/chính sách](product/README.md)
 - [Kiến trúc](architecture/README.md)
 - [UI/design](design/system.md)

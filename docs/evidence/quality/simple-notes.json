@@ -34,7 +34,23 @@
   "limits": [
     "Historical package utilities remain only for reproducible archived fixtures",
     "The paused keeper draft is excluded",
-    "CI and deployment verification are recorded after the implementation commit",
     "No new Phantom-extension claim or paid-user validation"
-  ]
+  ],
+  "implementationCommit": "463b3fada2b964b81f9fdaba1711062a9000cfab",
+  "ci": {
+    "escrowProgram": "success",
+    "web": "success",
+    "run": "https://github.com/2274802010922/pipicachu/actions/runs/37812338693"
+  },
+  "deployment": {
+    "noOverflow": true,
+    "site": "https://pipicachu.vercel.app",
+    "revisionMatched": true,
+    "noJsonWorkflow": true,
+    "languages": ["vi", "en"],
+    "widths": [375, 768, 1024, 1440],
+    "noFileInputs": true,
+    "scope": "Read-only smoke of finalized fixture; no extension signature",
+    "ready": true
+  }
 }

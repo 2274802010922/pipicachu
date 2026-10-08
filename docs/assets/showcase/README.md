@@ -1,5 +1,11 @@
-# UI showcase · 05/10/2026
+# UI showcase
 
-Bốn ảnh từ https://pipicachu.vercel.app tại commit 4530c03d4a1e56b1346f430de54708445f17f042, v0.5. Desktop 1440×1000; mobile 375×1000; form EN375×1400 sau khi registry đã tải; VI/EN đúng chế độ. Không kết nối ví, không ký, không gửi giao dịch trong lúc capture. Ảnh không chứng minh onboarding trọng tài hoặc fix lỗi2040; xem README root và CURRENT_STATE.
+## Bản deploy hiện tại
 
-Nguồn là UI thật, không mockup hoặc AI-generated. Giữ logo theo THIRD_PARTY_NOTICES; không có private key/seed phrase trong ảnh. Để refresh, chụp lại deployment và ghi checkpoint mới, không chỉnh số tiền/trạng thái trong ảnh.
+Ảnh trong `current/` chụp trực tiếp từ https://pipicachu.vercel.app ngày09/10 theo giờViệtNam; [manifest](current/manifest.json) lưu UTC/revision/viewport/nguồn. Header/home thật và một deal finalized CLI Devnet1USDC, seller net0,98. Không connect/sign/broadcast trong lúc capture, không sửa chữ/số tiền/trạng thái bằng đồ họa.
+
+Các ảnh chứng minh giao diện hiện tại và kết quả fixture; không thay Phantom proof, customer validation hoặc receipt kỹ thuật.
+
+## Ảnh lịch sử
+
+Ảnh ở root thư mục này là v0.5 commit4530c03, chụp05/10; `v06/` là application fixture local07/10. Giữ để đối chiếu lịch sử, không dùng làm showcase mới. Logo/artwork giữ scope trong THIRD_PARTY_NOTICES.

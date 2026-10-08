@@ -1,4 +1,4 @@
-# pipicachu · trạng thái hiện tại · 08/10/2026
+# pipicachu · trạng thái hiện tại · 09/10/2026
 
 ## Phạm vi đã chốt
 
@@ -32,11 +32,13 @@ Owner yêu cầu bỏ tính năng gói JSON sau khi test. Website không còn au
 
 Phần sửa keeper đang tạm dừng theo user và được lưu trong local Git stash riêng; không đưa vào đợt thay đổi UI này. Các cổng test/deploy cho UI mới được cập nhật theo bằng chứng sau kiểm, không dùng báo cáo Phantom của bản trước làm proof cho bản mới.
 
-Local UI mới pass 122 unit/integration, 41 browser, format/lint/typecheck/build/docs; VI/EN375/768/1024/1440 và axe. [Bằng chứng](../../evidence/quality/simple-notes.json). CI/Vercel sau push là cổng riêng cho revision này.
+UI mới pass 122 unit/integration, 41 browser, format/lint/typecheck/build/docs; VI/EN375/768/1024/1440 và axe. Implementation463b3fa đã push; CI37812338693 pass web/program, Vercel đúngrevision/readiness true; read-only smoke không có JSON/file input hoặc overflow. [Bằng chứng local](../../evidence/quality/simple-notes.json).
 
 ## Hồ sơ
 
-README VI/EN, Judge guide và tài liệu chất lượng cập nhật. Deck R6 (07/10) là candidate theo phạm vi tại thời điểm dựng; không coi số test cũ là báo cáo mới. Video `mTY3e3qX_4k` là happy path v0.5. EN footage và dữ liệu business/tester chưa có; không dựng bằng chứng hoặc doanh thu giả.
+Owner chốt pitch4phút, **live website**, cả Business và Technical. Bộ mới VI/EN4slide, editablePPTX/visualPDF, nội dung3:45 +15sbuffer, live demo125s. Business có target/fees/pilot hypothesis; Technical có constraints/atomic money/CI/receipts. [Run-of-show](../../judging/pitch-4min.md), [Q&A](../../judging/questions.md), [review hồ sơ](../../judging/repo-review-2026-10-09.md).
+
+README dẫn quality/current report thay snapshot07/10, showcase chụp deployment463b3fa thật. Deck R6/18slides là lịch sử, không dùng pitch và không đổi assets cũ. Video `mTY3e3qX_4k` vẫn happy pathv0.5; EN footage/WTP chưa có. Owner cần rehearsal4phút thực tế, chưa đo thay họ. Không phục hồi keeperstash hoặc đổi app/contract trong đợt hồ sơ.
 
 ## Revision nghiệm thu tự động
 

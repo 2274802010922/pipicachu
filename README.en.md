@@ -1,96 +1,111 @@
 <p align="center"><img src="public/brand/picachu-logo.jpg" width="88" alt="pipicachu"></p>
-<h1 align="center">pipicachu · USDC escrow for digital goods</h1>
-<p align="center">For community buyers and sellers who already use Solana wallets and USDC. One deal link, fixed terms, program-controlled funds.</p>
+<h1 align="center">pipicachu · C2C escrow</h1>
+<p align="center">USDC escrow for community digital-goods trades.<br>One deal link. Program-controlled funds. An arbitrator for disputes.</p>
 <p align="center">
 <a href="https://github.com/2274802010922/pipicachu/actions/workflows/quality.yml"><img src="https://github.com/2274802010922/pipicachu/actions/workflows/quality.yml/badge.svg?branch=main" alt="Quality CI"></a>
 <a href="LICENSE"><img src="https://img.shields.io/badge/License-Apache_2.0-2456E6?style=flat-square" alt="Apache 2.0"></a>
-<img src="https://img.shields.io/badge/Solana-Devnet-B7F34D?style=flat-square&amp;labelColor=091426" alt="Devnet">
+<img src="https://img.shields.io/badge/Solana-Devnet-B7F34D?style=flat-square&amp;labelColor=091426" alt="Solana Devnet">
 </p>
-<p align="center"><a href="https://pipicachu.vercel.app">Open app</a> · <a href="docs/judging/README.md">Judge guide</a> · <a href="docs/evidence/v06/README.md">Current status and evidence</a> · <a href="README.md">Tiếng Việt</a></p>
+<p align="center"><a href="https://pipicachu.vercel.app">Open app</a> · <a href="docs/judging/README.md">90-second judge guide</a> · <a href="docs/judging/pitch-4min.md">4-minute pitch</a> · <a href="docs/evidence/quality/README.md">Evidence</a> · <a href="README.md">Tiếng Việt</a></p>
 
-![pipicachu](docs/assets/readme-banner.svg)
+> **Working Solana Devnet prototype.** Test tokens; no independent audit or Mainnet deployment.
 
-> **Devnet prototype.** Test tokens have no real value. Upgrade authority remains; no independent audit, Mainnet launch or verified willingness to pay. v0.6 is undergoing acceptance, not a completed release.
+## Who delivers first? Who pays first?
 
-## Why this exists
+File/template sellers want payment before delivery. Buyers dealing with unfamiliar sellers want to inspect first. A community admin can help, but holding money in a personal wallet creates another dependency for both parties.
 
-A seller wants payment before handing over a digital pack; a buyer wants to inspect it before paying. An intermediary can help, but holding funds in their personal wallet adds custody dependence. pipicachu separates program-controlled principal from a community arbitrator’s ruling.
+pipicachu separates **holding funds** from **ruling on disputes**. Buyers deposit USDC into a program vault. The arbitrator can choose payout/refund to fixed recipients; the app does not verify file quality.
 
-The target audience and fee model remain hypotheses. Online-sale scam warnings are context, not proof of pipicachu customers. [Validation kit](docs/product/validation-kit.md).
+The target group is community digital-goods buyers/sellers **who already have Solana wallets and choose USDC**. [The FTC documents fake-payment risks in online selling](https://consumer.ftc.gov/consumer-alerts/2022/07/selling-stuff-online-heres-how-avoid-scam); that is scenario context, not pipicachu customer evidence. Demand and willingness to pay still need validation.
 
-## Watch a real happy path
+## See the working product
 
-[![Vietnamese demo](docs/demo/video-vi-2026-10-05/thumbnail-vi.png)](https://www.youtube.com/watch?v=mTY3e3qX_4k)
+![Current deployed homepage](docs/assets/showcase/current/home-desktop-en.png)
 
-**v0.5 footage:** real Phantom approval, 2 Devnet USDC, seller gets 1.96; arbitrator and platform each 0.02. Seller left, buyer right. Personas are illustrative. It does not show v0.6 governance, late ruling, dispute or keeper. English video awaits English-UI footage.
+**Four steps:** seller creates a link → buyer funds → seller delivers → buyer confirms or disputes. Delivery, dispute and ruling use a short note and wallet signature. Goods/evidence use the agreed external channel.
 
-## Four steps
+Arbitrators prepare separately: apply → manager approves → deposit bond → enable intake. Standing consent removes per-deal acceptance signing; prepaid funds bound capacity. Approval is an allowlist, not KYC.
 
-1. Seller chooses an available approved arbitrator and creates a link.
-2. Buyer reviews terms and deposits USDC into a deal vault.
-3. Seller delivers outside the app and commits delivery evidence.
-4. Buyer confirms; or disputes before review expiry. Without a timely dispute, a keeper can submit release.
+[Open a real Devnet result](https://pipicachu.vercel.app/deals/25JTcp8NdyqQoTksumh8hkUszc8SD3Ea3t2SNmor8Buj) · [Explorer receipt](https://explorer.solana.com/tx/5a59q7bJQfGR5Qaxd3cPpV3QBTKRETvnMMKe8L64mTjirUzbQejrUBfs1DN2ArkTob7iSF45dU7raukS9AmWSTgK?cluster=devnet)
 
-Arbitrators separately apply → manager reviews → deposit bond → enable service. Standing consent removes per-deal arbitrator signing. Manager authority is read from chain; approval is an allowlist, not KYC.
+![One USDC settled](docs/assets/showcase/current/completed-en.png)
 
-## What we built
+Current deployment captures showing a finalized CLI Devnet fixture, not a customer transaction. [Capture source/revision](docs/assets/showcase/current/manifest.json).
 
-| Capability                                                                | Evidence                                                                                                  |
-| ------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
-| Atomic 98/1/1 payout; full fee-free refund; bond unlock once              | [Rust](programs/pipicachu-escrow/src/lib.rs), [executable tests](tests/program/cycle.ts)                  |
-| Intentional treasury alias, transfers consolidated by token account       | [Recovery receipt](docs/evidence/hotfix-alias-recovery.json), [four-role tests](tests/program/aliases.ts) |
-| Late ruling for new policy 1; legacy 0 retains original deadlines         | [Protocol](docs/architecture/v06.md), [governance/capacity tests](tests/program/v06.ts)                   |
-| Separate manager authority, applications, two-step transfer               | [Client/IDL](client/idl/escrow.json), [bootstrap receipt](docs/evidence/v06/manager-bootstrap.json)       |
-| Pending recovery with the same signature; stale data blocks money actions | [Operation](src/escrow/operation.ts), [UX](docs/design/system.md)                                         |
-| Short note → wallet signature; no JSON download or evidence file upload   | [Note hash](src/escrow/note-commitment.ts), [flow checks](tests/e2e/simple-notes.spec.ts)                 |
-| Bounded RPC, shared quotas, isolated keeper retries                       | [Backend](src/backend/), [keeper](scripts/devnet/keeper.ts)                                               |
+<details>
+<summary>Recorded Phantom demo and mobile UI</summary>
 
-Manager approval, Redis, six Devnet branches and a keeper payout have recorded evidence. The owner reported a successful Phantom flow on 08 October; detailed receipts/checklists were not supplied for independent reporting. Scheduled keeper reliability, EN footage and paid-user validation remain separate gates. [Current status](docs/evidence/quality/README.md).
+[![Vietnamese video](docs/demo/video-vi-2026-10-05/thumbnail-vi.png)](https://www.youtube.com/watch?v=mTY3e3qX_4k)
 
-## Why Solana
+Owner-recorded **v0.5 happy path**: 2 USDC → 1.96 seller +0.02 arbitrator +0.02 platform. It does not show v0.6 governance, late ruling or keeper. The EN video awaits separate footage.
 
-Program-derived vaults hold principal; SPL Token CPI settles USDC and fees atomically. Transactions carry wallet authorization and independently inspectable receipts. Arbitrator funds are a capacity pool, not insurance. A timer does not run a transaction: the keeper or a user must submit finalize.
+<img src="docs/assets/showcase/current/completed-mobile-en.png" width="280" alt="Current Devnet result on mobile">
 
-## UI showcase
+</details>
 
-These are actual deployed v0.5 captures from 05/10, retained as historical visuals. The new workspace is tested separately; screenshots do not imply all v0.6 flows have live approval.
+## Strengths you can inspect
 
-![Desktop home](docs/assets/showcase/home-desktop-vi.png)
+| Value                                                       | Implementation and evidence                                                                                                                                                        |
+| ----------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Intermediaries rule without personally holding principal    | PDA vault, fixed recipients and role permissions: [constraints](programs/pipicachu-escrow/src/contexts.rs)                                                                         |
+| Principal, fees and reserved bond settle together           | Atomic 98/1/1 payout, full refund, unlock once and treasury aliases: [settlement](programs/pipicachu-escrow/src/settlement.rs), [receipts](docs/evidence/v06/live/acceptance.json) |
+| No acceptance signature from the arbitrator per deal        | Standing consent and prepaid capacity: [workflow](docs/product/organization-flow.md), [race/capacity tests](tests/program/v06.ts)                                                  |
+| Slow RPC or rejected signing never becomes false completion | Simulation, message/signature binding, finality and recovery: [operation](src/escrow/operation.ts), [tests](tests/unit/operation.test.ts)                                          |
 
-<table><tr><td><img src="docs/assets/showcase/home-mobile-vi.png" width="280" alt="VI mobile home"></td><td><img src="docs/assets/showcase/create-mobile-en.png" width="280" alt="EN mobile create"></td></tr></table>
+The proposed difference is **community workflow + program-enforced money rules + role-based UX**, not a claim that escrow has no competitors. [Alternatives and judge questions](docs/judging/questions.md).
 
-v0.6 workspace capture from the local running app with a **synthetic pending application** (07/10); it proves layout, not live approval:
+## Business: users and payment
 
-![v0.6 arbitrator pending workspace](docs/assets/showcase/v06/arbitrator-pending-desktop-en.png)
+- **Users:** USDC community buyers/sellers of files, templates and digital resources; community admins as arbitrators.
+- **Implemented fees:** seller gets 98%, arbitrator 1%, platform 1% on payout. Refunds return all principal without service fees; SOL fees are separate.
+- **Proposed acquisition:** pilots through 1–2 admins, with 5–10 buyers/sellers testing and deciding on a concrete fee. These are plans, not traction.
+- **Validation needed:** completion, fee/deadline understanding, repeat-use intent and willingness to pay. Devnet tokens are not revenue.
 
-## Architecture and trust
+[Validation kit](docs/product/validation-kit.md). No demonstrated moat or paid-customer evidence yet.
 
-Frontend feature controllers → fixed Devnet RPC proxy → Solana program. Manager controls registry; arbitrator controls dispute outcomes within the policy; upgrade authority is a separate retained Devnet power. Web servers hold no manager, buyer or seller keys. Redis stores expiring quotas and operational reports.
+## Why Solana, and what we built
 
-[Architecture](docs/architecture/v06.md) · [Security exceptions](docs/legal/dependency-exceptions.md) · [Acceptance gates](docs/testing/v06-gates.md) · [Read benchmark](docs/evidence/v06/benchmark.json).
+Solana holds/transfers USDC through PDA vaults, SPL Token CPI and atomic settlement. Network Clock governs deadlines, wallets authorize actions and receipts are independently inspectable. A database-only replacement returns custody authority to an operator.
 
-## Implementation quality
+```mermaid
+flowchart LR
+  Wallet[Phantom signature] --> Web[Next.js role-based UI]
+  Web --> RPC[Fixed Devnet RPC proxy]
+  RPC --> Program[Anchor program: roles and state]
+  Program --> Vault[PDA vault and SPL Token CPI]
+  Redis[Redis: quotas and reports] -.-> RPC
+  Keeper[Keeper: eligible finalize only] --> Program
+```
 
-The 08 October pass separates Solana client and Rust responsibilities, extracts action orchestration from the UI, validates UTF-8/account layouts and improves transaction recovery. Features and ABI remain unchanged.
+We built the state machine, constraints, settlement/bond logic, IDL-based client, recovery, bounded proxy/limiter and UI. Anchor, Solana SDK/SPL Token, Next.js and Phantom supply infrastructure. [Attribution](THIRD_PARTY_NOTICES.md).
 
-- CI compares source-generated IDL, pins Action commits and verifies the Agave checksum. Lint warnings fail; credential patterns and expiring advisory exceptions are checked.
-- A full snapshot uses 2 RPCs instead of 4. Six paired Devnet measurements: median 216.5 → 180 ms; no production performance guarantee.
-- Automated tests, Devnet receipts, real Phantom and production services are reported separately with explicit pending gates.
+## Current evidence
 
-[Quality evidence](docs/evidence/quality/README.md) · [Source boundaries](docs/architecture/quality.md) · [Reproduce from a clean checkout](docs/testing/reproduce.md) · [Owner checks](docs/deployment/OWNER_CHECKS.md).
+| Area                                                  | Source                                                                                                                                                  |
+| ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 122 unit/integration +41 browser; both CI jobs passed | [CI on 463b3fa](https://github.com/2274802010922/pipicachu/actions/runs/37812338693), [simplified workflow QA](docs/evidence/quality/simple-notes.json) |
+| Six finalized Devnet branches, principal/bond checks  | [Acceptance](docs/evidence/v06/live/acceptance.json) — CLI fixtures, not six Phantom flows                                                              |
+| Actual service-signed keeper payout                   | [Keeper proof](docs/evidence/v06/live/keeper-payout.json) — dispatch, not cron uptime proof                                                             |
+| Binary/IDL/ABI; 46 existing deals unchanged           | [Rollout](docs/evidence/quality/protocol-rollout.json), [reproduction](docs/testing/reproduce.md)                                                       |
+| Owner reported a successful Phantom flow              | Manual report on 08 October; detailed per-case receipts/checklists were not supplied                                                                    |
 
-## Run and reproduce
+[Current report](docs/evidence/quality/README.md). Older [checkpoints](docs/evidence/v06/README.md) are history; test counts are not added across revisions.
 
-Node 24 and pinned npm/dependencies/lockfile. `npm ci`, copy `.env.example` into ignored `.env.local`, then `npm run dev`. Local memory limiting is not a multi-instance proof. `npm run verify`; Linux/WSL `bash scripts/checks/program.sh` builds and executes synthetic local tests. Devnet writes require separate test wallets.
+## Run from a fresh checkout
 
-[Deployment and secrets](docs/deployment/README.md) · [Harness context](docs/harness/context/CURRENT_STATE.md) · [IDL](client/idl/escrow.json).
+Node 24; pinned npm/dependencies and lockfile.
 
-## Limits and commercial hypothesis
+```bash
+npm ci
+cp .env.example .env.local
+npm run dev
+npm run verify
+```
 
-Platform 1% + arbitrator 1% on payout; no fee on full refund. No paid-user validation or revenue. We compare direct transfers, intermediary custody, Escrow.com and Kleros; we do not claim no competitors or an established moat.
+Linux/WSL program tests: `bash scripts/checks/program.sh`. Local fixtures use a synthetic mint; Devnet fixtures have separate receipts. [Deployment/env](docs/deployment/README.md) · [Architecture](docs/architecture/v06.md) · [IDL](client/idl/escrow.json) · [Contributor workflow](.github/CONTRIBUTING.md).
 
-Evidence hashes do not prove file quality. Bond does not punish bad rulings. Arbitrator abandonment without mutual agreement can lock funds. No marketplace, USDT/VND conversion, AI, backup arbitrator or Mainnet in this release. Known dependency exceptions and report-only CSP are disclosed.
+## Trust boundaries
 
-## License
+An arbitrator can rule incorrectly. Bond is capacity, not insurance/slashing; abandonment without mutual agreement may lock funds. Scheduled keeper execution may be delayed; the pitch uses buyer confirmation. Devnet upgrade authority remains. Hashes neither verify goods nor encrypt notes. Files/evidence are not uploaded to the app server.
 
-Original code/docs: [Apache 2.0](LICENSE). [Third-party notices](THIRD_PARTY_NOTICES.md). The supplied pixel logo is excluded; this license grants no third-party artwork, character or trademark rights.
+No independent audit, Mainnet or revenue validation. [Security reporting](.github/SECURITY.md) · [Dependency exceptions](docs/legal/dependency-exceptions.md) · [Apache-2.0](LICENSE). Third-party logo/artwork rights are outside the code license.

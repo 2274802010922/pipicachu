@@ -1,17 +1,28 @@
-# Slide v0.6 VI/EN
+# Slide: pitch trực tiếp 4 phút
 
-Hai bản độc lập, mỗi bản12 slide chính +6 appendix, native editable PPTX và PDF xem nhanh. FontArial được chọn vì có sẵn và hiển thị tiếng Việt; giữ nền light terminal/lime/blue. Native tables ởslide8 và15; flow slide4 là diagram editable. Sources trong speaker notes và tài liệu judge/product/evidence.
+Bộ hiện tại VI/EN: **4 slide mỗi deck**, editable PPTX và visual PDF. Nội dung chính là problem/user → solution/business → live demo → technical/evidence. Thời lượng mục tiêu3:45 cộng15giây đệm; live demo125giây. [Run-of-show](pitch-4min.md), [câu hỏi giám khảo](questions.md).
 
-Nguồn nội dung: `scripts/slides/content-v06.json`; builder `scripts/slides/build-v06.mjs` dùng @oai/artifact-tool từ runtime Codex. Artifact lớn được giữ trong work/deck-v06/output và phân phối qua Release khi đủ cổng nghiệm thu; không commit file dựng hoặc key.
+## Artifact hiện tại
 
-Bản dựng hiện tại R6: `pipicachu-v06-vi-r6.pptx`, `pipicachu-v06-en-r6.pptx` và PDF cùng basename. Đã kiểm cấu trúc18slides, native tables, font policy và first-party import. Render mỗi slide; sửa orphan/wrap và screenshot quá nhỏ. PDF là visual export, PPTX là bản chỉnh sửa. Chưa kiểm trong PowerPoint desktop hoặc Google Slides.
+[Bộ pitch trên GitHub Releases](https://github.com/2274802010922/pipicachu/releases/tag/v0.6.0-pitch-kit)
 
-Slide nói đúng giới hạn: prototype Devnet, chưa audit/Mainnet/WTP; video là v0.5, UI mới dùng fixture được ghi rõ. Benchmark transaction hiện là hotfixv0.5.1; không giả benchmarkv0.6. Các cổng owner, Redis/keeper, Phantom và business vẫn hiển thị chờ. Không dùng deck để tuyên bố release đã hoàn tất.
+| Bản | Chỉnh sửa                                                                                                         | Xem nhanh                                                                                                       |
+| --- | ----------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| VI  | [PPTX](https://github.com/2274802010922/pipicachu/releases/download/v0.6.0-pitch-kit/pipicachu-pitch4-vi-r2.pptx) | [PDF](https://github.com/2274802010922/pipicachu/releases/download/v0.6.0-pitch-kit/pipicachu-pitch4-vi-r2.pdf) |
+| EN  | [PPTX](https://github.com/2274802010922/pipicachu/releases/download/v0.6.0-pitch-kit/pipicachu-pitch4-en-r2.pptx) | [PDF](https://github.com/2274802010922/pipicachu/releases/download/v0.6.0-pitch-kit/pipicachu-pitch4-en-r2.pdf) |
+
+`pipicachu-pitch4-vi-r2.pptx`, `pipicachu-pitch4-en-r2.pptx` và PDF cùng basename. File cuối ở `work/pitch-4min/output/`, phân phối qua bộ pitch Release. FontArial, light terminal nền#F7F6F1, ink#091426, lime#B7F34D, blue#2456E6. Text và flow diagram là native/editable; screenshot/QR/logo giữ đúng nguồn.
+
+Nguồn nội dung [content-pitch4.json](../../scripts/slides/content-pitch4.json), builder [build-pitch4.mjs](../../scripts/slides/build-pitch4.mjs), visual PDF [export-pitch4.py](../../scripts/slides/export-pitch4.py). [Manifest](../evidence/pitch4-manifest.json) ghi SHA256, số trang, nguồn screenshot và phạm vi đã kiểm. Không nói đã kiểm PowerPoint desktop/Google Slides khi chưa mở ở đó.
+
+Screenshot trong slide là kết quả fixture CLI Devnet finalized1USDC; **trên sân khấu chạy một deal mới**, không trình bày screenshot như vừa giao dịch. Notes có sources và lời dẫn VI/EN. Business chỉ có fee mechanism và pilot hypothesis, không giả users/revenue/WTP. Keeper receipts là dispatch, không uptime schedule.
 
 ## Tái dựng
 
-Dùng runtime bundled của Codex; tạo junction node_modules trong build ignore tới RUNTIME_NODE_MODULES, copy builder sang build, đặt PRESENTATION_SKILL_DIR, ARTIFACT_PYTHON, RUNTIME_NODE_MODULES, RUNTIME_NODE, RUNTIME_PYTHON theo workspace dependencies. QR website tạo bằng thư viện qrcode đã có ở máy; app không dùng thư viện này. Chạy builder với repo root. Không cài library trình bày vào production app. Mỗi lần sửa tạo revision output mới, không overwrite final cũ; theo finalization/visual QA của skill Presentations.
+Dùng `load_workspace_dependencies` của Codex lấy runtimeNode/packages/Python và installed Presentations skill. Junction `work/pitch-4min/build/node_modules` trỏ tới runtime packages; copy builder vào build directory. Đặt `PRESENTATION_SKILL_DIR`, `ARTIFACT_PYTHON`, `RUNTIME_NODE_MODULES`, `RUNTIME_NODE`, `RUNTIME_PYTHON` theo paths thực tế. Không cài artifact-tool vào runtime web.
 
-## Luồng thuyết trình
+Theo skill Presentations/PDF, đánh dấu operation trước authoring, chạy builder bằng bundledNode với argument repo root; sau đó Python export-pitch4.py với root và revision. Mỗi lần sửa dùng `PITCH_REVISION=r3` hoặc revision mới; không overwrite final cũ. Finalizer kiểm package/layout/fonts/import, rồi render và kiểm mọi slide/PDF bằng mắt. PDF là ảnh render, PPTX là nguồn chỉnh sửa và chứa speaker notes.
 
-Main12: vấn đề giao/trả trước → nhóm dùngUSDC → flow4bước → vai trò blockchain → demo → phí/giả thuyếtbusiness → alternatives → validation táchlocal/live → roadmap → solo team → QR. Appendix dùng khi BGK hỏi quyền tiền/state machine/cọc/recovery/ABI/benchmark. Happy-path video mTY3e3qX_4k giữ nguyên; dispute/late/keeper phải có receipt mới trước khi quay thêm.
+## Deck dài trước đây
+
+Deck18slides R6 ngày07/10, main12+appendix6, source [content-v06.json](../../scripts/slides/content-v06.json), [build-v06.mjs](../../scripts/slides/build-v06.mjs), [manifest snapshot](../evidence/v06/slides-manifest.json). Giữ lịch sử, không dùng trong pitch4phút; các trạng thái Redis/owner/góiJSON trên deck đó không đại diện bản hiện tại.

@@ -1,11 +1,11 @@
 # Demo v0.6 — kịch bản và phạm vi
 
-Mở đầu: hai người đã có Solana wallet, mua/bán một pack thiết kế bằng USDC qua cộng đồng; người mua muốn kiểm file, người bán muốn nhận tiền. Tình huống minh họa, không gọi là khách hàng thật.
+Pitch hiện tại dùng [luồng trực tiếp 4 phút](../judging/pitch-4min.md), với 125 giây dành cho website. Seller chuẩn bị deal mới 1 USDC trước buổi trình bày, trọng tài đã đủ cọc và bật nhận. Nói rõ phần setup đã làm trước.
 
-Happy path: người bán chọn trọng tài đã bật nhận → tạo link → người mua xem terms/fee/late-policy và nạp → người bán bàn giao ngoài app, tải evidenceJSON trước ký → người mua kiểm rồi xác nhận. Giữ đúng số tiền đã chọn; payout98/1/1, refund100 không phí. Ví/receipt/mint đọc từ chain.
+Trên sân khấu: buyer xem terms/fee và ký fund → seller gửi file qua kênh đã thống nhất, ghi chú/ký deliver → buyer kiểm rồi ký confirm → kết quả 0,98 seller +0,01 trọng tài +0,01 hệ thống. Không tải/nhập JSON hoặc chọn file. Hash không tự kiểm chất lượng hàng.
 
-Cảnh kỹ thuật bổ sung chỉ quay sau nghiệm thu: application owner duyệt bằng Phantom; disputed chặn auto release; đúng trọng tài vẫn xử sau SLA trên policy1; hai bên mutual settlement; keeper report/receipt. Không dùng một deal hoàn tất để giả thành một deal tranh chấp khác. Deal cũ policy0 giữ deadline đã ký.
+Dispute/late ruling/mutual settlement/keeper có [receipts riêng](../evidence/v06/live/README.md), dùng khi hỏi đáp hoặc buổi demo dài hơn. Không dùng một deal hoàn tất để giả thành một nhánh vừa chạy. Keeper cron không bảo đảm thời điểm; happy path 4 phút dùng buyer confirm.
 
-Nói rõ: program vault không phải ví cá nhân trung gian, nhưng upgrade authority còn giữ. Bond không phải bảo hiểm/slashing; hash không chứng minh hàng có chất lượng. Trọng tài bỏ xử và hai bên bất đồng có thể khóa tiền. Không claim người dùng trả phí chỉ từ Devnet receipts.
+Prototype Devnet, chưa audit độc lập; program còn quyền nâng cấp. Cọc không phải bảo hiểm/slashing. Trọng tài bỏ xử và hai bên bất đồng có thể khóa tiền. Token Devnet không phải doanh thu.
 
-Video YouTube hiện tại [mTY3e3qX_4k](https://www.youtube.com/watch?v=mTY3e3qX_4k) là v0.5 happy path do owner quay; chưa demo các phầnv0.6. EN video chỉ dựng sau footageUIEN riêng. Owner uploadYouTube thủ công; không sửa tài sản Picachu cũ.
+[Video mTY3e3qX_4k](https://www.youtube.com/watch?v=mTY3e3qX_4k) là v0.5 happy path 2 USDC do owner quay; giữ nguyên. EN video chờ footage riêng. Không sửa tài sản Picachu cũ.

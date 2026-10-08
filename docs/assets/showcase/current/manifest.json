@@ -1,0 +1,40 @@
+{
+  "at": "2026-10-08T17:13:17.019Z",
+  "site": "https://pipicachu.vercel.app",
+  "commit": "463b3fada2b964b81f9fdaba1711062a9000cfab",
+  "readonly": true,
+  "connectedWallet": false,
+  "signed": false,
+  "deal": "25JTcp8NdyqQoTksumh8hkUszc8SD3Ea3t2SNmor8Buj",
+  "captures": [
+    {
+      "name": "home-desktop-vi.png",
+      "viewport": "1440x1000",
+      "kind": "live deployed home"
+    },
+    {
+      "name": "completed-vi.png",
+      "kind": "real finalized CLI Devnet fixture, 1 USDC principal / 0.98 seller net"
+    },
+    {
+      "name": "completed-mobile-vi.png",
+      "viewport": "375x960",
+      "kind": "same read-only completed deal"
+    },
+    {
+      "name": "home-desktop-en.png",
+      "viewport": "1440x1000",
+      "kind": "live deployed home"
+    },
+    {
+      "name": "completed-en.png",
+      "kind": "real finalized CLI Devnet fixture, 1 USDC principal / 0.98 seller net"
+    },
+    {
+      "name": "completed-mobile-en.png",
+      "viewport": "375x960",
+      "kind": "same read-only completed deal"
+    }
+  ],
+  "scope": "Screenshots from current deployment; no staged transactions, customer claims or image manipulation"
+}
