@@ -21,6 +21,7 @@ import {
   approveApplicationIx,
   rejectApplicationIx,
   updatePolicyIx,
+  policyBytes,
   managerActionIx,
   type Manager,
   type Application,
@@ -147,6 +148,16 @@ export function Manage() {
     action: "revoke" | "update_policy",
   ) {
     if (!who || !authorized) return;
+    let nextPolicy: OrganizationPolicy | undefined;
+    if (action === "update_policy") {
+      try {
+        nextPolicy = policy();
+        policyBytes(nextPolicy);
+      } catch (error) {
+        setError(error);
+        return;
+      }
+    }
     if (
       !(await confirmation.ask(
         action === "revoke"
@@ -155,8 +166,8 @@ export function Manage() {
               "Revoke new-deal approval? Funded deals can still settle.",
             )
           : t(
-              "Cập nhật policy khi tổ chức đang ngừng nhận? Trọng tài phải chấp thuận policy mới khi bật lại.",
-              "Update the paused policy? The arbitrator must consent before enabling it.",
+              `Cập nhật ${org.authority.slice(0, 4)}…${org.authority.slice(-4)}: cọc ${amount(nextPolicy!.minimum)}, deal tối đa ${amount(nextPolicy!.maximum)} USDC; hạn nạp/giao/kiểm tra/SLA ${nextPolicy!.times.join(" / ")} giây? Trọng tài phải tự bật nhận lại.`,
+              `Update ${org.authority.slice(0, 4)}…${org.authority.slice(-4)}: bond ${amount(nextPolicy!.minimum)}, maximum ${amount(nextPolicy!.maximum)} USDC; funding/delivery/review/SLA ${nextPolicy!.times.join(" / ")} seconds? The arbitrator must enable service again.`,
             ),
       ))
     )
@@ -169,7 +180,11 @@ export function Manage() {
               new PublicKey(org.authority),
               false,
             )
-          : await updatePolicyIx(who, new PublicKey(org.authority), policy()),
+          : await updatePolicyIx(
+              who,
+              new PublicKey(org.authority),
+              nextPolicy!,
+            ),
       ],
       refresh,
       { action },
@@ -339,6 +354,12 @@ export function Manage() {
                       {org.accepting
                         ? t("Đang nhận", "Accepting")
                         : t("Ngừng nhận", "Paused")}
+                    </p>
+                    <p className="small">
+                      {t(
+                        `Policy trên chain: cọc ${amount(org.minimumDeposit)} USDC · Nạp/Giao/Kiểm tra/SLA ${org.times.join(" / ")} giây`,
+                        `On-chain policy: bond ${amount(org.minimumDeposit)} USDC · Fund/Deliver/Review/SLA ${org.times.join(" / ")} seconds`,
+                      )}
                     </p>
                     <div className="actions">
                       <button

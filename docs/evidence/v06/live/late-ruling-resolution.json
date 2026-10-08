@@ -1,0 +1,14 @@
+{
+  "body": {
+    "domain": "pipicachu:evidence:v1",
+    "version": 1,
+    "deal": "6wGAjeFRR5PWo2vikoNJ88PZCtpsyYwS5MZaakkzomYx",
+    "kind": "resolution",
+    "author": "2dakRFzAYG6qrWenyNUt5uCAGLhDYJMUhLBfXJn5XeC8",
+    "createdAt": "2026-10-08T10:15:27.815Z",
+    "salt": "a21bacb4b5e6a219d55d01a3315f7129ffa982ceffdfcbd8e263499b3af83ec0",
+    "note": "Synthetic Devnet acceptance fixture: late-ruling. No actual goods or customer evidence.",
+    "files": []
+  },
+  "commitment": "05a9882b78dd460f62fd5d8cbbfc2eb7d144972dd1075a2dbaa14b365fcd49e7"
+}

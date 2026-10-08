@@ -1,0 +1,14 @@
+{
+  "body": {
+    "domain": "pipicachu:evidence:v1",
+    "version": 1,
+    "deal": "F1fW1tGUhu3bRqxF4CGpZs95CiFF3W9ExYyELSRaxMTj",
+    "kind": "delivery",
+    "author": "BbftECvBKTHMm6t3Sejyz7E9HmBmcRp7NvEYnAnzb7F3",
+    "createdAt": "2026-10-08T10:13:38.478Z",
+    "salt": "a5c187f53b850d39faa4c64e5c37f856174c8cd7c5a3644006f9983a3b16e2b5",
+    "note": "Synthetic Devnet acceptance fixture: arbitrator-refund. No actual goods or customer evidence.",
+    "files": []
+  },
+  "commitment": "6b5ba3f4c2d58f7829cfdebe4e4c0b9962a79b23c420574511c73c1b2d0368a2"
+}

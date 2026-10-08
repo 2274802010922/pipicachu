@@ -18,6 +18,8 @@ Bạn có thể chuyển sang mục 2. Các bước dưới đây dùng khi thi�
 
 ## 2. Duyệt một application thử nghiệm
 
+**Đã hoàn tất với ví test 2dak ngày 08/10:** owner approval/policy, cọc/bật nhận bằng CLI, sáu nhánh và keeper payout đã kiểm. Xem [bộ live](../evidence/v06/live/README.md). Bạn không cần ký lại policy hoặc nạp thêm cho ví này. Các bước dưới là hướng dẫn cho lần chuẩn bị mới.
+
 Sau khi gateway write đã hoạt động, vào [Manage](https://pipicachu.vercel.app/manage), kết nối ví manager `CXjKGEBNTTotzoF26nGPfAG4AFicGgP72SMqUQKY1pJN`.
 
 Ví cần duyệt để nghiệm thu: `2dakRFzAYG6qrWenyNUt5uCAGLhDYJMUhLBfXJn5XeC8` (ví test riêng, không thay trọng tài chính).

@@ -1,0 +1,14 @@
+{
+  "body": {
+    "domain": "pipicachu:evidence:v1",
+    "version": 1,
+    "deal": "25JTcp8NdyqQoTksumh8hkUszc8SD3Ea3t2SNmor8Buj",
+    "kind": "delivery",
+    "author": "BbftECvBKTHMm6t3Sejyz7E9HmBmcRp7NvEYnAnzb7F3",
+    "createdAt": "2026-10-08T10:00:32.309Z",
+    "salt": "90fc02293e37366cd8c3f2fb2561a0370999b2138443d5fdb76dd1af3832c13a",
+    "note": "Synthetic Devnet acceptance fixture: confirm. No actual goods or customer evidence.",
+    "files": []
+  },
+  "commitment": "ecf0bcf57931c5cbe6cd079f1fa6ffcc7b4ea721f56cae7da4f2db9f15aa595b"
+}

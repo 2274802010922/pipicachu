@@ -5,7 +5,6 @@ import {
   Keypair,
   PublicKey,
   Transaction,
-  sendAndConfirmTransaction,
   SYSVAR_CLOCK_PUBKEY,
 } from "@solana/web3.js";
 import { getAccount } from "@solana/spl-token";
@@ -32,10 +31,19 @@ import {
 } from "../../src/escrow/governance";
 import { createEvidence, verifyEvidence } from "../../src/escrow/evidence";
 import { getAssociatedTokenAddressSync } from "../../src/escrow/token";
-import { prepareDevnetWalletTransaction } from "../../src/escrow/wallet-transaction";
+import {
+  submitWalletOperation,
+  trackOperation,
+  isUnresolved,
+  type Operation,
+} from "../../src/escrow/operation";
 const c = new Connection(
+  process.env.ACCEPTANCE_RPC_URL || "https://pipicachu.vercel.app/api/rpc",
+  { commitment: "confirmed", disableRetryOnRateLimit: true },
+);
+const archive = new Connection(
   process.env.SOLANA_DEVNET_RPC_URL || "https://api.devnet.solana.com",
-  "confirmed",
+  "finalized",
 );
 assert.equal(
   await c.getGenesisHash(),
@@ -50,21 +58,67 @@ const load = (name: string) =>
 const buyer = load("fixture-signer"),
   seller = load("escrow-seller"),
   arbitrator = load("v06-live-arbitrator");
+assert.equal(
+  arbitrator.publicKey.toBase58(),
+  "2dakRFzAYG6qrWenyNUt5uCAGLhDYJMUhLBfXJn5XeC8",
+  "Only the isolated acceptance wallet may be used",
+);
+const allowLongPolicy = process.argv.includes("--allow-long-policy");
+const maximumWindow = allowLongPolicy ? 1800 : 120;
 const application = await readApplication(c, arbitrator.publicKey),
   org = await readOrganization(c, arbitrator.publicKey);
 if (application?.status !== "approved" || !org?.approved)
   throw Error("OWNER_APPROVAL_REQUIRED");
-if (org.times.slice(1).some((n) => n > 120) || org.maximumDeal < 1_000_000n)
+if (
+  org.times.slice(1).some((n) => n > maximumWindow) ||
+  org.maximumDeal < 1_000_000n
+)
   throw Error(
     "TEST_POLICY_REQUIRED: use 60-second delivery/review/SLA only for the isolated test arbitrator",
   );
 const treasury = await readFeeTreasury(c),
   principal = 1_000_000n;
-const receipts: { action: string; signature: string }[] = [];
-const scenarios: Record<string, unknown>[] = [];
-const nonce = BigInt(Date.now());
 const directory = "docs/evidence/v06/live";
+const resume = process.argv.includes("--resume");
+const saved = resume
+  ? JSON.parse(fs.readFileSync(`${directory}/progress.json`, "utf8"))
+  : null;
+if (saved) {
+  assert.equal(saved.testArbitrator, arbitrator.publicKey.toBase58());
+  assert.equal(saved.network, "devnet");
+  assert.deepEqual(
+    saved.policyTimes,
+    org.times,
+    "Do not change policy mid-run",
+  );
+}
+const receipts: { action: string; signature: string }[] = saved?.receipts || [];
+const scenarios: Record<string, unknown>[] = saved?.scenarios || [];
+const nonce = saved ? BigInt(saved.nonce) : BigInt(Date.now());
+assert.ok(nonce >= 0n && nonce <= 0xffffffffffffffffn);
+let operation: Operation | null = saved?.operation || null;
 fs.mkdirSync(directory, { recursive: true });
+function checkpoint(stage: string) {
+  fs.writeFileSync(
+    `${directory}/progress.json`,
+    JSON.stringify(
+      {
+        at: new Date().toISOString(),
+        network: "devnet",
+        nonce: nonce.toString(),
+        testArbitrator: arbitrator.publicKey.toBase58(),
+        policyTimes: org!.times,
+        stage,
+        scenarios,
+        receipts,
+        operation,
+        source: "CLI test operations; not Phantom extension",
+      },
+      null,
+      2,
+    ),
+  );
+}
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 async function time() {
   const clock = await c.getAccountInfo(SYSVAR_CLOCK_PUBKEY);
@@ -72,7 +126,12 @@ async function time() {
   return Number(clock.data.readBigInt64LE(32));
 }
 async function waitUntil(deadline: number) {
-  for (let i = 0; i < 150; i++) {
+  checkpoint(`waiting for chain deadline ${deadline}`);
+  console.log(
+    "Waiting for the actual on-chain deadline:",
+    new Date(deadline * 1000).toISOString(),
+  );
+  for (let i = 0; i < maximumWindow + 90; i++) {
     if ((await time()) >= deadline) return;
     await sleep(1000);
   }
@@ -83,13 +142,49 @@ async function send(
   signer: Keypair,
   instructions: Awaited<ReturnType<typeof act>>[],
 ) {
-  const signature = await sendAndConfirmTransaction(
-    c,
-    prepareDevnetWalletTransaction(new Transaction().add(...instructions)),
-    [signer],
-    { commitment: "confirmed" },
-  );
+  const existing = receipts.find((r) => r.action === name);
+  if (existing) {
+    const status = (
+      await c.getSignatureStatuses([existing.signature], {
+        searchTransactionHistory: true,
+      })
+    ).value[0];
+    assert.ok(
+      status && !status.err,
+      "Existing receipt must be recorded on chain",
+    );
+    return existing.signature;
+  }
+  let signature: string;
+  if (
+    operation?.action === name &&
+    operation.signature &&
+    isUnresolved(operation)
+  ) {
+    signature = await trackOperation(c, operation, (next) => {
+      operation = next;
+      checkpoint(name);
+    });
+  } else {
+    signature = await submitWalletOperation({
+      connection: c,
+      wallet: signer.publicKey,
+      tx: new Transaction().add(...instructions),
+      sign: async (tx) => {
+        tx.partialSign(signer);
+        return tx;
+      },
+      currentWallet: () => signer.publicKey,
+      meta: { action: name },
+      onUpdate: (next) => {
+        operation = next;
+        checkpoint(name);
+      },
+    });
+  }
   receipts.push({ action: name, signature });
+  checkpoint(name);
+  console.log("Confirmed:", name, signature);
   return signature;
 }
 async function evidence(
@@ -98,6 +193,17 @@ async function evidence(
   author: Keypair,
   label: string,
 ) {
+  const file = `${directory}/${label}-${kind}.json`;
+  if (fs.existsSync(file)) {
+    const existing = JSON.parse(fs.readFileSync(file, "utf8"));
+    if (
+      existing.body.deal === d.address &&
+      existing.body.kind === kind &&
+      existing.body.author === author.publicKey.toBase58()
+    )
+      return existing;
+    assert.ok(!resume, "Evidence from a different run must not be reused");
+  }
   const envelope = await createEvidence({
     deal: d.address,
     kind,
@@ -113,52 +219,69 @@ async function evidence(
 async function create(index: number, label: string) {
   const n = nonce + BigInt(index),
     address = dealAddress(seller.publicKey, n);
-  await send(`${label}:create`, seller, [
-    await createOrganizationDealIx(
-      seller.publicKey,
-      buyer.publicKey,
-      arbitrator.publicKey,
-      n,
-      principal,
-      org!.times,
-      `Devnet test only: ${label}; no actual goods; verify fixed fees and policy1`,
-    ),
-  ]);
-  let d = await readDeal(c, address.toBase58());
+  let d: Awaited<ReturnType<typeof readDeal>>;
+  try {
+    d = await readDeal(c, address.toBase58());
+  } catch (error) {
+    if (!(error instanceof Error && error.message === "DEAL_NOT_FOUND"))
+      throw error;
+    await send(`${label}:create`, seller, [
+      await createOrganizationDealIx(
+        seller.publicKey,
+        buyer.publicKey,
+        arbitrator.publicKey,
+        n,
+        principal,
+        org!.times,
+        `Devnet test only: ${label}; no actual goods; verify fixed fees and policy1`,
+      ),
+    ]);
+    d = await readDeal(c, address.toBase58());
+  }
+  assert.equal(d.seller, seller.publicKey.toBase58());
+  assert.equal(d.buyer, buyer.publicKey.toBase58());
+  assert.equal(d.arbitrator, arbitrator.publicKey.toBase58());
   assert.equal(d.resolutionPolicyVersion, 1);
   assert.equal(d.amount, principal);
   assert.equal(d.fee, 10_000n);
   assert.equal(d.platformFee, 10_000n);
-  await send(`${label}:fund`, buyer, [await fundIx(buyer.publicKey, d)]);
-  d = await readDeal(c, d.address);
-  assert.equal(d.state, "funded");
-  assert.equal((await getAccount(c, vaultAddress(address))).amount, principal);
+  if (d.state === "created") {
+    await send(`${label}:fund`, buyer, [await fundIx(buyer.publicKey, d)]);
+    d = await readDeal(c, d.address);
+    assert.equal(d.state, "funded");
+    assert.equal(
+      (await getAccount(c, vaultAddress(address))).amount,
+      principal,
+    );
+  }
   return d;
 }
 async function deliver(d: Awaited<ReturnType<typeof readDeal>>, label: string) {
   const envelope = await evidence(d, "delivery", seller, label);
-  await send(`${label}:deliver`, seller, [
-    await act(
-      "deliver",
-      seller.publicKey,
-      new PublicKey(d.address),
-      Buffer.from(envelope.commitment, "hex"),
-    ),
-  ]);
+  if (d.state === "funded")
+    await send(`${label}:deliver`, seller, [
+      await act(
+        "deliver",
+        seller.publicKey,
+        new PublicKey(d.address),
+        Buffer.from(envelope.commitment, "hex"),
+      ),
+    ]);
   d = await readDeal(c, d.address);
   assert.equal((await verifyEvidence(envelope, d)).valid, true);
   return d;
 }
 async function dispute(d: Awaited<ReturnType<typeof readDeal>>, label: string) {
   const envelope = await evidence(d, "dispute", buyer, label);
-  await send(`${label}:dispute`, buyer, [
-    await act(
-      "dispute",
-      buyer.publicKey,
-      new PublicKey(d.address),
-      Buffer.from(envelope.commitment, "hex"),
-    ),
-  ]);
+  if (d.state === "delivered")
+    await send(`${label}:dispute`, buyer, [
+      await act(
+        "dispute",
+        buyer.publicKey,
+        new PublicKey(d.address),
+        Buffer.from(envelope.commitment, "hex"),
+      ),
+    ]);
   d = await readDeal(c, d.address);
   assert.equal((await verifyEvidence(envelope, d)).valid, true);
   return d;
@@ -177,33 +300,84 @@ async function settlement(
     arbitrator.publicKey,
     treasury,
   ];
-  const before = await Promise.all(
-    owners.map((p) => getAccount(c, getAssociatedTokenAddressSync(MINT, p))),
-  );
-  const locked = (await readArbitrator(c, arbitrator.publicKey))!.locked;
-  const signature = await send(
-    `${label}:${name}`,
-    signer,
-    await settleIxs(name, signer.publicKey, d, args, c),
-  );
-  const final = await readDeal(c, d.address),
-    after = await Promise.all(
-      owners.map((p) => getAccount(c, getAssociatedTokenAddressSync(MINT, p))),
+  if (scenarios.some((r) => r.scenario === label)) return;
+  const current = await readDeal(c, d.address);
+  const receipt = receipts.find((r) => r.action === `${label}:${name}`);
+  let signature: string;
+  if (["completed", "refunded"].includes(current.state)) {
+    assert.ok(
+      receipt,
+      "Recover an unjournaled settlement receipt before resuming",
     );
+    signature = receipt.signature;
+  } else {
+    signature = await send(
+      `${label}:${name}`,
+      signer,
+      await settleIxs(name, signer.publicKey, current, args, c),
+    );
+  }
+  const final = await readDeal(c, d.address);
+  const tx = await archive.getTransaction(signature, {
+    commitment: "finalized",
+    maxSupportedTransactionVersion: 0,
+  });
+  assert.ok(tx && !tx.meta?.err, "Finalized settlement receipt required");
+  const keys = tx.transaction.message.getAccountKeys({
+    accountKeysFromLookups: tx.meta!.loadedAddresses,
+  });
+  const deltas = owners.map((owner) => {
+    const ata = getAssociatedTokenAddressSync(MINT, owner);
+    const index = Array.from({ length: keys.length }, (_, i) =>
+      keys.get(i),
+    ).findIndex((p) => p?.equals(ata));
+    assert.ok(index >= 0, "Fixed recipient account must be present");
+    const before = tx.meta!.preTokenBalances?.find(
+      (b) => b.accountIndex === index && b.mint === MINT.toBase58(),
+    );
+    const after = tx.meta!.postTokenBalances?.find(
+      (b) => b.accountIndex === index && b.mint === MINT.toBase58(),
+    );
+    assert.ok(
+      before && after,
+      "Require complete mint/recipient balance metadata",
+    );
+    return (
+      BigInt(after.uiTokenAmount.amount) - BigInt(before.uiTokenAmount.amount)
+    );
+  });
   const expected = payout
     ? [0n, 980_000n, 10_000n, 10_000n]
     : [principal, 0n, 0n, 0n];
-  after.forEach((a, i) =>
-    assert.equal(a.amount - before[i].amount, expected[i]),
-  );
+  deltas.forEach((value, i) => assert.equal(value, expected[i]));
   assert.equal(final.state, payout ? "completed" : "refunded");
   assert.equal(
     (await getAccount(c, vaultAddress(new PublicKey(d.address)))).amount,
     0n,
   );
+  // All active reservations in this isolated run must remain accounted for.
+  // This also verifies recovery after an already-landed settlement without
+  // relying on a lost before/after snapshot or another transaction's balances.
+  let expectedReserve = 0n;
+  for (let index = 0; index < 6; index++) {
+    try {
+      const known = await readDeal(
+        c,
+        dealAddress(seller.publicKey, nonce + BigInt(index)).toBase58(),
+      );
+      assert.equal(known.arbitrator, arbitrator.publicKey.toBase58());
+      if (["funded", "delivered", "disputed"].includes(known.state))
+        expectedReserve += known.bond;
+    } catch (error) {
+      if (!(error instanceof Error && error.message === "DEAL_NOT_FOUND"))
+        throw error;
+    }
+  }
+  const arbInfo = (await readArbitrator(c, arbitrator.publicKey))!;
   assert.equal(
-    locked - (await readArbitrator(c, arbitrator.publicKey))!.locked,
-    100_000n,
+    arbInfo.locked,
+    expectedReserve,
+    "Terminal deals cannot retain or double-unlock reservations",
   );
   scenarios.push({
     scenario: label,
@@ -213,8 +387,11 @@ async function settlement(
     resolutionPolicyVersion: final.resolutionPolicyVersion,
     expectedAtomicUSDC: expected.map(String),
     vaultAmount: "0",
-    bondUnlocked: "100000",
+    reservedBondAfterSettlement: expectedReserve.toString(),
+    bondUnlockVerifiedAgainstAllKnownActiveDeals: true,
+    tokenDeltaSource: "finalized transaction pre/post balances",
   });
+  checkpoint(`verified ${label}`);
 }
 const approvalHistory = await c.getSignaturesForAddress(
   applicationAddress(arbitrator.publicKey),
@@ -223,7 +400,7 @@ const approvalHistory = await c.getSignaturesForAddress(
 let approvalSignature: string | null = null;
 for (const receipt of approvalHistory) {
   if (receipt.err) continue;
-  const transaction = await c.getTransaction(receipt.signature, {
+  const transaction = await archive.getTransaction(receipt.signature, {
     commitment: "confirmed",
     maxSupportedTransactionVersion: 0,
   });
@@ -251,16 +428,40 @@ assert.ok(
   approvalSignature,
   "Owner-signed approval must have a separate receipt",
 );
-receipts.push({
-  action: "owner manager approves isolated test application",
-  signature: approvalSignature,
-});
+if (
+  !receipts.some(
+    (r) => r.action === "owner manager approves isolated test application",
+  )
+)
+  receipts.push({
+    action: "owner manager approves isolated test application",
+    signature: approvalSignature,
+  });
 const starting = (await readArbitrator(c, arbitrator.publicKey))!;
-assert.equal(
-  starting.locked,
-  0n,
-  "Recover the previous test operation before starting a new run",
-);
+if (!resume)
+  assert.equal(
+    starting.locked,
+    0n,
+    "Resume the previous run before creating a new nonce",
+  );
+else {
+  let known = 0n;
+  for (let index = 0; index < 6; index++) {
+    try {
+      const d = await readDeal(
+        c,
+        dealAddress(seller.publicKey, nonce + BigInt(index)).toBase58(),
+      );
+      assert.equal(d.arbitrator, arbitrator.publicKey.toBase58());
+      if (["funded", "delivered", "disputed"].includes(d.state))
+        known += d.bond;
+    } catch (error) {
+      if (!(error instanceof Error && error.message === "DEAL_NOT_FOUND"))
+        throw error;
+    }
+  }
+  assert.equal(starting.locked, known, "No unknown obligations may be touched");
+}
 if (starting.total < org.minimumDeposit)
   await send("prepare isolated bond", arbitrator, [
     await bondIx(
@@ -269,15 +470,18 @@ if (starting.total < org.minimumDeposit)
       org.minimumDeposit - starting.total,
     ),
   ]);
-await send("isolated arbitrator consents to policy", arbitrator, [
-  await organizationAcceptingIx(arbitrator.publicKey, true, c),
-]);
+if (!org.accepting)
+  await send(
+    `isolated arbitrator consents to policy${resume ? ":resume:" + Date.now() : ""}`,
+    arbitrator,
+    [await organizationAcceptingIx(arbitrator.publicKey, true, c)],
+  );
 try {
+  // Start the longest clock first; all other cases use their own deals.
+  // Never shorten a signed deadline or treat elapsed wall time as chain time.
+  const deliveryTimeout = await create(1, "delivery-timeout");
   let d = await deliver(await create(0, "confirm"), "confirm");
   await settlement(d, "confirm", "confirm", buyer, true);
-  d = await create(1, "delivery-timeout");
-  await waitUntil(d.deliverBy);
-  await settlement(d, "delivery-timeout", "refund_expired", buyer, false);
   for (const [i, label, payout, late] of [
     [2, "arbitrator-payout", true, false],
     [3, "arbitrator-refund", false, false],
@@ -315,14 +519,15 @@ try {
     "mutual-refund",
   );
   await waitUntil(d.arbitrateBy);
-  await send("mutual refund proposal", buyer, [
-    await act(
-      "propose_settlement",
-      buyer.publicKey,
-      new PublicKey(d.address),
-      Buffer.from([0]),
-    ),
-  ]);
+  if (d.state === "disputed" && d.proposal === 0)
+    await send("mutual refund proposal", buyer, [
+      await act(
+        "propose_settlement",
+        buyer.publicKey,
+        new PublicKey(d.address),
+        Buffer.from([0]),
+      ),
+    ]);
   await settlement(
     await readDeal(c, d.address),
     "mutual-refund",
@@ -330,18 +535,45 @@ try {
     seller,
     false,
   );
-  for (const receipt of receipts)
-    for (let n = 0; n < 50; n++) {
-      const status = (
-        await c.getSignatureStatuses([receipt.signature], {
-          searchTransactionHistory: true,
-        })
-      ).value[0];
-      assert.ok(!status?.err);
-      if (status?.confirmationStatus === "finalized") break;
-      if (n === 49) throw Error("FINALITY_TIMEOUT");
-      await sleep(1000);
+  await waitUntil(deliveryTimeout.deliverBy);
+  await settlement(
+    deliveryTimeout,
+    "delivery-timeout",
+    "refund_expired",
+    buyer,
+    false,
+  );
+  checkpoint("all six branches verified; awaiting final receipt batch");
+  let final = false;
+  for (let n = 0; n < 50; n++) {
+    try {
+      const statuses = (
+        await c.getSignatureStatuses(
+          receipts.map((r) => r.signature),
+          { searchTransactionHistory: true },
+        )
+      ).value;
+      assert.equal(statuses.length, receipts.length);
+      assert.ok(
+        statuses.every((status) => !status?.err),
+        "A failed receipt cannot pass",
+      );
+      if (
+        statuses.every((status) => status?.confirmationStatus === "finalized")
+      ) {
+        final = true;
+        break;
+      }
+    } catch (error) {
+      if (!(
+        error instanceof Error &&
+        /RPC_UNAVAILABLE|429|fetch failed/.test(error.message)
+      ))
+        throw error;
     }
+    await sleep(2000);
+  }
+  assert.ok(final, "FINALITY_TIMEOUT");
   fs.writeFileSync(
     `${directory}/acceptance.json`,
     JSON.stringify(
@@ -367,7 +599,12 @@ try {
     "Six v0.6 live branches verified and finalized; keeper/Phantom remain separate gates",
   );
 } finally {
-  await send("pause isolated test arbitrator after acceptance", arbitrator, [
-    await organizationAcceptingIx(arbitrator.publicKey, false),
-  ]);
+  const currentOrg = await readOrganization(c, arbitrator.publicKey);
+  if (currentOrg?.accepting)
+    await send(
+      `pause isolated test arbitrator after acceptance:${Date.now()}`,
+      arbitrator,
+      [await organizationAcceptingIx(arbitrator.publicKey, false, c)],
+    );
+  checkpoint("isolated arbitrator paused; no new intake");
 }

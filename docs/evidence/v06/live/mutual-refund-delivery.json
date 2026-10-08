@@ -1,0 +1,14 @@
+{
+  "body": {
+    "domain": "pipicachu:evidence:v1",
+    "version": 1,
+    "deal": "XsGvj6AJTygKx11LfrNHy5ywQ79m6WVK2nQ3X5YsAYw",
+    "kind": "delivery",
+    "author": "BbftECvBKTHMm6t3Sejyz7E9HmBmcRp7NvEYnAnzb7F3",
+    "createdAt": "2026-10-08T10:15:51.909Z",
+    "salt": "2f771c6c35b3e48cc9ccb65de5e12756911ac79512eef1dfd2c9bc59b4326cda",
+    "note": "Synthetic Devnet acceptance fixture: mutual-refund. No actual goods or customer evidence.",
+    "files": []
+  },
+  "commitment": "7946b3c913771689696f37afa9a030df0f6aba0f0fcdfbb020f0a73fa4ab6e9b"
+}

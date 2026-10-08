@@ -1,0 +1,221 @@
+{
+  "at": "2026-10-08T10:36:16.794Z",
+  "network": "devnet",
+  "version": "0.6.0",
+  "source": "CLI-signed test transactions; not Phantom extension",
+  "managerApprovalSignature": "2vaJAzv3Jmjagk9LnNUMth96q1xWxCLxXn1qrcP61LMfA2zS83Gm1W3p9yYK1tq8pUiokMc17yiZ6c2ZvKoT6iPX",
+  "testArbitrator": "2dakRFzAYG6qrWenyNUt5uCAGLhDYJMUhLBfXJn5XeC8",
+  "allReceiptsFinalized": true,
+  "scenarios": [
+    {
+      "scenario": "confirm",
+      "address": "25JTcp8NdyqQoTksumh8hkUszc8SD3Ea3t2SNmor8Buj",
+      "signature": "5a59q7bJQfGR5Qaxd3cPpV3QBTKRETvnMMKe8L64mTjirUzbQejrUBfs1DN2ArkTob7iSF45dU7raukS9AmWSTgK",
+      "state": "completed",
+      "resolutionPolicyVersion": 1,
+      "expectedAtomicUSDC": ["0", "980000", "10000", "10000"],
+      "vaultAmount": "0",
+      "bondUnlocked": "100000"
+    },
+    {
+      "scenario": "arbitrator-payout",
+      "address": "C6pHYo6N6QNa85mfAnqEhWhGrp54ypaTxTBvgZd53tHX",
+      "signature": "vHF5WuUL6cJhU67AaCfgxbcLPVr8NmvBrM4ma4Gcfx3zxh9C3kjrmN5Ce6R7nJ6bkaJcn6SX9huJncQSZ927Pnw",
+      "state": "completed",
+      "resolutionPolicyVersion": 1,
+      "expectedAtomicUSDC": ["0", "980000", "10000", "10000"],
+      "vaultAmount": "0",
+      "reservedBondAfterSettlement": "100000",
+      "bondUnlockVerifiedAgainstAllKnownActiveDeals": true,
+      "tokenDeltaSource": "finalized transaction pre/post balances"
+    },
+    {
+      "scenario": "arbitrator-refund",
+      "address": "F1fW1tGUhu3bRqxF4CGpZs95CiFF3W9ExYyELSRaxMTj",
+      "signature": "2ss5NPwwiVcDKdsFSBQA5YiJBTck17FaP1R7Tm3jfF8xV8KchDDrg5SmkFCTvxHvLkr1d7zWGV8wJtGE9LENxDW3",
+      "state": "refunded",
+      "resolutionPolicyVersion": 1,
+      "expectedAtomicUSDC": ["1000000", "0", "0", "0"],
+      "vaultAmount": "0",
+      "reservedBondAfterSettlement": "100000",
+      "bondUnlockVerifiedAgainstAllKnownActiveDeals": true,
+      "tokenDeltaSource": "finalized transaction pre/post balances"
+    },
+    {
+      "scenario": "late-ruling",
+      "address": "6wGAjeFRR5PWo2vikoNJ88PZCtpsyYwS5MZaakkzomYx",
+      "signature": "5WQMQVxFwJQTzqtduZkHAUoQtbMSnYTUr17vGVpafuwFELQtt7aEwQL6THtDVMjy3WQC9apPU5KGPoy4BmixEv3B",
+      "state": "completed",
+      "resolutionPolicyVersion": 1,
+      "expectedAtomicUSDC": ["0", "980000", "10000", "10000"],
+      "vaultAmount": "0",
+      "reservedBondAfterSettlement": "100000",
+      "bondUnlockVerifiedAgainstAllKnownActiveDeals": true,
+      "tokenDeltaSource": "finalized transaction pre/post balances",
+      "arbitrateBy": 1791454523,
+      "networkTimeBeforeRuling": 1791454524
+    },
+    {
+      "scenario": "mutual-refund",
+      "address": "XsGvj6AJTygKx11LfrNHy5ywQ79m6WVK2nQ3X5YsAYw",
+      "signature": "5mKhqgFNebjR6MY6XQoGDdgFJMxDCGvnr8wfR5PKs3iMMQyaU1rUPJqbeunwSWZt8t3tHRgUNTb88FKsf6buTyQa",
+      "state": "refunded",
+      "resolutionPolicyVersion": 1,
+      "expectedAtomicUSDC": ["1000000", "0", "0", "0"],
+      "vaultAmount": "0",
+      "reservedBondAfterSettlement": "100000",
+      "bondUnlockVerifiedAgainstAllKnownActiveDeals": true,
+      "tokenDeltaSource": "finalized transaction pre/post balances"
+    },
+    {
+      "scenario": "delivery-timeout",
+      "address": "4CSvrebMSe2rgmjnxPFfUK6cdYHZPi9A6JrXxWaYKYmk",
+      "signature": "3rN76aaD3TpQtbw5czXx4Q1PgR9W7hnmETzvc9SzXPDFXx6iCMEFB8u28TAUevyP6aVLzSPTLatQ9EQctpHVExAv",
+      "state": "refunded",
+      "resolutionPolicyVersion": 1,
+      "expectedAtomicUSDC": ["1000000", "0", "0", "0"],
+      "vaultAmount": "0",
+      "reservedBondAfterSettlement": "0",
+      "bondUnlockVerifiedAgainstAllKnownActiveDeals": true,
+      "tokenDeltaSource": "finalized transaction pre/post balances",
+      "arbitrateBy": 1791454523,
+      "networkTimeBeforeRuling": 1791455769
+    }
+  ],
+  "receipts": [
+    {
+      "action": "owner manager approves isolated test application",
+      "signature": "2vaJAzv3Jmjagk9LnNUMth96q1xWxCLxXn1qrcP61LMfA2zS83Gm1W3p9yYK1tq8pUiokMc17yiZ6c2ZvKoT6iPX"
+    },
+    {
+      "action": "prepare isolated bond",
+      "signature": "2UoV7T8Fi6XqZULgM6r2Qe2Nn2irL3ZgHSdkiz3fqSghrND9G1MJLhAXDwwTjxAJEhcaP6mTCo6Gw9iMf4Ex4pMT"
+    },
+    {
+      "action": "isolated arbitrator consents to policy",
+      "signature": "4cYga5ERZCry2QHYuiEpDKAUUX8cNru19L4HrPe3a3mdueV2ntXsbvGc2f1FCPVLmdo9suGnRAVqVwjVhJCJYJos"
+    },
+    {
+      "action": "delivery-timeout:create",
+      "signature": "5yP1mxmnLEvuzdQDxU7QTmg7YkpjGKyQ2tLW4gkdLxM18bmNP4LBfSYiDTeW74Fg3epT577ZB4BeTt8gLxjHMJTT"
+    },
+    {
+      "action": "delivery-timeout:fund",
+      "signature": "4ge8iwuRHpeLViNDxsJ1gmpW884NcvV1Q84WGMKGHzhEMJXwU9Rjjf4pNeSpginHrm3471eG4zFLHSbhrMs6GaTH"
+    },
+    {
+      "action": "confirm:create",
+      "signature": "g5HEvuifwnKVDWH4TyRp6aDJCHK7kYyJvCzbXTbYL9yNy82fBX1DRFWkWqCs6sj16D7hokGzucth3pz4qzwKMkc"
+    },
+    {
+      "action": "confirm:fund",
+      "signature": "49dHaiMh6y6RDLxK37Y7qwA3tkGcsGSY66vnfpqvUH8mBnn8EQPC7XWdbi4P5FGByAVmVgyTGAmW7tkmg7s3AVZH"
+    },
+    {
+      "action": "confirm:deliver",
+      "signature": "NkXzBdpc6UpUznb8L6t6UgPLgqYvbYr8yqumja25UpXBvcBcqn8pdatYZbRz8dBvgifxUPnZnpb3zAEM8GoJjoK"
+    },
+    {
+      "action": "confirm:confirm",
+      "signature": "5a59q7bJQfGR5Qaxd3cPpV3QBTKRETvnMMKe8L64mTjirUzbQejrUBfs1DN2ArkTob7iSF45dU7raukS9AmWSTgK"
+    },
+    {
+      "action": "arbitrator-payout:create",
+      "signature": "DqBBsvTxkuQGHDQkAUN7VcUvRN6heaAUwPXyddVg1AtxxWLZHAWJRT6DPW5iryHjpDyxXqnDq82gHkWDa1TpxvD"
+    },
+    {
+      "action": "arbitrator-payout:fund",
+      "signature": "5H8gNUn2LVXY21Fvcn5vSBjAE5s2erhb1qubHDoQ6C3CpN7G4WsQUbf6WdrsKnJY8J2nThSYEyYtaSn9yZ1vzaPw"
+    },
+    {
+      "action": "arbitrator-payout:deliver",
+      "signature": "2uyxSjdEuMctJKkCN3QWVDoz8k1v5xu2CMxqu1TVSb3q5PKCSDFytRNX97Zisy48hTEdKAZ9wQAgkTyjSZrXNZAt"
+    },
+    {
+      "action": "arbitrator-payout:dispute",
+      "signature": "2PZdGjf8uB4Btu4jF8eACesu5rUCLmwBdRbgNCtCSDQBxunvi48t8SX4n4srfnGSe2bKTtFaxfzQ9cpq3F7zrMbC"
+    },
+    {
+      "action": "arbitrator-payout:resolve",
+      "signature": "vHF5WuUL6cJhU67AaCfgxbcLPVr8NmvBrM4ma4Gcfx3zxh9C3kjrmN5Ce6R7nJ6bkaJcn6SX9huJncQSZ927Pnw"
+    },
+    {
+      "action": "arbitrator-refund:create",
+      "signature": "2uvkLEFCjRUHKxzfWZUbNjDRBFtBjpK1jpyKFSSLwjetAgqdcUjSsk9R4i9ZFgXjdrSk6BborgCZtTvRTdu8keEw"
+    },
+    {
+      "action": "arbitrator-refund:fund",
+      "signature": "5YvoWszZBmmHtxcFgjWbvTpjLSQ33oWoBCm2SHR5idA5EnnPWQeic96TRsx7K6SwEJZNDvrgaak7HuDHTT4ATD6z"
+    },
+    {
+      "action": "arbitrator-refund:deliver",
+      "signature": "3TLruQ9jHBEeVset9zo8kSjzEw8eWuXi8Xuy66pkzUn1hVqYNcHR7EDSjMzQYDf5pMMx6Koa7ncayyeqx9oPqUvR"
+    },
+    {
+      "action": "arbitrator-refund:dispute",
+      "signature": "4cdKvqpMZE7wg6cf3FiC54Fsz16kTCG7k9CVCTwB3p59RLAEeWmARcbJebZ5ffNERzjx6JbR6Z1Z4avKjsRmTCF4"
+    },
+    {
+      "action": "arbitrator-refund:resolve",
+      "signature": "2ss5NPwwiVcDKdsFSBQA5YiJBTck17FaP1R7Tm3jfF8xV8KchDDrg5SmkFCTvxHvLkr1d7zWGV8wJtGE9LENxDW3"
+    },
+    {
+      "action": "late-ruling:create",
+      "signature": "4W3W1a11hR1WubQYMHfeM6iFEhaeH5xpmG2RzwKZdxQQz1cZYmLss8982Qr2s1PTb8LTESvGe8wjVcm5jsFKjNmk"
+    },
+    {
+      "action": "late-ruling:fund",
+      "signature": "5Z9J9w64BVQZrF4zgz73joubotNTWktdfZbttZbdXFmYziyWVSMC1xXFUpQEe96kiBH8L68eNT6iQrKj4Cv8zGPt"
+    },
+    {
+      "action": "late-ruling:deliver",
+      "signature": "4uN6g4ysaFQ824KfPc8eAaTnBw5rKATkxkKUXCseaz3mDEjgErUdkfr2DAdQugVbemTn3ytJMeh4XuS5S79JWfqt"
+    },
+    {
+      "action": "late-ruling:dispute",
+      "signature": "4bzgoQPfEyPiZs1ouSC8o58ZEyJJqpuFgyDiNiMaxJQu9FAuJWBgjtmNXfgxnjKj419zieUsFKu5kyjqV9WcYSLA"
+    },
+    {
+      "action": "late-ruling:resolve",
+      "signature": "5WQMQVxFwJQTzqtduZkHAUoQtbMSnYTUr17vGVpafuwFELQtt7aEwQL6THtDVMjy3WQC9apPU5KGPoy4BmixEv3B"
+    },
+    {
+      "action": "mutual-refund:create",
+      "signature": "3jfChpNcAMnr3Txj5y2r6ogP4Y37mUzgf9ccYEPtEsr8yuScjPvXhHnT24qzkKBwgDBUwcpoa5VguLBXDwDJaTYb"
+    },
+    {
+      "action": "mutual-refund:fund",
+      "signature": "562CugPNKy3U9WBTjQok8F4hvcfWk4sStJuvmfuu5Ud7wvGwCrPVzBqxNMhDk2Y7hNTLXsT8NBajDokeSYYxdfzL"
+    },
+    {
+      "action": "mutual-refund:deliver",
+      "signature": "3dhbAsLAsKu1ap39YDCnG9JpcAae5CE6XRzxNbkHVm6i8gSbp4ZqxUVzGbBFCnZPQKUHdxURspUTBxEWUFRUfz7A"
+    },
+    {
+      "action": "mutual-refund:dispute",
+      "signature": "47uz95Et3kiGyGK2tMKped783SRRMq7nFmWZyFhypZeMUZirruXrir93J5x9tZQokvUd8hQRqnNVFyjDCKganKP6"
+    },
+    {
+      "action": "mutual refund proposal",
+      "signature": "5zjYYc5Qsm12aBEWAVKnT59HEQr2WMs2mobpjj7t18UepBwdyfkd6UC8bNwvvFpUaTr9x3fj8sdm6SZqQzxUqWtL"
+    },
+    {
+      "action": "mutual-refund:accept_settlement",
+      "signature": "5mKhqgFNebjR6MY6XQoGDdgFJMxDCGvnr8wfR5PKs3iMMQyaU1rUPJqbeunwSWZt8t3tHRgUNTb88FKsf6buTyQa"
+    },
+    {
+      "action": "delivery-timeout:refund_expired",
+      "signature": "3rN76aaD3TpQtbw5czXx4Q1PgR9W7hnmETzvc9SzXPDFXx6iCMEFB8u28TAUevyP6aVLzSPTLatQ9EQctpHVExAv"
+    },
+    {
+      "action": "pause isolated test arbitrator after acceptance",
+      "signature": "2njmTua7dMCH1BeQ3P7mWXVgVnRV9JTq1Yx7ks8B1bRp2rPt8Ybe4wvwXhP22eVW5PxV9naZkqJUMXXUco6Ct1Kq"
+    },
+    {
+      "action": "isolated arbitrator consents to policy:resume:1791455757159",
+      "signature": "2hr8vAcEYcXEAHagEMh5yAee5fZARnrE4YeCEPrLzZeGy7yNzCF7ms6QSiP3KmFcyQKpXcnME5o7Pycapuj5WPnr"
+    }
+  ],
+  "keeperVerified": false,
+  "primaryArbitratorUnchanged": "7PpWKXsjxR6f7Zu8Se11h2nWkEyaaNVxLLd6XF9K39CG"
+}

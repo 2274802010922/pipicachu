@@ -1,0 +1,107 @@
+{
+  "at": "2026-10-08T10:50:41.004Z",
+  "network": "devnet",
+  "fixture": {
+    "at": "2026-10-08T10:41:00.207Z",
+    "network": "devnet",
+    "address": "Bs6gK3ouBaiG8GbrPmPij3XaBFgmkgwZond81RTGTkZj",
+    "buyer": "DwTKmg68k39b8jZWt1CHypfoPs5JuJsuP88SfKcbW3uj",
+    "seller": "BbftECvBKTHMm6t3Sejyz7E9HmBmcRp7NvEYnAnzb7F3",
+    "arbitrator": "2dakRFzAYG6qrWenyNUt5uCAGLhDYJMUhLBfXJn5XeC8",
+    "reviewBy": 1791456354,
+    "amount": "1000000",
+    "signatures": [
+      {
+        "action": "keeper fixture:create",
+        "signature": "3HHAb9RdtbYvsNFTfz7noJJqTi9pNve54rXP7RiWLhcdSJ8VYnxFGXQNDSXRJbAwPuEmSiesARWH8WmUSaZG2iwx"
+      },
+      {
+        "action": "keeper fixture:fund",
+        "signature": "3t6yoLRJGu8p35Rs9gWR2NiEA77KhoSSAcrQP1PieaRAq6ncSjXX7Hvh9XV8vZvXc48eBBZoabEh7dptfn49nwyP"
+      },
+      {
+        "action": "keeper fixture:deliver",
+        "signature": "44KvKS8YWdzDNv6CzLzyxrPsD7DUz9GmBs18oGAe8X4P9chsRqG6Hc8VKMi66HTbKz9VUJJp8rh8JdsaNsZDmJP"
+      }
+    ],
+    "deliveryPackage": {
+      "body": {
+        "domain": "pipicachu:evidence:v1",
+        "version": 1,
+        "deal": "Bs6gK3ouBaiG8GbrPmPij3XaBFgmkgwZond81RTGTkZj",
+        "kind": "delivery",
+        "author": "BbftECvBKTHMm6t3Sejyz7E9HmBmcRp7NvEYnAnzb7F3",
+        "createdAt": "2026-10-08T10:40:54.300Z",
+        "salt": "aad0aa7043b73a2800e415da789669f00a171d3d4368e8a1337ef238c4232763",
+        "note": "Synthetic delivered keeper fixture; no actual goods or customer evidence.",
+        "files": []
+      },
+      "commitment": "f05e6a5e9c442ef23b19471f401e5eddb573f015d9bc48ee503b442e6bdd92e1"
+    },
+    "source": "CLI-signed isolated Devnet fixture; actual keeper payout pending",
+    "beforeKeeperLocked": "100000"
+  },
+  "workflowRun": "https://github.com/2274802010922/pipicachu/actions/runs/37765632041",
+  "trigger": "workflow_dispatch after actual chain review deadline; not proof of schedule uptime",
+  "report": {
+    "startedAt": "2026-10-08T10:46:39.205Z",
+    "network": "devnet",
+    "programId": "4Xds5m5JtWR8HbNLdGeF7e3Qh3akKMHwMfjKsQeVXnrb",
+    "scanned": 1,
+    "eligible": 1,
+    "results": [
+      {
+        "deal": "Bs6gK3ouBaiG8GbrPmPij3XaBFgmkgwZond81RTGTkZj",
+        "state": "completed",
+        "signature": "3n826RG7zeJRmv1vms7L2f2XPFHZZvDTRTc47kNJ9puwPkMaAHZkRJi2WyZWP9bKx7UvT2dbcKPcUJF7yLfWE4nL"
+      }
+    ],
+    "keeper": "CHSZY4SQiRX8EyGfeW7hkp2MqYWUcgC6rp9pwqmCaijc",
+    "lastPayoutAt": "2026-10-08T10:46:44.354Z",
+    "finishedAt": "2026-10-08T10:46:44.354Z"
+  },
+  "signature": "3n826RG7zeJRmv1vms7L2f2XPFHZZvDTRTc47kNJ9puwPkMaAHZkRJi2WyZWP9bKx7UvT2dbcKPcUJF7yLfWE4nL",
+  "finalized": true,
+  "blockTime": 1791456401,
+  "reviewBy": 1791456354,
+  "expectedAtomicUSDC": ["0", "980000", "10000", "10000"],
+  "vaultAmount": "0",
+  "bondUnlockedAtomic": "100000",
+  "testArbitratorPaused": true,
+  "pauseSignature": "24wy7dUQJyLHP9xRwXrtCCWx6k9go8fr5E77BexGnFWPBZT1T5YTSenPVMbuUuVAuSzkSRJBT3oHxjhtkT56WSKV",
+  "metrics": {
+    "unitsConsumed": 47774,
+    "feeLamports": 5000,
+    "transactionBytes": 792
+  },
+  "scope": "Real Devnet service-signed payout; no Phantom or paid-customer claim",
+  "normalRestart": {
+    "run": "https://github.com/2274802010922/pipicachu/actions/runs/37766407120",
+    "report": {
+      "startedAt": "2026-10-08T10:53:35.433Z",
+      "network": "devnet",
+      "programId": "4Xds5m5JtWR8HbNLdGeF7e3Qh3akKMHwMfjKsQeVXnrb",
+      "scanned": 0,
+      "eligible": 0,
+      "results": [],
+      "keeper": "CHSZY4SQiRX8EyGfeW7hkp2MqYWUcgC6rp9pwqmCaijc",
+      "finishedAt": "2026-10-08T10:53:35.752Z"
+    },
+    "verified": "Success; no eligible deal or additional signature after completed payout"
+  },
+  "operationalFailureObserved": {
+    "run": "https://github.com/2274802010922/pipicachu/actions/runs/37766142958",
+    "report": {
+      "startedAt": "2026-10-08T10:51:19.778Z",
+      "network": "devnet",
+      "programId": "4Xds5m5JtWR8HbNLdGeF7e3Qh3akKMHwMfjKsQeVXnrb",
+      "scanned": 0,
+      "eligible": 0,
+      "results": [],
+      "keeper": "CHSZY4SQiRX8EyGfeW7hkp2MqYWUcgC6rp9pwqmCaijc",
+      "finishedAt": "2026-10-08T10:51:20.233Z",
+      "serviceError": "KEEPER_REPORT_STORAGE_UNAVAILABLE"
+    },
+    "scope": "Report storage failed during a forced recheck; not counted as successful negative-test or scheduled uptime evidence. Subsequent normal restart succeeded."
+  }
+}

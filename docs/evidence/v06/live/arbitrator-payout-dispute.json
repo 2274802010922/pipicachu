@@ -1,0 +1,14 @@
+{
+  "body": {
+    "domain": "pipicachu:evidence:v1",
+    "version": 1,
+    "deal": "C6pHYo6N6QNa85mfAnqEhWhGrp54ypaTxTBvgZd53tHX",
+    "kind": "dispute",
+    "author": "DwTKmg68k39b8jZWt1CHypfoPs5JuJsuP88SfKcbW3uj",
+    "createdAt": "2026-10-08T10:00:44.074Z",
+    "salt": "a5f77e89bc4b510cbb20383235eb6c3ade84a1870f38c6e74a19540979a7431d",
+    "note": "Synthetic Devnet acceptance fixture: arbitrator-payout. No actual goods or customer evidence.",
+    "files": []
+  },
+  "commitment": "c496c8c3b5baaa4af9f180472448433b60c1e10b982dc8d01637bcfb87d1ffb5"
+}

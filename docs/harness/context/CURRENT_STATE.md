@@ -18,9 +18,13 @@ Bằng chứng và kết quả cuối: [quality](../../evidence/quality/README.m
 
 User yêu cầu hoàn tất code và tự kiểm thủ công sau. Không hỏi lại password/seed phrase, không bypass manager approval hoặc write limiter. Redis đã được xử lý sau khi owner cung cấp cặp REST hợp lệ ngày 08/10. Vercel Production/Preview và GitHub keeper đã cấu hình; `/api/ready` true, unsigned simulation pass. Keeper hai lượt manual pass, healthy với eligible 0; chưa thay live payout/scheduled reliability/Phantom proof.
 
-Application test riêng `2dakRFzAYG6qrWenyNUt5uCAGLhDYJMUhLBfXJn5XeC8` đã được owner duyệt, receipt finalized ở `docs/evidence/v06/owner-approval.json`. Policy on-chain hiện min 1/max 10 USDC, times 1800/1800/300/1800. Đã điền sẵn draft 300/60/60/60 ở Chrome /manage; owner còn cần bấm Áp dụng policy trên đúng hàng 2dak và ký. Test key đã có đủ SOL/USDC, total/locked 0. Không thay trọng tài chính. Chỉ chạy `scripts/devnet/accept-v06.ts` sau khi policy ngắn đã lên chain; CLI không thay Phantom extension proof.
+Application test `2dakRFzAYG6qrWenyNUt5uCAGLhDYJMUhLBfXJn5XeC8` đã được owner duyệt và ký policy; on-chain times thực tế 1800/1800/300/60, min1/max10 USDC. Giữ điều kiện đã ký, không yêu cầu owner ký lại. CLI đã kiểm sáu nhánh thật/finalized (confirm, delivery timeout, arbitrator payout/refund, late ruling, mutual refund); `docs/evidence/v06/live/acceptance.json`. Ví test nạp cọc1 USDC, khóa/mở đúng theo các deal; sau keeper đã ngừng nhận và locked0. Primary 7Pp giữ nguyên.
 
-[Checklist owner](../../deployment/OWNER_CHECKS.md): phần credentials/Redis/keeper startup đã hoàn tất; manager approval đã kiểm; còn owner cập nhật policy test ngắn, Phantom accept/reject, nhánh mới Devnet, keeper payout và tester. Cọc không bảo hiểm; bỏ xử hoàn toàn và hai bên bất đồng vẫn có thể khóa tiền. CSP mặc định report-only, chưa enforce trước kiểm Phantom.
+Keeper thực đã trả một deal Delivered sau review deadline, signerCHSYC, split98/1/1 và unlock100000 atomic; proof `docs/evidence/v06/live/keeper-payout.json`. Workflow dispatch37765632041 pass; normal restart37766407120 pass/eligible0. Một forced recheck bị lỗi lưu report Redis; không tính là negative pass. Cron uptime/Phantom transfer flow/business chưa nghiệm thu.
+
+Harness dùng gateway Vercel cho read/simulation/send, source product operation lifecycle và journal để resume cùng nonce, không tạo/nạp lặp. Archive transaction đọc riêng để kiểm delta token từ receipt finalized. `--allow-long-policy --resume` tôn trọng Clock/deadline thật. UI /manage hiển thị policy trên chain, dialog ghi ví và đủ giá trị trước ký; 119unit +34browser web pass.
+
+[Checklist owner](../../deployment/OWNER_CHECKS.md): phần credentials/Redis/keeper startup đã hoàn tất; owner approval/policy và nhánh mới/keeper payout đã kiểm; còn Phantom accept/reject toàn luồng, cron reliability và tester. Cọc không bảo hiểm; bỏ xử hoàn toàn và hai bên bất đồng vẫn có thể khóa tiền. CSP mặc định report-only, chưa enforce trước kiểm Phantom.
 
 ## Hồ sơ
 
