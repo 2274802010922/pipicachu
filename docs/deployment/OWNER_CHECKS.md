@@ -4,15 +4,17 @@ Code và kiểm tự động được hoàn tất trước; các bước dưới
 
 ## 1. Sửa quyền Redis trước khi ký
 
-Production đang báo `limiterError: permissions`: đọc được nhưng lệnh EVAL của limiter bị từ chối. Không coi PING pass là đủ. Website chặn simulate/send an toàn.
+**Đã hoàn tất ngày 08/10/2026:** `/api/ready` trả `ready:true`, `limiter:true`. Đã lưu đúng cặp Redis cho Vercel Production/Preview và GitHub keeper, redeploy, kiểm GET/SET/EVAL và unsigned simulation qua website. Hai lượt keeper manual chạy thành công, ghi report vào Redis; chưa có deal eligible để chứng minh payout. Xem [bằng chứng](../evidence/quality/redis-ready-2026-10-08.json).
+
+Bạn có thể chuyển sang mục 2. Các bước dưới đây dùng khi thiết lập môi trường khác hoặc đổi token. Lỗi trước đó là token lưu trên Vercel không thực hiện được limiter, dù token được owner cung cấp trực tiếp đã qua GET/SET/EVAL. Không coi PING pass là đủ.
 
 1. Đăng nhập [Upstash Console](https://console.upstash.com/) ở tab đã mở; chọn database đang dùng cho pipicachu.
 2. Trong REST API credentials, dùng **Token** có quyền ghi, không dùng **Readonly Token**. Nếu là ACL token riêng, cần quyền EVAL/INCR/EXPIRE và GET/SET/DEL trong namespace pipicachu.
 3. Vercel → pipicachu → Settings → Environment Variables: sửa `RATE_LIMIT_REDIS_TOKEN` thành token đúng; giữ REST URL của cùng database. Áp dụng Production và Preview; Secret. Không gửi token vào chat hoặc Git.
-4. Redeploy. Mở `/api/ready`: cần `ready:true` và `limiter:true`. Đây là probe chính script limiter, không chỉ PING.
-5. GitHub repo → Settings → Secrets and variables → Actions → New repository secret: thêm `RATE_LIMIT_REDIS_URL` và `RATE_LIMIT_REDIS_TOKEN` cùng database. Giữ `DEVNET_KEEPER_KEYPAIR` hiện có. Không thêm manager/treasury key lên server.
+4. **Save xong tất cả biến trước, sau đó mới Redeploy Production.** Mở `/api/ready`: cần `ready:true` và `limiter:true`. Đây là probe chính script limiter, không chỉ PING.
+5. Secret GitHub chỉ dành cho keeper; sửa ở GitHub không tự cập nhật Vercel. GitHub repo → Settings → Secrets and variables → Actions → New repository secret: thêm `RATE_LIMIT_REDIS_URL` và `RATE_LIMIT_REDIS_TOKEN` cùng database. Giữ `DEVNET_KEEPER_KEYPAIR` hiện có. Không thêm manager/treasury key lên server.
 
-[Nguồn credentials của Upstash](https://upstash.com/docs/redis/features/restapi). Báo lại “đã đăng nhập” nếu muốn agent làm tiếp cấu hình từ console, hoặc “đã thay token/redeploy” nếu tự làm. Không cần gửi secret.
+[Nguồn credentials của Upstash](https://upstash.com/docs/redis/features/restapi). Không gửi secret vào chat/Git; cấu hình bằng giao diện Secret hoặc CLI stdin. App dùng tên `RATE_LIMIT_REDIS_URL` và `RATE_LIMIT_REDIS_TOKEN`, tương ứng với REST URL/token từ Upstash.
 
 ## 2. Duyệt một application thử nghiệm
 

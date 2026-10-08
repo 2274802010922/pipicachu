@@ -1,0 +1,38 @@
+{
+  "at": "2026-10-08T09:08:29.097Z",
+  "site": "https://pipicachu.vercel.app",
+  "readiness": {
+    "ready": true,
+    "mode": "production",
+    "rpc": true,
+    "program": true,
+    "manager": true,
+    "limiter": true,
+    "checkedAt": "2026-10-08T09:08:27.229Z",
+    "missing": []
+  },
+  "simulation": {
+    "acceptedByProxy": true,
+    "error": null,
+    "unitsConsumed": 18938,
+    "scope": "unsigned simulation only; no transaction signed/broadcast; no registration or token transfer committed"
+  },
+  "keeper": {
+    "state": "healthy",
+    "blocked": 0,
+    "report": {
+      "startedAt": "2026-10-08T09:05:54.547Z",
+      "network": "devnet",
+      "programId": "4Xds5m5JtWR8HbNLdGeF7e3Qh3akKMHwMfjKsQeVXnrb",
+      "scanned": 0,
+      "eligible": 0,
+      "results": [],
+      "keeper": "CHSZY4SQiRX8EyGfeW7hkp2MqYWUcgC6rp9pwqmCaijc",
+      "finishedAt": "2026-10-08T09:05:54.798Z"
+    }
+  },
+  "githubKeeperRun": "https://github.com/2274802010922/pipicachu/actions/runs/37751655480",
+  "credentials": "values deliberately omitted; same supplied pair verified GET/SET/EVAL; GitHub secrets and Vercel Production/Preview configured",
+  "githubKeeperRestartRun": "https://github.com/2274802010922/pipicachu/actions/runs/37754223664",
+  "limitations": "Manual keeper runs had zero eligible deals. This verifies startup/Redis report, not real payout, scheduled uptime or Phantom. Owner approval/new-policy live branches remain pending."
+}
