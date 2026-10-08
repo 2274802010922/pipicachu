@@ -25,3 +25,7 @@ Application test riêng `2dakRFzAYG6qrWenyNUt5uCAGLhDYJMUhLBfXJn5XeC8` đang pen
 ## Hồ sơ
 
 README VI/EN, Judge guide và tài liệu chất lượng cập nhật. Deck R6 (07/10) là candidate theo phạm vi tại thời điểm dựng; không coi số test cũ là báo cáo mới. Video `mTY3e3qX_4k` là happy path v0.5. EN footage và dữ liệu business/tester chưa có; không dựng bằng chứng hoặc doanh thu giả.
+
+## Revision nghiệm thu tự động
+
+Implementation commit `d044af727534e38ee66acad235064d4293e80760`, Quality run `37718022979` pass cả hai job. Vercel deploy đúng commit và read-only smoke pass. Program upgrade finalized, binary `0e5efb8dad587ee58f2952aec1ca0fa992cb074ec30d895402a49c18f3201861`; 46 deal giữ nguyên. `/api/ready` vẫn thiếu limiter với reason permissions. Commit tiếp theo chỉ ghi proof CI/smoke, không thay code.

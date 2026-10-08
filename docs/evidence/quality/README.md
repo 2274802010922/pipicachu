@@ -17,3 +17,7 @@
 Local đã qua 119 unit/integration và 33 browser; CI của revision bàn giao là cổng riêng. Native Rust có 5 test; một test chạy 4.096 bộ số tiền, không ghi thành 4.096 test độc lập. Cold bootstrap và 4 vai treasury được báo riêng. Bộ test không thay audit bảo mật độc lập.
 
 Còn cần owner kiểm credential Redis/GitHub keeper, application approval, Phantom accept/reject, các nhánh mới Devnet và dữ liệu tester. Video YouTube hiện có chỉ là happy path v0.5; slide R6 ngày 07/10 giữ phạm vi tại thời điểm dựng.
+
+## Xác nhận triển khai
+
+[CI của commit triển khai](ci-verification.json) đã pass cả web và escrow-program. [Smoke Vercel](vercel-smoke.json) pass trên cùng commit `d044af7`: đọc deal thật, VI/EN và responsive, không ký ví. Readiness vẫn 503 vì `limiterError: permissions`; Redis/keeper và owner checks tiếp tục chờ kiểm thủ công.
