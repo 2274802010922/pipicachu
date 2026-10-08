@@ -2,12 +2,7 @@
 import { Buffer } from "buffer";
 import { useState, useEffect } from "react";
 import { PublicKey } from "@solana/web3.js";
-import {
-  createEvidence,
-  type EvidenceEnvelope,
-  type EvidenceKind,
-} from "@/escrow/evidence";
-import { downloadEvidence } from "../components/evidence";
+import { noteCommitment } from "@/escrow/note-commitment";
 import { useLanguage } from "../i18n/provider";
 import { useWallet } from "../wallet";
 import { useOperation } from "./use-operation";
@@ -23,7 +18,6 @@ import {
   readDeal,
   readArbitrator,
   fundIx,
-  digest,
   settleIxs,
 } from "@/escrow/client";
 
@@ -49,16 +43,12 @@ export function useDealController(id: string) {
     receipts,
     refresh,
   } = useDeal(id);
-  const [files, setFiles] = useState<File[]>([]),
-    [prepared, setPrepared] = useState<EvidenceEnvelope | null>(null);
   const [evidence, setEvidence] = useState(""),
     [complaintOpen, setComplaintOpen] = useState(false),
     [copy, setCopy] = useState("");
   useEffect(() => {
     const timer = setTimeout(() => {
       setEvidence("");
-      setFiles([]);
-      setPrepared(null);
       setComplaintOpen(false);
     }, 0);
     return () => clearTimeout(timer);
@@ -106,20 +96,6 @@ export function useDealController(id: string) {
       refresh,
       { action: "prepare_bond", dealAddress: id },
     );
-  }
-  async function commitment(kind: EvidenceKind) {
-    if (!deal || !who || !evidence.trim()) throw Error("INVALID_TERMS");
-    if (deal.resolutionPolicyVersion !== 1) return digest(evidence);
-    const pkg = await createEvidence({
-      deal: id,
-      kind,
-      author: who.toBase58(),
-      note: evidence,
-      files,
-    });
-    setPrepared(pkg);
-    downloadEvidence(pkg);
-    return Buffer.from(pkg.commitment, "hex");
   }
   async function execute(name: string) {
     if (name === "dispute" && !complaintOpen) {
@@ -178,25 +154,16 @@ export function useDealController(id: string) {
           return [await fundIx(actor, deal)];
         }
         if (name === "deliver" || name === "dispute") {
-          if (!evidence.trim()) throw new Error("INVALID_TERMS");
-          return [
-            await act(
-              name,
-              actor,
-              d,
-              await commitment(name === "deliver" ? "delivery" : "dispute"),
-            ),
-          ];
+          return [await act(name, actor, d, await noteCommitment(evidence))];
         }
         if (name === "resolve_seller" || name === "resolve_buyer") {
-          if (!evidence.trim()) throw new Error("INVALID_TERMS");
           return settleIxs(
             "resolve",
             actor,
             deal,
             Buffer.concat([
               Buffer.from([name === "resolve_seller" ? 1 : 0]),
-              await commitment("resolution"),
+              await noteCommitment(evidence),
             ]),
             connection(),
           );
@@ -239,9 +206,6 @@ export function useDealController(id: string) {
     confirmation,
     op,
     bondOp,
-    files,
-    setFiles,
-    prepared,
     evidence,
     setEvidence,
     complaintOpen,

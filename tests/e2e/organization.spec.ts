@@ -87,7 +87,9 @@ for (const width of [375, 768, 1024, 1440])
     await page
       .getByRole("button", { name: "Mở tranh chấp", exact: true })
       .click();
-    await expect(page.getByLabel("Ghi chú bàn giao / khiếu nại")).toBeVisible();
+    await expect(
+      page.getByLabel("Lý do khiếu nại", { exact: true }),
+    ).toBeVisible();
     expect(
       await page.evaluate(
         () => document.documentElement.scrollWidth <= innerWidth,

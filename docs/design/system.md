@@ -24,4 +24,8 @@ Container max1200, desktoppadding32/mobile16; cardpadding24/mobile16, radius12. 
 
 DealViewModel là nguồn progress/actor/action/deadline. Seller tạifund chờngười mua, khôngchờtrọng tài trongworkflow1. Policy1 cho đúngtrọng tàixửmuộn; legacy0giữcutoff. Refund/cancel khôngđánh dấu các bước chưa thực hiện thành công. Mộtprimaryaction, recoveryfinalize nằmngoài happy-path.
 
-/admin làworkspace trọng tài; /managechỉquản trị registry. Pendingapproval khôngđòinạp cọc; approvalkhôngKYC. Nạp/rút vàenable có dialog tiền/policy. RPCdata20sgiới hạnmoneyaction; đổi ví/reset draft vàfeedback, VIENđổi khôngmấtinput. Pendingchưa đượcsuccess; khóa thao tác lặp vàchotheodõi signature. Evidencepackage tải trước ký vànói rõplaintext/no upload/hashkhôngchứng minh chất lượng.
+/admin làworkspace trọng tài; /managechỉquản trị registry. Pendingapproval khôngđòinạp cọc; approvalkhôngKYC. Nạp/rút vàenable có dialog tiền/policy. RPCdata20sgiới hạnmoneyaction; đổi ví/reset draft vàfeedback, VIENđổi khôngmấtinput. Pendingchưa đượcsuccess; khóa thao tác lặp vàchotheodõi signature.
+
+## Luồng ghi chú đơn giản — 08/10/2026
+
+Bàn giao/khiếu nại/phán quyết: một ô ghi chú phù hợp vai → ký ví → trạng thái. Không tạo/tải tự động JSON, nút tải JSON, chọn file hoặc verifier. Hàng/bằng chứng gửi qua chat; hash32byte còn ở phần chi tiết kỹ thuật, không tự xác minh chất lượng. Đổi VI/EN giữ nội dung ghi chú, đổi ví/deal xóa draft. Luồng tiền/phí/deadline và confirmation dialog giữ nguyên.

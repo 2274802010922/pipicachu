@@ -4,7 +4,6 @@ import { type Deal, amount, vaultAddress } from "@/escrow/client";
 import { feeBreakdown } from "@/escrow/fees";
 import { useLanguage } from "../i18n/provider";
 import { Address, Receipt } from "./feedback";
-import { EvidenceVerifier } from "./evidence";
 function vaultAddressFor(id: string) {
   return vaultAddress(new PublicKey(id)).toBase58();
 }
@@ -12,12 +11,10 @@ export function DealDetails({
   deal,
   deadline,
   receipts,
-  wallet,
 }: {
   deal: Deal;
   deadline: number;
   receipts: { signature: string; err: unknown; confirmationStatus?: string }[];
-  wallet: string | null;
 }) {
   const { t, locale } = useLanguage();
   const id = deal.address;
@@ -122,10 +119,6 @@ export function DealDetails({
           <p>{t("Chưa tải được lịch sử.", "History unavailable.")}</p>
         )}
       </details>
-      <EvidenceVerifier
-        key={`${deal.address}:${wallet || "viewer"}`}
-        deal={deal}
-      />
       <details className="panel disclosure">
         <summary>{t("Cách hoạt động", "How it works")}</summary>
         <p>

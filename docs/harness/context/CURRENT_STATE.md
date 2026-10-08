@@ -20,11 +20,19 @@ User yêu cầu hoàn tất code và tự kiểm thủ công sau. Không hỏi l
 
 Application test `2dakRFzAYG6qrWenyNUt5uCAGLhDYJMUhLBfXJn5XeC8` đã được owner duyệt và ký policy; on-chain times thực tế 1800/1800/300/60, min1/max10 USDC. Giữ điều kiện đã ký, không yêu cầu owner ký lại. CLI đã kiểm sáu nhánh thật/finalized (confirm, delivery timeout, arbitrator payout/refund, late ruling, mutual refund); `docs/evidence/v06/live/acceptance.json`. Ví test nạp cọc1 USDC, khóa/mở đúng theo các deal; sau keeper đã ngừng nhận và locked0. Primary 7Pp giữ nguyên.
 
-Keeper thực đã trả một deal Delivered sau review deadline, signerCHSYC, split98/1/1 và unlock100000 atomic; proof `docs/evidence/v06/live/keeper-payout.json`. Workflow dispatch37765632041 pass; normal restart37766407120 pass/eligible0. Một forced recheck bị lỗi lưu report Redis; không tính là negative pass. Cron uptime/Phantom transfer flow/business chưa nghiệm thu.
+Keeper thực đã trả một deal Delivered sau review deadline, signerCHSYC, split98/1/1 và unlock100000 atomic; proof `docs/evidence/v06/live/keeper-payout.json`. Workflow dispatch37765632041 pass; normal restart37766407120 pass/eligible0. Một forced recheck bị lỗi lưu report Redis; không tính là negative pass. Cron uptime/business chưa nghiệm thu. Owner báo đã kiểm Phantom thành công ngày 08/10; chưa có receipt/checklist chi tiết, không coi là bằng chứng độc lập cho mọi nhánh.
 
 Harness dùng gateway Vercel cho read/simulation/send, source product operation lifecycle và journal để resume cùng nonce, không tạo/nạp lặp. Archive transaction đọc riêng để kiểm delta token từ receipt finalized. `--allow-long-policy --resume` tôn trọng Clock/deadline thật. UI /manage hiển thị policy trên chain, dialog ghi ví và đủ giá trị trước ký; 119unit +34browser web pass.
 
-[Checklist owner](../../deployment/OWNER_CHECKS.md): phần credentials/Redis/keeper startup đã hoàn tất; owner approval/policy và nhánh mới/keeper payout đã kiểm; còn Phantom accept/reject toàn luồng, cron reliability và tester. Cọc không bảo hiểm; bỏ xử hoàn toàn và hai bên bất đồng vẫn có thể khóa tiền. CSP mặc định report-only, chưa enforce trước kiểm Phantom.
+[Checklist owner](../../deployment/OWNER_CHECKS.md): credentials/Redis/keeper startup, owner approval/policy và nhánh mới/keeper payout đã kiểm. Owner đã báo kiểm Phantom thành công; phạm vi accept/reject/VIEN/recovery riêng chưa được cung cấp. Cron reliability và tester còn riêng. Cọc không bảo hiểm; bỏ xử hoàn toàn và hai bên bất đồng vẫn có thể khóa tiền. CSP vẫn report-only, không tự enforce từ một báo cáo kiểm thủ công không có phạm vi chi tiết.
+
+## Đơn giản hóa giao diện theo phản hồi owner
+
+Owner yêu cầu bỏ tính năng gói JSON sau khi test. Website không còn auto-download, nút tải JSON, file manifest hoặc import/verifier. Bàn giao/khiếu nại/phán quyết chỉ ghi chú ngắn → ký ví → trạng thái. Hash SHA-256 của ghi chú trim vẫn truyền đúng32byte; không đổi contract, phí, wallet operation hoặc deal cũ. Ghi chú không upload/lưu; hàng và bằng chứng trao qua chat. `src/escrow/evidence.ts` chỉ phục vụ fixture lịch sử, không vào UI.
+
+Phần sửa keeper đang tạm dừng theo user và được lưu trong local Git stash riêng; không đưa vào đợt thay đổi UI này. Các cổng test/deploy cho UI mới được cập nhật theo bằng chứng sau kiểm, không dùng báo cáo Phantom của bản trước làm proof cho bản mới.
+
+Local UI mới pass 122 unit/integration, 41 browser, format/lint/typecheck/build/docs; VI/EN375/768/1024/1440 và axe. [Bằng chứng](../../evidence/quality/simple-notes.json). CI/Vercel sau push là cổng riêng cho revision này.
 
 ## Hồ sơ
 
@@ -32,4 +40,4 @@ README VI/EN, Judge guide và tài liệu chất lượng cập nhật. Deck R6 
 
 ## Revision nghiệm thu tự động
 
-Implementation commit `d044af727534e38ee66acad235064d4293e80760`, Quality run `37718022979` pass cả hai job. Vercel deploy đúng commit và read-only smoke pass. Program upgrade finalized, binary `0e5efb8dad587ee58f2952aec1ca0fa992cb074ec30d895402a49c18f3201861`; 46 deal giữ nguyên. `/api/ready` sau cấu hình ngày 08/10 đã ready/limiter true; xem `docs/evidence/quality/redis-ready-2026-10-08.json`. Commit tiếp theo chỉ ghi proof CI/smoke, không thay code.
+Implementation chất lượng commit `d044af727534e38ee66acad235064d4293e80760`, Quality run `37718022979` pass cả hai job. Vercel của checkpoint đó và read-only smoke pass. Program upgrade finalized, binary `0e5efb8dad587ee58f2952aec1ca0fa992cb074ec30d895402a49c18f3201861`; 46 deal giữ nguyên. `/api/ready` sau cấu hình ngày 08/10 đã ready/limiter true; xem `docs/evidence/quality/redis-ready-2026-10-08.json`. Các revision tiếp theo được ghi riêng trong bằng chứng tương ứng.

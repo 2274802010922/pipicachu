@@ -5,7 +5,6 @@ import { Notice, Receipt } from "../components/feedback";
 import { STATE_LABELS, ACTION_LABELS } from "../shared-escrow";
 import { DealProgress } from "../components/deal-progress";
 import { BondStep } from "../components/bond-step";
-import { downloadEvidence } from "../components/evidence";
 import { DealDetails } from "../components/deal-details";
 import { feeBreakdown } from "@/escrow/fees";
 import { bondReadiness } from "@/escrow/bond";
@@ -28,8 +27,6 @@ export function DealView({ id }: { id: string }) {
     confirmation,
     op,
     bondOp,
-    setFiles,
-    prepared,
     evidence,
     setEvidence,
     complaintOpen,
@@ -365,8 +362,16 @@ export function DealView({ id }: { id: string }) {
                   <label>
                     <span id="evidence-label">
                       {t(
-                        "Ghi chú bàn giao / khiếu nại",
-                        "Delivery / dispute note",
+                        deal.state === "disputed"
+                          ? "Lý do phán quyết"
+                          : complaintOpen
+                            ? "Lý do khiếu nại"
+                            : "Ghi chú bàn giao",
+                        deal.state === "disputed"
+                          ? "Ruling reason"
+                          : complaintOpen
+                            ? "Dispute reason"
+                            : "Delivery note",
                       )}
                     </span>
                     <textarea
@@ -377,55 +382,12 @@ export function DealView({ id }: { id: string }) {
                     />
                     <small>
                       {t(
-                        "Chia sẻ bằng chứng qua kênh đã thỏa thuận.",
-                        "Share evidence through the agreed channel.",
+                        "Gửi hàng và bằng chứng qua kênh đã thỏa thuận.",
+                        "Share goods and evidence through the agreed channel.",
                       )}
                     </small>
                   </label>
                 )}
-              {requiresEvidence &&
-                (deal.state !== "delivered" || complaintOpen) &&
-                deal.resolutionPolicyVersion === 1 && (
-                  <details>
-                    <summary>
-                      {t(
-                        "File đính kèm trong bằng chứng (tùy chọn)",
-                        "Evidence file manifest (optional)",
-                      )}
-                    </summary>
-                    <label>
-                      {t(
-                        "Chọn file để tính hash, không upload",
-                        "Select files to hash, no upload",
-                      )}
-                      <input
-                        type="file"
-                        multiple
-                        onChange={(e) => setFiles([...(e.target.files || [])])}
-                      />
-                    </label>
-                    <small>
-                      {t(
-                        "Tối đa 20 file / tổng 50 MiB. Nội dung trao qua chat; gói tải về là plaintext.",
-                        "Up to 20 files / 50 MiB total. Share content separately; downloaded packages are plaintext.",
-                      )}
-                    </small>
-                  </details>
-                )}
-              {prepared && (
-                <Notice>
-                  {t(
-                    "Gói bằng chứng đã được tạo trên máy. Tải lại nếu trình duyệt chưa lưu; gói chưa có nghĩa giao dịch đã hoàn tất.",
-                    "Evidence package generated locally. Download again if needed; this alone does not mean the transaction completed.",
-                  )}{" "}
-                  <button
-                    type="button"
-                    onClick={() => downloadEvidence(prepared)}
-                  >
-                    {t("Tải gói JSON", "Download JSON")}
-                  </button>
-                </Notice>
-              )}
               <div className="actions main-actions">
                 {primaryAction && actionButton(primaryAction, true)}
                 {available.includes("dispute") && actionButton("dispute")}
@@ -488,12 +450,7 @@ export function DealView({ id }: { id: string }) {
           />
         )}
       </div>
-      <DealDetails
-        deal={deal}
-        deadline={deadline}
-        receipts={receipts}
-        wallet={who?.toBase58() || null}
-      />
+      <DealDetails deal={deal} deadline={deadline} receipts={receipts} />
     </>
   );
 }

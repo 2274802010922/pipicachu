@@ -53,17 +53,13 @@ export function errorMessage(error: unknown, vi: boolean) {
       "Tài khoản này không phải deal pipicachu hợp lệ.",
       "This is not a valid pipicachu deal.",
     ],
-    EVIDENCE_TOO_LARGE: [
-      "Bằng chứng vượt giới hạn 20 file/50 MiB hoặc JSON 64 KiB.",
-      "Evidence exceeds 20 files/50 MiB or 64 KiB JSON.",
+    NOTE_REQUIRED: [
+      "Nhập ghi chú ngắn trước khi ký.",
+      "Enter a short note before signing.",
     ],
-    EVIDENCE_DUPLICATE_NAME: [
-      "File có tên trùng nhau. Đổi tên để đối chiếu chính xác.",
-      "Duplicate file names. Rename them for precise comparison.",
-    ],
-    INVALID_EVIDENCE: [
-      "Gói bằng chứng không hợp lệ.",
-      "Invalid evidence package.",
+    NOTE_TOO_LONG: [
+      "Ghi chú quá dài. Rút gọn và gửi nội dung chi tiết qua chat.",
+      "The note is too long. Shorten it and share details through chat.",
     ],
     INSUFFICIENT_USDC: [
       "Ví chưa đủ USDC Devnet cho thao tác này. Kiểm tra đúng mint và số dư.",

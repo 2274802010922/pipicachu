@@ -42,10 +42,10 @@ Arbitrators separately apply → manager reviews → deposit bond → enable ser
 | Late ruling for new policy 1; legacy 0 retains original deadlines         | [Protocol](docs/architecture/v06.md), [governance/capacity tests](tests/program/v06.ts)                   |
 | Separate manager authority, applications, two-step transfer               | [Client/IDL](client/idl/escrow.json), [bootstrap receipt](docs/evidence/v06/manager-bootstrap.json)       |
 | Pending recovery with the same signature; stale data blocks money actions | [Operation](src/escrow/operation.ts), [UX](docs/design/system.md)                                         |
-| Local salted evidence packages, no evidence upload                        | [Verifier](src/escrow/evidence.ts), [test vectors](tests/unit/evidence.test.ts)                           |
+| Short note → wallet signature; no JSON download or evidence file upload   | [Note hash](src/escrow/note-commitment.ts), [flow checks](tests/e2e/simple-notes.spec.ts)                 |
 | Bounded RPC, shared quotas, isolated keeper retries                       | [Backend](src/backend/), [keeper](scripts/devnet/keeper.ts)                                               |
 
-Implementation and live acceptance are distinct. **Owner approval, real Phantom v0.6, shared Redis/keeper and full new-policy live branches remain gates.** [Single current status](docs/evidence/v06/README.md).
+Manager approval, Redis, six Devnet branches and a keeper payout have recorded evidence. The owner reported a successful Phantom flow on 08 October; detailed receipts/checklists were not supplied for independent reporting. Scheduled keeper reliability, EN footage and paid-user validation remain separate gates. [Current status](docs/evidence/quality/README.md).
 
 ## Why Solana
 

@@ -13,6 +13,6 @@ Redis ← shared quotas, per-deal keeper retry, live operational reports
 
 Deal876byte tương thích legacy. Policy byte trong padding không đổi điều kiện cũ. Payout98/1/1 hoặc refund100 nguyên tử, alias treasury gộp theo token-account, bond unlock một lần. [Receipt hotfix](../evidence/hotfix-alias-recovery.json). Keeper permissionless chỉ finalize Delivered quá review, không resolve dispute.
 
-RPC schema/body/response caps và shared Redis quotas; failure mode read degraded/write closed. Operation recovery theo signature/expiry; không ký lại khi kết quả chưa rõ. Evidence local canonicalJSON+salt, không upload nội dung. [Deployment](../deployment/README.md) · [Acceptance gates](../testing/v06-gates.md).
+RPC schema/body/response caps và shared Redis quotas; failure mode read degraded/write closed. Operation recovery theo signature/expiry; không ký lại khi kết quả chưa rõ. Ghi chú được băm local; không tải JSON, nhận file hoặc upload nội dung. Hàng và bằng chứng trao ngoài ứng dụng. [Deployment](../deployment/README.md) · [Acceptance gates](../testing/v06-gates.md).
 
 Classic SPL Token USDC6decimals, không Token2022 hooks/fees. Mint đối chiếu [Circle](https://developers.circle.com/stablecoins/usdc-contract-addresses); issuer/freeze authority vẫn là yếu tố tin cậy. Token local synthetic không phải Circle issuance. CPI/PDA tham khảo [Anchor](https://www.anchor-lang.com/docs/tokens/basics/transfer-tokens). Chưa audit độc lập/Mainnet, CSP report-only tới khi Phantom thật được kiểm.

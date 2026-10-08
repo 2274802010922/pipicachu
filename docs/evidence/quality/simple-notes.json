@@ -1,0 +1,40 @@
+{
+  "date": "2026-10-08",
+  "scope": "Removal of JSON evidence workflow from website; no protocol change",
+  "local": {
+    "unitIntegration": 122,
+    "browser": 41,
+    "formatLintTypecheckBuildDocs": "pass",
+    "widths": [375, 768, 1024, 1440],
+    "languages": ["vi", "en"],
+    "axe": "pass in both languages for the simplified action card",
+    "noteActions": ["deliver", "dispute", "resolve refund"],
+    "checks": [
+      "No automatic downloads when preparing or rejecting a signature",
+      "No JSON export/import, file input or verifier interface",
+      "Encoded note commitments match an independent SHA-256 calculation",
+      "RPC request bodies do not contain plaintext notes",
+      "Changing language preserves the draft",
+      "UTF-8 byte limit and empty-note errors are enforced"
+    ],
+    "walletScope": "Injected provider rejecting signing; not Phantom extension proof"
+  },
+  "protocol": {
+    "changed": false,
+    "commitmentBytes": 32,
+    "existingCommitmentsRewritten": false,
+    "fees": "98/1/1 payout; full fee-free principal refund"
+  },
+  "privacy": "Note hashes are not encryption. Actual goods and evidence remain in the agreed external channel.",
+  "ownerReport": {
+    "date": "2026-10-08",
+    "message": "Owner reported a successful Phantom flow before requesting removal",
+    "detailedReceiptsProvided": false
+  },
+  "limits": [
+    "Historical package utilities remain only for reproducible archived fixtures",
+    "The paused keeper draft is excluded",
+    "CI and deployment verification are recorded after the implementation commit",
+    "No new Phantom-extension claim or paid-user validation"
+  ]
+}

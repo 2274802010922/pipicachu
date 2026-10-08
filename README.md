@@ -42,10 +42,10 @@ Trọng tài có workspace riêng: đăng ký → manager duyệt → nạp cọ
 | Policy 1 xử muộn, deal cũ 0 giữ deadline                          | [Protocol](docs/architecture/v06.md), [test governance/capacity](tests/program/v06.ts)               |
 | Manager riêng, application, chuyển quyền hai chữ ký               | [IDL](client/idl/escrow.json), [bootstrap thật](docs/evidence/v06/manager-bootstrap.json)            |
 | Phục hồi pending theo signature, chặn data cũ trước thao tác tiền | [Operation](src/escrow/operation.ts), [UX](docs/design/system.md)                                    |
-| Package bằng chứng có salt, kiểm local, không upload nội dung     | [Verifier](src/escrow/evidence.ts), [test vectors](tests/unit/evidence.test.ts)                      |
+| Ghi chú ngắn → ký ví; không tải JSON hoặc nhận file bằng chứng    | [Hash ghi chú](src/escrow/note-commitment.ts), [kiểm luồng](tests/e2e/simple-notes.spec.ts)          |
 | RPC có giới hạn, quota chia sẻ, keeper retry từng deal            | [Backend](src/backend/), [keeper](scripts/devnet/keeper.ts)                                          |
 
-Code đã triển khai khác bằng chứng chạy live. **Còn cổng owner duyệt application, Phantom v0.6, Redis/keeper và các nhánh policy mới Devnet.** [Một bảng trạng thái hiện tại](docs/evidence/v06/README.md).
+Manager approval, Redis, sáu nhánh Devnet và keeper payout đã có bằng chứng. Owner báo đã kiểm luồng Phantom thành công ngày 08/10; chưa gửi receipt/checklist chi tiết cho báo cáo độc lập. Lịch keeper, footage EN và dữ liệu người dùng trả phí vẫn là cổng riêng. [Trạng thái hiện tại](docs/evidence/quality/README.md).
 
 ## Vì sao dùng Solana?
 

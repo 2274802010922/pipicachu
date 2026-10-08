@@ -19,8 +19,8 @@ export function Guide({ privacy = false }: { privacy?: boolean }) {
           </p>
           <p>
             {t(
-              "Nội dung bằng chứng chỉ dùng trong trình duyệt để tạo hash; không được gửi tới AI hoặc lưu trong database của ứng dụng. Bạn phải gửi nội dung bằng chứng cho bên kia/trọng tài qua kênh đã thỏa thuận.",
-              "Evidence content is hashed in your browser, not sent to AI or stored in an app database. Share actual evidence with the other party/arbitrator through the agreed channel.",
+              "Ghi chú được băm trong trình duyệt; ứng dụng không lưu nội dung hoặc nhận file. Gửi hàng và bằng chứng qua kênh đã thỏa thuận. Hash không mã hóa nội dung, nên không ghi mật khẩu hoặc dữ liệu riêng tư.",
+              "Notes are hashed in your browser; the app does not store their content or accept files. Share goods and evidence through the agreed channel. Hashing is not encryption: do not include passwords or private data.",
             )}
           </p>
           <p>

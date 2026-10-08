@@ -1,6 +1,8 @@
 import { z } from "zod";
 import { PublicKey } from "@solana/web3.js";
 import type { Deal } from "./client";
+// Historical package fixtures only. The web app uses note-commitment.ts and
+// has no package export/import, attachment, or verifier interface.
 const hex = z.string().regex(/^[0-9a-f]{64}$/);
 const pub = z.string().refine((s) => {
   try {

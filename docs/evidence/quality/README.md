@@ -16,8 +16,10 @@
 
 Local đã qua 119 unit/integration và 33 browser; CI của revision bàn giao là cổng riêng. Native Rust có 5 test; một test chạy 4.096 bộ số tiền, không ghi thành 4.096 test độc lập. Cold bootstrap và 4 vai treasury được báo riêng. Bộ test không thay audit bảo mật độc lập.
 
-Credentials Redis/GitHub keeper đã được cấu hình và kiểm sau checkpoint. Owner approval, sáu nhánh CLI và keeper payout đã kiểm trong [bộ live](../v06/live/README.md). Còn Phantom accept/reject/toàn luồng, cron reliability và dữ liệu tester. Video YouTube hiện có chỉ là happy path v0.5; slide R6 ngày 07/10 giữ phạm vi tại thời điểm dựng.
+Credentials Redis/GitHub keeper đã được cấu hình và kiểm sau checkpoint. Owner approval, sáu nhánh CLI và keeper payout đã kiểm trong [bộ live](../v06/live/README.md). Owner báo Phantom thành công ngày 08/10; chưa cung cấp receipt/phạm vi từng ca, không coi là bằng chứng kiểm độc lập mọi nhánh. Cron reliability và dữ liệu tester còn riêng. Video YouTube hiện có chỉ là happy path v0.5; slide R6 ngày 07/10 giữ phạm vi tại thời điểm dựng.
 
 ## Xác nhận triển khai
+
+Đợt bỏ gói JSON theo yêu cầu owner: [bằng chứng local](simple-notes.json), 122 unit/integration +41 browser, VI/EN ở bốn chiều rộng và axe. Ba thao tác ghi chú gửi hash đúng, không tải file hoặc gửi nguyên văn ghi chú tới RPC. Contract không đổi; provider inject/reject chỉ là kiểm giao diện, không thay Phantom proof. CI/deploy cho revision mới được ghi riêng sau push.
 
 [CI của commit triển khai](ci-verification.json) đã pass cả web và escrow-program. [Smoke Vercel](vercel-smoke.json) pass trên cùng commit `d044af7`: đọc deal thật, VI/EN và responsive, không ký ví. Readiness sau cấu hình Redis ngày 08/10 đã ready/limiter true; [bằng chứng](redis-ready-2026-10-08.json). Keeper manual ghi report thành công với eligible 0. Owner approval và live payout đã kiểm tiếp trong [bộ live](../v06/live/README.md); còn Phantom, cron reliability và business checks.

@@ -34,6 +34,8 @@ Sau khi secret đã có, agent kiểm keeper manual/schedule/report/restart và 
 
 ## 4. Checklist nghiệm thu ký và kết quả
 
+Owner báo “test thành công” ngày 08/10, rồi yêu cầu bỏ phần gói JSON. Đây là báo cáo dùng thử thủ công, chưa có receipt hoặc kết quả riêng từng mục dưới. Không yêu cầu kiểm lại toàn bộ từ đầu chỉ vì bỏ thao tác tải file; các ca chưa có phạm vi vẫn giữ riêng trong handoff.
+
 - [ ] Kết nối đúng ví Phantom Devnet; từ chối một lượt ký: không tạo giao dịch và không báo hoàn tất.
 - [ ] Tạo deal → buyer fund → seller deliver → buyer confirm. Principal 2 USDC: seller 1,96, trọng tài 0,02, hệ thống 0,02; phí SOL riêng.
 - [ ] Mở tranh chấp trước review deadline; trọng tài chọn payout/refund. Refund phải trả đủ principal, không phí.
@@ -43,4 +45,4 @@ Sau khi secret đã có, agent kiểm keeper manual/schedule/report/restart và 
 - [ ] Mở Explorer, đối chiếu recipient/mint/amount và cọc unlocked; transaction failed không dùng làm receipt thành công.
 - [ ] Test VI/EN trên máy có Phantom thật. CSP chỉ enforce sau khi kiểm luồng này; nếu không kiểm thì giữ report-only.
 
-Lưu signature công khai, thời điểm, revision và kết quả pass/fail. Không gửi password, seed phrase, token Redis hoặc package bằng chứng riêng tư. Dữ liệu tester/khả năng trả phí là cổng business riêng.
+Lưu signature công khai, thời điểm, revision và kết quả pass/fail. Không gửi password, seed phrase, token Redis hoặc bằng chứng riêng tư. Website không còn tải/nhập gói JSON; chỉ ghi chú và ký ví, hàng/bằng chứng trao qua kênh đã thống nhất. Dữ liệu tester/khả năng trả phí là cổng business riêng.
