@@ -1,5 +1,5 @@
 <p align="center"><img src="public/brand/picachu-logo.jpg" width="88" alt="pipicachu"></p>
-<h1 align="center">pipicachu · Ký quỹ USDC cho sản phẩm số</h1>
+<h1 align="center">pipicachu · Giao dịch trung gian C2C </h1>
 <p align="center">Dành cho người mua/bán sản phẩm số qua cộng đồng đã dùng ví Solana và USDC. Một link giao dịch, điều kiện rõ, tiền giữ trong vault của chương trình.</p>
 <p align="center">
 <a href="https://github.com/2274802010922/pipicachu/actions/workflows/quality.yml"><img src="https://github.com/2274802010922/pipicachu/actions/workflows/quality.yml/badge.svg?branch=main" alt="Quality CI"></a>
