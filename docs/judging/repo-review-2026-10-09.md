@@ -8,9 +8,9 @@ Có đủ chương trình, UI, CI và receipt để trình diễn prototype Devn
 
 README VI/EN, docs index, judge guide, product/validation, architecture, testing/reproduction, current/legacy evidence, deployment/owner checklist, license/notices/security/contribution, About/topics/Release và deck R6. Đối chiếu nguồn settlement/constraints/operation với CI và receipts đã có; đây không phải audit bảo mật độc lập từng dòng code.
 
-Runtime đang deploy là `463b3fa`, [CI37812338693](https://github.com/2274802010922/pipicachu/actions/runs/37812338693) pass cả web/program. Readiness rpc/program/manager/limiter true ở lần kiểm. Keeper report stale; không nâng thành bảo đảm lịch chạy. [Ảnh bản hiện tại](../assets/showcase/current/manifest.json).
+Lần rà ban đầu chụp UI trên `463b3fa`, [CI37812338693](https://github.com/2274802010922/pipicachu/actions/runs/37812338693) pass cả web/program. Source hồ sơ tiếp theo `e9b53f0` có [CI37818489543](https://github.com/2274802010922/pipicachu/actions/runs/37818489543) pass; [snapshot09/10](../evidence/competition-snapshot.json) ghi deploy/readiness mới tại thời điểm kiểm. Keeper stale không được nâng thành uptime guarantee. [Manifest ảnh463b3fa](../assets/showcase/current/manifest.json) giữ nguyên provenance.
 
-## Những điểm cần sửa trong hồ sơ
+## Những điểm đã xử lý trong hồ sơ
 
 | Mức | Trước                                                                | Cách xử lý trong đợt này                                                                                           |
 | --- | -------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
@@ -34,6 +34,8 @@ Runtime đang deploy là `463b3fa`, [CI37812338693](https://github.com/227480201
 | Evidence & Reproducibility · 20       | Exact CI revision, binary/IDL source checks, public receipts, clean-checkout workflow | [quality](../evidence/quality/README.md), [reproduce](../testing/reproduce.md)                                    |
 
 Không tự chấm 9/10 hoặc bảo đảm giải. Bảng này ánh xạ evidence vào rubric, không dự đoán điểm giám khảo.
+
+Hồ sơ bổ sung đã có [briefVI](submission.vi.md)/[EN](submission.en.md), [mục lục](dossier.md), checklist sân khấu ngắn và snapshot revision/CI/assets. Hướng dẫn Redis/duyệt ví test cũ được archive thay vì tiếp tục xuất hiện như việc owner còn phải làm.
 
 ## Business còn thiếu gì thật sự?
 

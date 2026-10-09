@@ -6,9 +6,11 @@
 <a href="LICENSE"><img src="https://img.shields.io/badge/License-Apache_2.0-2456E6?style=flat-square" alt="Apache 2.0"></a>
 <img src="https://img.shields.io/badge/Solana-Devnet-B7F34D?style=flat-square&amp;labelColor=091426" alt="Solana Devnet">
 </p>
-<p align="center"><a href="https://pipicachu.vercel.app">Mở sản phẩm</a> · <a href="docs/judging/README.md">Giám khảo: đọc 90 giây</a> · <a href="docs/judging/pitch-4min.md">Pitch 4 phút</a> · <a href="docs/evidence/quality/README.md">Bằng chứng</a> · <a href="README.en.md">English</a></p>
+<p align="center"><a href="https://pipicachu.vercel.app">Mở sản phẩm</a> · <a href="docs/judging/dossier.md">Hồ sơ giám khảo</a> · <a href="docs/judging/slides-v06.md">Slide 4 phút</a> · <a href="docs/evidence/quality/README.md">Bằng chứng</a> · <a href="README.en.md">English</a></p>
 
 > **Prototype chạy trên Solana Devnet.** Token thử nghiệm; chưa audit độc lập hoặc triển khai Mainnet.
+
+**Brief nộp bài:** [Tiếng Việt](docs/judging/submission.vi.md) · [English](docs/judging/submission.en.md).
 
 ## Vấn đề: ai giao trước, ai trả trước?
 

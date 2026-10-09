@@ -1,0 +1,96 @@
+{
+  "kind": "competition-dossier-snapshot",
+  "verificationDateLocal": "2026-10-09",
+  "timezone": "Asia/Saigon",
+  "checkedAtUtc": "2026-10-09T02:34:39.6866725Z",
+  "sourceRevisionVerified": "e9b53f0ee511fe6d437097783a9263b2aa9bea0a",
+  "ci": {
+    "url": "https://github.com/2274802010922/pipicachu/actions/runs/37818489543",
+    "conclusion": "success",
+    "jobs": [
+      {
+        "conclusion": "success",
+        "name": "quality"
+      },
+      {
+        "conclusion": "success",
+        "name": "escrow-program"
+      }
+    ],
+    "unitIntegration": 122,
+    "browser": 41
+  },
+  "deployment": {
+    "url": "https://pipicachu.vercel.app",
+    "revision": "e9b53f0ee511fe6d437097783a9263b2aa9bea0a",
+    "readiness": {
+      "ready": true,
+      "mode": "production",
+      "rpc": true,
+      "program": true,
+      "manager": true,
+      "limiter": true,
+      "checkedAt": "2026-10-09T02:34:30.997Z",
+      "missing": []
+    },
+    "scope": "Read-only health probe; no wallet signature or broadcast"
+  },
+  "keeper": {
+    "observedState": "stale",
+    "lastReportAtUtc": "2026-10-09T00:15:48.203Z",
+    "actualPayoutEvidence": "docs/evidence/v06/live/keeper-payout.json",
+    "cronReliabilityAccepted": false,
+    "pausedDraftApplied": false
+  },
+  "release": {
+    "tag": "v0.6.0-pitch-kit",
+    "url": "https://github.com/2274802010922/pipicachu/releases/tag/v0.6.0-pitch-kit",
+    "targetCommitish": "e9b53f0ee511fe6d437097783a9263b2aa9bea0a",
+    "assetsVerified": [
+      {
+        "name": "pipicachu-pitch4-en-r2.pdf",
+        "bytes": 175066,
+        "sha256": "37eba08774a81725963f255df31a89516c84d90a3e5d99e55901ee94a7211934",
+        "url": "https://github.com/2274802010922/pipicachu/releases/download/v0.6.0-pitch-kit/pipicachu-pitch4-en-r2.pdf",
+        "headStatus": 200
+      },
+      {
+        "name": "pipicachu-pitch4-en-r2.pptx",
+        "bytes": 83397,
+        "sha256": "a4b3dd6f08eb036d8495757bbf7490c118886f6dda44af75a11d76f9a716bdaa",
+        "url": "https://github.com/2274802010922/pipicachu/releases/download/v0.6.0-pitch-kit/pipicachu-pitch4-en-r2.pptx",
+        "headStatus": 200
+      },
+      {
+        "name": "pipicachu-pitch4-vi-r2.pdf",
+        "bytes": 179929,
+        "sha256": "5f6f110796218581f8e45e64325f1db8199be0b16ea0e2fc47dc94eddc1027b8",
+        "url": "https://github.com/2274802010922/pipicachu/releases/download/v0.6.0-pitch-kit/pipicachu-pitch4-vi-r2.pdf",
+        "headStatus": 200
+      },
+      {
+        "name": "pipicachu-pitch4-vi-r2.pptx",
+        "bytes": 85244,
+        "sha256": "ab544f5be5ddd3cbe9eb6b479f92b903e1b7d76ecf76d683d4091e546f245d4a",
+        "url": "https://github.com/2274802010922/pipicachu/releases/download/v0.6.0-pitch-kit/pipicachu-pitch4-vi-r2.pptx",
+        "headStatus": 200
+      }
+    ]
+  },
+  "ownerPhantom": {
+    "reportedOn": "2026-10-08",
+    "status": "reported-success",
+    "independentPerCaseReceiptsRecorded": false
+  },
+  "business": {
+    "feeMechanism": "Implemented and tested on Devnet",
+    "paidUserValidation": "not-collected",
+    "revenueValidation": "not-collected",
+    "pilotCountsAreHypotheses": true
+  },
+  "manual": {
+    "timedRehearsalRecorded": false,
+    "powerPointDesktopInspectionRecorded": false
+  },
+  "scope": "Time-bounded verification snapshot; later documentation commits do not rewrite this observation or old slide/receipt sources"
+}

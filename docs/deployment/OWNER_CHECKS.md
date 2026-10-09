@@ -1,48 +1,29 @@
-# Checklist kiểm thủ công sau bàn giao · v0.6
+# Trước giờ demo trực tiếp · pipicachu
 
-Code và kiểm tự động được hoàn tất trước; các bước dưới đây do owner thực hiện sau theo yêu cầu. Không cần thêm tính năng để làm checklist.
+Đây là checklist chuẩn bị sân khấu, không phải yêu cầu thiết lập lại hệ thống. Owner đã báo test Phantom thành công ngày08/10. Hồ sơ và bằng chứng nằm ở [mục lục giám khảo](../judging/dossier.md).
 
-## 1. Sửa quyền Redis trước khi ký
+## Đã thực hiện
 
-**Đã hoàn tất ngày 08/10/2026:** `/api/ready` trả `ready:true`, `limiter:true`. Đã lưu đúng cặp Redis cho Vercel Production/Preview và GitHub keeper, redeploy, kiểm GET/SET/EVAL và unsigned simulation qua website. Hai lượt keeper manual chạy thành công, ghi report vào Redis; chưa có deal eligible để chứng minh payout. Xem [bằng chứng](../evidence/quality/redis-ready-2026-10-08.json).
+| Phần                                              | Bằng chứng                                                                                                                                 |
+| ------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| Redis/limiter Vercel và GitHub keeper credentials | [Redis proof](../evidence/quality/redis-ready-2026-10-08.json); readiness true tại [snapshot 09/10](../evidence/competition-snapshot.json) |
+| Owner manager approval/policy                     | [Receipt](../evidence/v06/owner-approval.json); không cần ký lại ví test 2dak                                                              |
+| Sáu nhánh Devnet và keeper payout                 | [Live evidence](../evidence/v06/live/README.md); CLI/service signatures có phạm vi riêng                                                   |
+| Luồng Phantom                                     | Owner báo đã test thành công; không tự đánh dấu từng ca nâng cao khi chưa có receipt                                                       |
+| Bộ pitch                                          | [4 slide VI/EN](../judging/slides-v06.md), notes, source, Q&A và kịch bản125 giây live                                                     |
 
-Bạn có thể chuyển sang mục 2. Các bước dưới đây dùng khi thiết lập môi trường khác hoặc đổi token. Lỗi trước đó là token lưu trên Vercel không thực hiện được limiter, dù token được owner cung cấp trực tiếp đã qua GET/SET/EVAL. Không coi PING pass là đủ.
+## Owner kiểm trước khi lên sân khấu
 
-1. Đăng nhập [Upstash Console](https://console.upstash.com/) ở tab đã mở; chọn database đang dùng cho pipicachu.
-2. Trong REST API credentials, dùng **Token** có quyền ghi, không dùng **Readonly Token**. Nếu là ACL token riêng, cần quyền EVAL/INCR/EXPIRE và GET/SET/DEL trong namespace pipicachu.
-3. Vercel → pipicachu → Settings → Environment Variables: sửa `RATE_LIMIT_REDIS_TOKEN` thành token đúng; giữ REST URL của cùng database. Áp dụng Production và Preview; Secret. Không gửi token vào chat hoặc Git.
-4. **Save xong tất cả biến trước, sau đó mới Redeploy Production.** Mở `/api/ready`: cần `ready:true` và `limiter:true`. Đây là probe chính script limiter, không chỉ PING.
-5. Secret GitHub chỉ dành cho keeper; sửa ở GitHub không tự cập nhật Vercel. GitHub repo → Settings → Secrets and variables → Actions → New repository secret: thêm `RATE_LIMIT_REDIS_URL` và `RATE_LIMIT_REDIS_TOKEN` cùng database. Giữ `DEVNET_KEEPER_KEYPAIR` hiện có. Không thêm manager/treasury key lên server.
+- [ ] Mở PPTX/PDF trên máy trình chiếu; bấm giờ một lượt theo [pitch4 phút](../judging/pitch-4min.md).
+- [ ] Seller, buyer, arbitrator dùng ba ví khác nhau. Không dùng ví 2dak của CLI harness làm ví Phantom.
+- [ ] Trọng tài đã duyệt, bật nhận và đủ cọc khả dụng; buyer có USDC Devnet, ví có SOL trả phí. Seller khác treasury để ba khoản payout nhìn riêng.
+- [ ] Chuẩn bị **deal mới1 USDC** sát giờ, còn funding deadline; mở link trong đúng cửa sổ buyer/seller, mở khóa Phantom trước.
+- [ ] Mở sẵn website, Explorer và một kết quả đã chạy trước có nhãn; không lộ secret hoặc tab cá nhân.
 
-[Nguồn credentials của Upstash](https://upstash.com/docs/redis/features/restapi). Không gửi secret vào chat/Git; cấu hình bằng giao diện Secret hoặc CLI stdin. App dùng tên `RATE_LIMIT_REDIS_URL` và `RATE_LIMIT_REDIS_TOKEN`, tương ứng với REST URL/token từ Upstash.
+Trên sân khấu chỉ chạy fund → delivery note/sign → buyer confirm → kết quả0,98/0,01/0,01. Hàng/bằng chứng gửi qua kênh đã thống nhất; website không có JSON/file import/export. Pending không gọi là thành công, không ký lại khi chưa rõ kết quả. Không chờ cron trong happy path.
 
-## 2. Duyệt một application thử nghiệm
+## Những phần chưa có kết quả công bố
 
-**Đã hoàn tất với ví test 2dak ngày 08/10:** owner approval/policy, cọc/bật nhận bằng CLI, sáu nhánh và keeper payout đã kiểm. Xem [bộ live](../evidence/v06/live/README.md). Bạn không cần ký lại policy hoặc nạp thêm cho ví này. Các bước dưới là hướng dẫn cho lần chuẩn bị mới.
+Rehearsal bằng đồng hồ, người dùng trả phí/WTP, footage EN và keeper cron reliability giữ đúng trạng thái chưa nghiệm thu. Không yêu cầu owner làm lại toàn bộ Phantom vì bỏ JSON. Checklist nâng cao thuộc [cổng kỹ thuật](../testing/v06-gates.md), khác chuẩn bị sân khấu và khác validation business.
 
-Sau khi gateway write đã hoạt động, vào [Manage](https://pipicachu.vercel.app/manage), kết nối ví manager `CXjKGEBNTTotzoF26nGPfAG4AFicGgP72SMqUQKY1pJN`.
-
-Ví cần duyệt để nghiệm thu: `2dakRFzAYG6qrWenyNUt5uCAGLhDYJMUhLBfXJn5XeC8` (ví test riêng, không thay trọng tài chính).
-
-Mở Policy và điền: cọc tối thiểu 1 USDC, deal tối đa 10 USDC, hạn nạp 300 giây, giao 60, kiểm tra 60, SLA 60. Bấm Duyệt cho đúng ví test, xem dialog và ký Phantom. Không bấm revoke hoặc update policy của ví chính `7Pp…K39CG`.
-
-Manager phải ký thật; application pending không có quyền nhận deal. Agent không có key manager và không dùng initializer để duyệt tắt. [Application receipt](../evidence/v06/test-application.json). Sau approval, script `npx tsx scripts/devnet/accept-v06.ts` dùng các ví test riêng để kiểm six branches, bảo toàn tiền/cọc và pause test arbitrator. CLI không thay Phantom proof.
-
-## 3. Keeper, browser và business
-
-Sau khi secret đã có, agent kiểm keeper manual/schedule/report/restart và receipt riêng. Nếu Phantom yêu cầu xác nhận thao tác hoặc mở khóa, owner thực hiện; không gửi password/seed phrase. EN video chờ footage riêng. [Bộ dùng thử](../product/validation-kit.md) chờ owner mời tester; chưa có dữ liệu WTP hoặc doanh thu.
-
-## 4. Checklist nghiệm thu ký và kết quả
-
-Owner báo “test thành công” ngày 08/10, rồi yêu cầu bỏ phần gói JSON. Đây là báo cáo dùng thử thủ công, chưa có receipt hoặc kết quả riêng từng mục dưới. Không yêu cầu kiểm lại toàn bộ từ đầu chỉ vì bỏ thao tác tải file; các ca chưa có phạm vi vẫn giữ riêng trong handoff.
-
-- [ ] Kết nối đúng ví Phantom Devnet; từ chối một lượt ký: không tạo giao dịch và không báo hoàn tất.
-- [ ] Tạo deal → buyer fund → seller deliver → buyer confirm. Principal 2 USDC: seller 1,96, trọng tài 0,02, hệ thống 0,02; phí SOL riêng.
-- [ ] Mở tranh chấp trước review deadline; trọng tài chọn payout/refund. Refund phải trả đủ principal, không phí.
-- [ ] Với policy 1, xử sau SLA vẫn dùng đúng trọng tài. Với policy 0, giữ cutoff cũ.
-- [ ] Trong khi đang xác nhận, tải lại tab và đổi ví: không ký lại ngay hoặc tạo deal/nạp cọc lặp.
-- [ ] Sau review deadline không dispute, keeper có receipt finalized; report có timestamp mới. Thử manual workflow theo đúng một deal đủ điều kiện.
-- [ ] Mở Explorer, đối chiếu recipient/mint/amount và cọc unlocked; transaction failed không dùng làm receipt thành công.
-- [ ] Test VI/EN trên máy có Phantom thật. CSP chỉ enforce sau khi kiểm luồng này; nếu không kiểm thì giữ report-only.
-
-Lưu signature công khai, thời điểm, revision và kết quả pass/fail. Không gửi password, seed phrase, token Redis hoặc bằng chứng riêng tư. Website không còn tải/nhập gói JSON; chỉ ghi chú và ký ví, hàng/bằng chứng trao qua kênh đã thống nhất. Dữ liệu tester/khả năng trả phí là cổng business riêng.
+[Setup/deployment cho môi trường mới](README.md) · [Checklist setup cũ đã archive](../archive/context-2026-10-09/OWNER_CHECKS.md). Không gửi password, seed phrase hoặc credential qua chat/Git.

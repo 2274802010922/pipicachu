@@ -4,6 +4,8 @@
 
 [Mở website](https://pipicachu.vercel.app) · [Pitch trực tiếp 4 phút](pitch-4min.md) · [Kết quả Devnet thật](https://pipicachu.vercel.app/deals/25JTcp8NdyqQoTksumh8hkUszc8SD3Ea3t2SNmor8Buj) · [Bằng chứng hiện tại](../evidence/quality/README.md).
 
+[Mục lục hồ sơ](dossier.md) · [Brief nộp bài VI](submission.vi.md) · [English brief](submission.en.md).
+
 ## Product & Business
 
 - Seller tạo link → buyer nạp → seller giao ngoài app → buyer xác nhận/tranh chấp.
@@ -24,7 +26,7 @@ Program kiểm role, deadline, state và fixed recipients. Payout/refund nguyên
 
 ## Đã kiểm và phạm vi tin cậy
 
-CI web/program pass trên 463b3fa; sáu nhánh CLI Devnet finalized và keeper payout có receipt. Owner báo đã test Phantom thành công, chưa cung cấp đầy đủ receipt từng ca. [Ảnh bản deploy hiện tại](../assets/showcase/current/manifest.json) là read-only captures, không thay wallet proof.
+CI web/program pass trên 463b3fa và source hồ sơe9b53f0; [snapshot09/10](../evidence/competition-snapshot.json) lưu thời điểm/revision/readiness đã kiểm. Sáu nhánh CLI Devnet finalized và keeper payout có receipt. Owner báo đã test Phantom thành công; [ảnh capture463b3fa](../assets/showcase/current/manifest.json) là read-only, không thay wallet proof.
 
 Cọc không phải insurance/slashing; trọng tài vẫn có thể xử sai hoặc bỏ xử. Khi bỏ xử và hai bên bất đồng, tiền có thể khóa. Keeper payout đã kiểm bằng dispatch; cron reliability chưa nghiệm thu. Devnet còn upgrade authority, chưa audit độc lập/Mainnet. Hash không kiểm chất lượng file. [Câu hỏi và trả lời](questions.md).
 

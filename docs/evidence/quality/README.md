@@ -1,6 +1,6 @@
 # Bằng chứng hiện tại · 09/10/2026
 
-Runtime kiểm trực tiếp: `463b3fada2b964b81f9fdaba1711062a9000cfab`. [CI37812338693](https://github.com/2274802010922/pipicachu/actions/runs/37812338693) pass cả **quality** và **escrow-program**. Không cộng số test từ nhiều checkpoint.
+App code bỏ JSON ở `463b3fa`; source hồ sơ ở `e9b53f0`. Cả [CI37812338693](https://github.com/2274802010922/pipicachu/actions/runs/37812338693) và [CI37818489543](https://github.com/2274802010922/pipicachu/actions/runs/37818489543) pass **quality/escrow-program**. [Snapshot09/10](../competition-snapshot.json) ghi deploy/readiness và asset đã kiểm, không coi một revision cũ là trạng thái đang chạy mãi. Không cộng số test các checkpoint.
 
 | Phần          | Kết quả và phạm vi                                                                                                                       |
 | ------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
@@ -10,7 +10,7 @@ Runtime kiểm trực tiếp: `463b3fada2b964b81f9fdaba1711062a9000cfab`. [CI378
 | Devnet        | [Sáu nhánh finalized](../v06/live/acceptance.json), 1 USDC principal, payout98/1/1 hoặc refund100%; CLI fixture, không khách hàng thật   |
 | Quản trị      | Owner approval/policy lên chain; [receipt](../v06/owner-approval.json), [bootstrap](../v06/manager-bootstrap.json)                       |
 | Keeper payout | [Receipt thật](../v06/live/keeper-payout.json), service signer, split98/1/1/unlock; manual dispatch, không cron uptime proof             |
-| Vercel/Redis  | Bản 463b3fa đang deploy, readiness rpc/program/manager/limiter true tại lần rà; [Redis proof](redis-ready-2026-10-08.json)               |
+| Vercel/Redis  | Revision/time/readiness tại [snapshot09/10](../competition-snapshot.json); [Redis setup proof](redis-ready-2026-10-08.json) giữ lịch sử  |
 | Phantom       | Owner báo đã test thành công 08/10. Báo cáo thủ công, chưa có receipt/checklist chi tiết cho mọi nhánh                                   |
 
 ## Binary, source và hiệu năng

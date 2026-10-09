@@ -12,4 +12,4 @@ Deal resolution policy0 giữ cutoff trọng tài cũ. Deal mới policy1 dùng 
 
 Không giữ file hàng/bằng chứng ở server. Website chỉ có ghi chú ngắn và ký ví, không tải/nhập JSON hoặc chọn file. Hàng và bằng chứng gửi qua kênh ngoài. Nội dung on-chain chỉ terms công khai tối đa512 UTF8 byte và commitment32byte; hash không xác minh chất lượng/lời trình bày đúng hoặc mã hóa ghi chú. Trọng tài bỏ xử và hai bên bất đồng vẫn có thể khóa tiền. Terminal giữ account/vault để tra cứu; chưa hoàn rent. Upgrade authority Devnet còn giữ, chưa audit/Mainnet.
 
-[Trạng thái nghiệm thu](../evidence/v06/README.md) · [Kiến trúc/ABI](../architecture/v06.md) · [Bộ dùng thử](validation-kit.md).
+[Trạng thái đã kiểm](../evidence/quality/README.md) · [Hồ sơ giám khảo](../judging/dossier.md) · [Kiến trúc/ABI](../architecture/v06.md) · [Bộ dùng thử](validation-kit.md).

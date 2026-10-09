@@ -6,9 +6,11 @@
 <a href="LICENSE"><img src="https://img.shields.io/badge/License-Apache_2.0-2456E6?style=flat-square" alt="Apache 2.0"></a>
 <img src="https://img.shields.io/badge/Solana-Devnet-B7F34D?style=flat-square&amp;labelColor=091426" alt="Solana Devnet">
 </p>
-<p align="center"><a href="https://pipicachu.vercel.app">Open app</a> · <a href="docs/judging/README.md">90-second judge guide</a> · <a href="docs/judging/pitch-4min.md">4-minute pitch</a> · <a href="docs/evidence/quality/README.md">Evidence</a> · <a href="README.md">Tiếng Việt</a></p>
+<p align="center"><a href="https://pipicachu.vercel.app">Open app</a> · <a href="docs/judging/dossier.md">Judge dossier</a> · <a href="docs/judging/slides-v06.md">4-minute slides</a> · <a href="docs/evidence/quality/README.md">Evidence</a> · <a href="README.md">Tiếng Việt</a></p>
 
 > **Working Solana Devnet prototype.** Test tokens; no independent audit or Mainnet deployment.
+
+**Submission brief:** [English](docs/judging/submission.en.md) · [Tiếng Việt](docs/judging/submission.vi.md).
 
 ## Who delivers first? Who pays first?
 
