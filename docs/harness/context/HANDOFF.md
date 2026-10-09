@@ -1,6 +1,6 @@
 # Handoff pipicachu · 09/10/2026
 
-User yêu cầu **hoàn thiện hồ sơ trước**, giữ live pitch4phút có cả Business/Technical. Không thêm feature hoặc mở lại keeper đang pause.
+User chốt **README thể hiện trực tiếp câu chuyện và 7 tiêu chí**, strengths/evidence inline, không lấy slide/dossier download làm đường dẫn chính. VI/EN đồng bộ; scope USDC Devnet; không fabricated market/audit/award claims. Live pitch4phút và dossier giữ làm tham khảo. Không thêm feature hoặc mở lại keeper đang pause.
 
 ## Bắt đầu ở đâu
 

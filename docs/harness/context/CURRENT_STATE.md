@@ -8,6 +8,8 @@ Primary arbitrator: `7PpWKXsjxR6f7Zu8Se11h2nWkEyaaNVxLLd6XF9K39CG`. Manager/plat
 
 ## Hồ sơ hiện tại
 
+User chốt **README là trang trình bày chính ngay trên GitHub**, câu chuyện sản phẩm trước rồi 7 tiêu chí: Product & Business, Technical Build, Innovative, Solana, Security/Privacy, UX, System Architecture. README VI/EN chỉ nêu thế mạnh có cơ sở, ví dụ phí, screenshot/video đúng nguồn, Mermaid và bảng evidence inline; bỏ CTA tải slide/dossier và danh sách việc thiếu/chờ khỏi root. Social Impact/Developer Tooling không có mục giải riêng; harness nằm trong Technical/Architecture. Nhãn USDC Devnet giữ đúng scope, không dựng users/revenue/audit/award claims. Dossier/slide và chi tiết vận hành vẫn là tài liệu tham khảo đã có.
+
 [Mục lục giám khảo](../../judging/dossier.md) → [brief VI](../../judging/submission.vi.md)/[EN](../../judging/submission.en.md) → [guide 90 giây](../../judging/README.md) → [live pitch 4 phút](../../judging/pitch-4min.md) → [Q&A](../../judging/questions.md).
 
 4 slide VI/EN, PPTX editable/PDF visual, R2 đã render kiểm. Nội dung3:45 +15giây đệm, live125giây, demo1USDC →0,98/0,01/0,01. [Manifest](../../evidence/pitch4-manifest.json), tag v0.6.0-pitch-kit sourcee9b53f0; slide/capture snapshots không bị overwrite. Gói hồ sơ bổ sung có source revision riêng.
