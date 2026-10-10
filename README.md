@@ -135,6 +135,14 @@ flowchart TB
 | **46 deal tương thích**      | Money, fee, terms, state, workflow, policy và deadlines giữ nguyên sau upgrade đã kiểm  | [Binary/IDL/snapshot](docs/evidence/quality/protocol-rollout.json)                       |
 
 Số liệu theo revision và loại kiểm thử; [báo cáo kỹ thuật](docs/evidence/quality/README.md) lưu nguồn đầy đủ.
+##hướng phát triển
+6 giải pháp bảo vệ tỷ lệ chia tiền cho Pipicachu
+1. Lưu tỷ lệ on-chain: Lưu phí và tỷ lệ chia tiền trực tiếp trong smart contract của từng giao dịch.
+2. Khóa điều khoản sau khi nạp: Khi người mua ký nạp USDC bằng Phantom, không ai được thay đổi tỷ lệ, kể cả admin.
+3. Giải ngân bằng smart contract: Smart contract tự tính và chuyển tiền theo tỷ lệ đã khóa, không phụ thuộc backend.
+4. Giới hạn quyền trọng tài: Trọng tài chỉ được xử lý tranh chấp theo quy tắc đã thống nhất, không được tự thay đổi tỷ lệ phí.
+5. Bảo vệ quyền nâng cấp: Sử dụng multisig + timelock hoặc chuyển smart contract sang immutable để ngăn admin âm thầm thay đổi logic.
+6. Cho phép kiểm chứng: Hiển thị tỷ lệ đã khóa và transaction trên Solana Explorer để người dùng tự xác minh.
 
 ## Chạy và tái hiện
 
