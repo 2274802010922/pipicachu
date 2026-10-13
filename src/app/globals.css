@@ -602,3 +602,50 @@ th {
     grid-template-columns: 1fr;
   }
 }
+
+.payment-breakdown {
+  margin-block: 24px;
+}
+.payment-breakdown table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+.payment-breakdown th,
+.payment-breakdown td {
+  padding: 12px 8px;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  vertical-align: top;
+  overflow-wrap: anywhere;
+}
+.payment-breakdown th:last-child,
+.payment-breakdown td:last-child {
+  width: 120px;
+  text-align: right;
+}
+.payment-breakdown h3 {
+  margin-top: 0;
+}
+.payment-trust {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+.payment-compact {
+  margin-block: 12px;
+}
+.confirmation-dialog {
+  max-height: 85dvh;
+  overflow-y: auto;
+}
+.confirmation-content {
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 480px) {
+  .payment-breakdown th:last-child,
+  .payment-breakdown td:last-child {
+    width: 96px;
+  }
+}

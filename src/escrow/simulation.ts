@@ -4,6 +4,8 @@ export function simulationFailureCode(
   logs: string[] | null | undefined,
 ): string {
   const lines = logs || [];
+  if (lines.some((line) => /Error Code: PaymentTermsChanged\./.test(line)))
+    return "PAYMENT_TERMS_CHANGED";
   if (
     lines.some(
       (line) =>

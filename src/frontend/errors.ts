@@ -1,6 +1,10 @@
 export function errorMessage(error: unknown, vi: boolean) {
   const text = error instanceof Error ? error.message : String(error);
   const labels: Record<string, [string, string]> = {
+    PAYMENT_TERMS_CHANGED: [
+      "Điều kiện hoặc phí khác bản bạn đã xem. Tải lại và kiểm tra trước khi ký; chưa nạp tiền.",
+      "Payment terms differ from your review. Refresh and review before signing; nothing was deposited.",
+    ],
     WALLET_MISSING: [
       "Kết nối ví Phantom trước khi thực hiện.",
       "Connect Phantom before continuing.",

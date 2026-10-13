@@ -1,3 +1,4 @@
+import { paymentTermsHash } from "../../src/escrow/payment-terms";
 import fs from "node:fs";
 import assert from "node:assert/strict";
 import {
@@ -20,6 +21,8 @@ import {
   dealAddress,
   digest,
   fundIx,
+  fundReviewedIx,
+  readFeeTreasury,
   MINT,
   organizationAcceptingIx,
   organizationApprovalIx,
@@ -158,13 +161,39 @@ await send(seller, [
     nonce,
     1_000_000n,
     policy.times,
-    "Permitted digital pack; review before automatic release",
+    "Bộ thiết kế: giao đủ ba file; kiểm tra trước khi giải ngân",
   ),
 ]);
 let d = await readDeal(c, address.toBase58());
 assert.equal(d.resolutionPolicyVersion, 1);
 checks.push({ case: "new deal snapshots late-ruling policy" });
-await send(manager, [await fundIx(manager.publicKey, d)]);
+const treasury = (await readFeeTreasury(c)).toBase58();
+const reviewHash = await paymentTermsHash(d, treasury);
+for (const [name, changed, recipient] of [
+  ["principal", { ...d, amount: d.amount + 1n }, treasury],
+  ["arbitrator fee", { ...d, fee: d.fee + 1n }, treasury],
+  ["platform fee", { ...d, platformFee: d.platformFee + 1n }, treasury],
+  ["recipient", d, seller.publicKey.toBase58()],
+  ["terms", { ...d, terms: d.terms + "!" }, treasury],
+  ["deadline", { ...d, reviewSeconds: d.reviewSeconds + 1 }, treasury],
+  ["seller", { ...d, seller: manager.publicKey.toBase58() }, treasury],
+] as const) {
+  await reject(`fund rejects changed ${name}`, 6009, async () =>
+    send(manager, [
+      await fundReviewedIx(
+        manager.publicKey,
+        d,
+        await paymentTermsHash(changed, recipient),
+      ),
+    ]),
+  );
+  assert.equal((await readDeal(c, address.toBase58())).state, "created");
+  assert.equal((await readArbitrator(c, arb.publicKey))!.locked, 0n);
+}
+await send(manager, [await fundReviewedIx(manager.publicKey, d, reviewHash)]);
+checks.push({
+  case: "reviewed funding binds amount, fees, recipients and UTF-8 terms",
+});
 await send(seller, [
   await act(
     "deliver",

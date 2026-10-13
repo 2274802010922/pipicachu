@@ -138,6 +138,20 @@ export async function fundIx(actor: PublicKey, d: Deal) {
     key(organizationAddress(new PublicKey(d.arbitrator))),
   ]);
 }
+/** Locks the exact on-chain terms shown before wallet signing. */
+export async function fundReviewedIx(
+  actor: PublicKey,
+  d: Deal,
+  expectedTerms: Buffer,
+) {
+  if (expectedTerms.length !== 32) throw Error("PAYMENT_TERMS_CHANGED");
+  const legacy = await fundIx(actor, d);
+  return instruction(
+    "fund_reviewed",
+    [...legacy.keys, key(FEE_CONFIG)],
+    expectedTerms,
+  );
+}
 export async function settleIxs(
   name: string,
   actor: PublicKey,

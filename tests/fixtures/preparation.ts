@@ -140,6 +140,17 @@ export function snapshotBatchFixture(
       fixture.arb,
       organization ? organizationFixture() : null,
       clockFixture(time),
+      feeConfigFixture(),
     ],
   };
+}
+
+export function feeConfigFixture() {
+  return account(
+    Buffer.concat([
+      disc("FeeConfig"),
+      new PublicKey("CXjKGEBNTTotzoF26nGPfAG4AFicGgP72SMqUQKY1pJN").toBuffer(),
+      Buffer.from([1]),
+    ]),
+  );
 }

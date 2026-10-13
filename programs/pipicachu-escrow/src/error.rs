@@ -19,4 +19,6 @@ pub enum EscrowError {
     ApplicationNotPending,
     #[msg("This organization is already approved")]
     AlreadyApproved,
+    #[msg("Payment conditions differ from the buyer review")]
+    PaymentTermsChanged,
 }

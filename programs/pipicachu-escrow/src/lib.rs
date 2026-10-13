@@ -7,6 +7,7 @@ const MAX_SECONDS: i64 = 30 * 86400;
 
 mod contexts;
 mod error;
+mod funding;
 mod math;
 mod registry;
 mod settlement;
@@ -553,42 +554,36 @@ pub mod pipicachu_escrow {
         Ok(())
     }
     pub fn fund(ctx: Context<Fund>) -> Result<()> {
-        let d = &mut ctx.accounts.deal;
-        let now = Clock::get()?.unix_timestamp;
-        require_keys_eq!(ctx.accounts.buyer.key(), d.buyer, EscrowError::Unauthorized);
-        require!(
-            d.state == State::Created && now < d.fund_by && d.approvals == 1,
-            EscrowError::WrongState
-        );
-        if d.workflow_version == 1 {
-            let org = load_organization(&ctx.accounts.organization.to_account_info())?
-                .ok_or(EscrowError::OrganizationUnavailable)?;
-            require!(
-                org.approved && org.accepting,
-                EscrowError::OrganizationUnavailable
-            );
-            require!(
-                ctx.accounts.arbitrator.total >= org.minimum_deposit
-                    && d.amount <= org.maximum_deal,
-                EscrowError::InsufficientBond
-            );
-        }
-        for a in [&mut ctx.accounts.arbitrator] {
-            require!(a.total - a.locked >= d.bond, EscrowError::InsufficientBond);
-            a.locked = a.locked.checked_add(d.bond).ok_or(EscrowError::Overflow)?;
-        }
-        transfer(
-            &ctx.accounts.token_program,
+        funding::fund_payment(
+            &ctx.accounts.buyer,
+            &mut ctx.accounts.deal,
+            &ctx.accounts.mint,
+            &mut ctx.accounts.arbitrator,
             &ctx.accounts.source,
             &ctx.accounts.vault,
-            ctx.accounts.buyer.to_account_info(),
+            &ctx.accounts.token_program,
+            &ctx.accounts.organization,
+        )
+    }
+    pub fn fund_reviewed(ctx: Context<FundReviewed>, expected_terms: [u8; 32]) -> Result<()> {
+        require!(
+            funding::terms_hash(
+                ctx.accounts.deal.key(),
+                &ctx.accounts.deal,
+                ctx.accounts.fee_config.treasury
+            ) == expected_terms,
+            EscrowError::PaymentTermsChanged
+        );
+        funding::fund_payment(
+            &ctx.accounts.buyer,
+            &mut ctx.accounts.deal,
             &ctx.accounts.mint,
-            d.amount,
-            &[],
-        )?;
-        d.state = State::Funded;
-        d.deliver_by = now + d.delivery_seconds;
-        Ok(())
+            &mut ctx.accounts.arbitrator,
+            &ctx.accounts.source,
+            &ctx.accounts.vault,
+            &ctx.accounts.token_program,
+            &ctx.accounts.organization,
+        )
     }
     pub fn deliver(ctx: Context<Act>, evidence_hash: [u8; 32]) -> Result<()> {
         let d = &mut ctx.accounts.deal;

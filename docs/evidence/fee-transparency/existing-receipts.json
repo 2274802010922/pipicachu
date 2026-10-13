@@ -1,0 +1,42 @@
+{
+  "at": "2026-10-13T04:04:17.115Z",
+  "source": "read-only existing finalized Devnet transactions",
+  "proof": [
+    {
+      "scenario": "confirm",
+      "deal": "25JTcp8NdyqQoTksumh8hkUszc8SD3Ea3t2SNmor8Buj",
+      "signature": "5a59q7bJQfGR5Qaxd3cPpV3QBTKRETvnMMKe8L64mTjirUzbQejrUBfs1DN2ArkTob7iSF45dU7raukS9AmWSTgK",
+      "verified": true
+    },
+    {
+      "scenario": "arbitrator-payout",
+      "deal": "C6pHYo6N6QNa85mfAnqEhWhGrp54ypaTxTBvgZd53tHX",
+      "signature": "vHF5WuUL6cJhU67AaCfgxbcLPVr8NmvBrM4ma4Gcfx3zxh9C3kjrmN5Ce6R7nJ6bkaJcn6SX9huJncQSZ927Pnw",
+      "verified": true
+    },
+    {
+      "scenario": "arbitrator-refund",
+      "deal": "F1fW1tGUhu3bRqxF4CGpZs95CiFF3W9ExYyELSRaxMTj",
+      "signature": "2ss5NPwwiVcDKdsFSBQA5YiJBTck17FaP1R7Tm3jfF8xV8KchDDrg5SmkFCTvxHvLkr1d7zWGV8wJtGE9LENxDW3",
+      "verified": true
+    },
+    {
+      "scenario": "late-ruling",
+      "deal": "6wGAjeFRR5PWo2vikoNJ88PZCtpsyYwS5MZaakkzomYx",
+      "signature": "5WQMQVxFwJQTzqtduZkHAUoQtbMSnYTUr17vGVpafuwFELQtt7aEwQL6THtDVMjy3WQC9apPU5KGPoy4BmixEv3B",
+      "verified": true
+    },
+    {
+      "scenario": "mutual-refund",
+      "deal": "XsGvj6AJTygKx11LfrNHy5ywQ79m6WVK2nQ3X5YsAYw",
+      "signature": "5mKhqgFNebjR6MY6XQoGDdgFJMxDCGvnr8wfR5PKs3iMMQyaU1rUPJqbeunwSWZt8t3tHRgUNTb88FKsf6buTyQa",
+      "verified": true
+    },
+    {
+      "scenario": "delivery-timeout",
+      "deal": "4CSvrebMSe2rgmjnxPFfUK6cdYHZPi9A6JrXxWaYKYmk",
+      "signature": "3rN76aaD3TpQtbw5czXx4Q1PgR9W7hnmETzvc9SzXPDFXx6iCMEFB8u28TAUevyP6aVLzSPTLatQ9EQctpHVExAv",
+      "verified": true
+    }
+  ]
+}

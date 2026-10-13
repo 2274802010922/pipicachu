@@ -16,6 +16,7 @@ export function useDeal(id: string) {
   const [deal, setDeal] = useState<Deal | null>(null),
     [organization, setOrganization] = useState<Organization | null>(null),
     [profile, setProfile] = useState<Arbitrator | null | undefined>(undefined);
+  const [treasury, setTreasury] = useState<string | null>(null);
   const [error, setError] = useState(""),
     [loading, setLoading] = useState(true),
     [chainTime, setChainTime] = useState(0),
@@ -36,9 +37,11 @@ export function useDeal(id: string) {
         profile: arb,
         organization: org,
         chainTime: time,
+        treasury: recipient,
       } = await readDealSnapshot(c, id);
       if (revision !== generation.current) return;
       setDeal(d);
+      setTreasury(recipient);
       setProfile(arb);
       setOrganization(org);
       setChainTime(time);
@@ -73,6 +76,7 @@ export function useDeal(id: string) {
       if (revision !== generation.current) return;
       setError(errorMessage(e, locale === "vi"));
       setReadAt(0);
+      setTreasury(null);
       setProfile(undefined);
       setDeal((old) => (old?.address === id ? old : null));
       setLoading(false);
@@ -111,6 +115,7 @@ export function useDeal(id: string) {
     deal,
     organization,
     arbitratorProfile: profile,
+    treasury,
     error,
     loading,
     readAt,

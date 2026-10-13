@@ -6,6 +6,7 @@ import {
   preparationAddress,
   fixtureTime,
   clockFixture,
+  feeConfigFixture,
   organizationFixture,
 } from "../fixtures/preparation";
 function decoded(raw: ReturnType<typeof clockFixture>) {
@@ -24,6 +25,7 @@ it("two simultaneous readers share a fresh two-RPC snapshot with finalized commi
       decoded(f.arb),
       decoded(organizationFixture()),
       decoded(clockFixture()),
+      decoded(feeConfigFixture()),
     ]),
   } as unknown as Connection;
   const [first, second] = await Promise.all([

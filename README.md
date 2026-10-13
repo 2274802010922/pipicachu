@@ -136,15 +136,13 @@ flowchart TB
 
 Số liệu theo revision và loại kiểm thử; [báo cáo kỹ thuật](docs/evidence/quality/README.md) lưu nguồn đầy đủ.
 
+## Minh bạch phí 98 / 1 / 1
 
-##hướng phát triển
-6 giải pháp bảo vệ tỷ lệ chia tiền cho Pipicachu
-1. Lưu tỷ lệ on-chain: Lưu phí và tỷ lệ chia tiền trực tiếp trong smart contract của từng giao dịch.
-2. Khóa điều khoản sau khi nạp: Khi người mua ký nạp USDC bằng Phantom, không ai được thay đổi tỷ lệ, kể cả admin.
-3. Giải ngân bằng smart contract: Smart contract tự tính và chuyển tiền theo tỷ lệ đã khóa, không phụ thuộc backend.
-4. Giới hạn quyền trọng tài: Trọng tài chỉ được xử lý tranh chấp theo quy tắc đã thống nhất, không được tự thay đổi tỷ lệ phí.
-5. Bảo vệ quyền nâng cấp: Sử dụng multisig + timelock hoặc chuyển smart contract sang immutable để ngăn admin âm thầm thay đổi logic.
-6. Cho phép kiểm chứng: Hiển thị tỷ lệ đã khóa và transaction trên Solana Explorer để người dùng tự xác minh.
+- Bảng phân bổ đọc trực tiếp từ deal on-chain, hiển thị số USDC và địa chỉ nhận trước khi người mua ký. Hoàn tiền trả đủ principal, phí dịch vụ bằng 0; phí mạng/rent SOL riêng.
+- Instruction \`fund_reviewed\` đối chiếu hash của số tiền, phí, người nhận, thời hạn và điều khoản đã xem. Thay đổi bất kỳ trường nào đều bị chặn trước khi nạp; deal cũ giữ điều kiện cũ.
+- Receipt được đối chiếu với transfer finalized, đúng vault/mint/token account và tổng tiền. Quyền nâng cấp được đọc live từ Solana, không suy ra từ một nhãn cấu hình.
+
+[Thiết kế và cổng bất biến](docs/architecture/fee-transparency.md) · [Trạng thái chương trình](https://pipicachu.vercel.app/api/program-status). Program còn upgrade authority thì chủ quyền vẫn có thể thay code; multisig/timelock không đồng nghĩa immutable. Chỉ công bố đã bỏ quyền khi có bằng chứng on-chain.
 
 ## Chạy và tái hiện
 

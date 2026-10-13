@@ -1,4 +1,6 @@
 "use client";
+import { PaymentReceipt } from "../components/payment-receipt";
+import { PaymentBreakdown } from "../components/payment-breakdown";
 import { useLanguage } from "../i18n/provider";
 import { useDealController } from "../hooks/use-deal-controller";
 import { Notice, Receipt } from "../components/feedback";
@@ -22,6 +24,7 @@ export function DealView({ id }: { id: string }) {
     readAt,
     fresh,
     receipts,
+    treasury,
     refresh,
     who,
     confirmation,
@@ -450,6 +453,14 @@ export function DealView({ id }: { id: string }) {
           />
         )}
       </div>
+      <PaymentBreakdown deal={deal} treasury={treasury} />
+      <PaymentReceipt
+        deal={deal}
+        treasury={treasury}
+        signatures={receipts
+          .filter((r) => !r.err && r.confirmationStatus === "finalized")
+          .map((r) => r.signature)}
+      />
       <DealDetails deal={deal} deadline={deadline} receipts={receipts} />
     </>
   );

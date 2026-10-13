@@ -1979,6 +1979,123 @@
           "type": "u64"
         }
       ]
+    },
+    {
+      "name": "fund_reviewed",
+      "discriminator": [91, 109, 236, 21, 143, 104, 188, 14],
+      "accounts": [
+        {
+          "name": "buyer",
+          "signer": true
+        },
+        {
+          "name": "deal",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [100, 101, 97, 108]
+              },
+              {
+                "kind": "account",
+                "path": "deal.seller",
+                "account": "Deal"
+              },
+              {
+                "kind": "account",
+                "path": "deal.nonce",
+                "account": "Deal"
+              }
+            ]
+          }
+        },
+        {
+          "name": "mint",
+          "relations": ["deal", "arbitrator"]
+        },
+        {
+          "name": "arbitrator",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [97, 114, 98]
+              },
+              {
+                "kind": "account",
+                "path": "deal.arbitrator",
+                "account": "Deal"
+              }
+            ]
+          }
+        },
+        {
+          "name": "source",
+          "writable": true
+        },
+        {
+          "name": "vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [118, 97, 117, 108, 116]
+              },
+              {
+                "kind": "account",
+                "path": "deal"
+              }
+            ]
+          }
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "name": "organization",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  111, 114, 103, 97, 110, 105, 122, 97, 116, 105, 111, 110
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "deal.arbitrator",
+                "account": "Deal"
+              }
+            ]
+          }
+        },
+        {
+          "name": "fee_config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112, 108, 97, 116, 102, 111, 114, 109, 95, 102, 101, 101, 95,
+                  118, 49
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "args": [
+        {
+          "name": "expected_terms",
+          "type": {
+            "array": ["u8", 32]
+          }
+        }
+      ]
     }
   ],
   "accounts": [
@@ -2056,6 +2173,11 @@
       "code": 6008,
       "name": "AlreadyApproved",
       "msg": "This organization is already approved"
+    },
+    {
+      "code": 6009,
+      "name": "PaymentTermsChanged",
+      "msg": "Payment conditions differ from the buyer review"
     }
   ],
   "types": [

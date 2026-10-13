@@ -3,7 +3,7 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import { useLanguage } from "../i18n/provider";
 export function useConfirmation(resetKey?: string) {
   const { t } = useLanguage();
-  const [message, setMessage] = useState<string | null>(null);
+  const [message, setMessage] = useState<React.ReactNode>(null);
   const element = useRef<HTMLDialogElement>(null);
   const resolve = useRef<((accepted: boolean) => void) | null>(null);
   useEffect(() => {
@@ -22,7 +22,7 @@ export function useConfirmation(resetKey?: string) {
     return () => clearTimeout(timer);
   }, [resetKey, finish]);
   return {
-    ask: (text: string) =>
+    ask: (text: React.ReactNode) =>
       new Promise<boolean>((done) => {
         resolve.current?.(false);
         resolve.current = done;
@@ -41,7 +41,7 @@ export function useConfirmation(resetKey?: string) {
         <h2 id="confirmation-title">
           {t("Kiểm tra trước khi ký", "Review before signing")}
         </h2>
-        <p>{message}</p>
+        <div className="confirmation-content">{message}</div>
         <div className="actions">
           <button onClick={() => finish(false)}>
             {t("Quay lại", "Go back")}

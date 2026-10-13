@@ -15,6 +15,11 @@ import {
 import type { Arbitrator } from "./types";
 export async function readFeeTreasury(c: Connection): Promise<PublicKey> {
   const info = await c.getAccountInfo(FEE_CONFIG, "confirmed");
+  return decodeFeeTreasury(info);
+}
+export async function decodeFeeTreasury(
+  info: AccountInfo<Buffer> | null,
+): Promise<PublicKey> {
   if (!info || !info.owner.equals(PROGRAM_ID) || info.data.length !== 41)
     throw new Error("PLATFORM_FEE_NOT_CONFIGURED");
   await assertAccount(info.data, "FeeConfig");
@@ -78,11 +83,12 @@ const snapshots = new Map<
 async function loadDealSnapshot(c: Connection, id: string) {
   const deal = await readDeal(c, id, "finalized");
   const authority = new PublicKey(deal.arbitrator);
-  const [arb, org, clock] = await c.getMultipleAccountsInfo(
+  const [arb, org, clock, fees] = await c.getMultipleAccountsInfo(
     [
       arbAddress(authority),
       organizationAddress(authority),
       SYSVAR_CLOCK_PUBKEY,
+      FEE_CONFIG,
     ],
     "finalized",
   );
@@ -108,7 +114,13 @@ async function loadDealSnapshot(c: Connection, id: string) {
       organization.mint !== MINT.toBase58())
   )
     throw Error("INVALID_ACCOUNT");
-  return { deal, profile, organization, chainTime };
+  return {
+    deal,
+    profile,
+    organization,
+    chainTime,
+    treasury: (await decodeFeeTreasury(fees)).toBase58(),
+  };
 }
 export function readDealSnapshot(c: Connection, id: string) {
   const key = c.rpcEndpoint + ":" + id + ":finalized";

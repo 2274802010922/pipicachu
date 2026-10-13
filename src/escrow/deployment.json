@@ -13,5 +13,6 @@
   "resolutionPolicyVersion": 1,
   "managerConfig": "B7CUY6dLyHAGCtxnwHHSiS5h2SKJsfJdNW5eZbxnkG8c",
   "protocolVersion": "0.6.0",
-  "binarySha256": "0e5efb8dad587ee58f2952aec1ca0fa992cb074ec30d895402a49c18f3201861"
+  "binarySha256": "1d78f1ebca22843996e8b79b701d18706c82fc959774332a892c1fb242458487",
+  "reviewedFunding": true
 }

@@ -1,10 +1,15 @@
+import { programAuthority } from "@/backend/program-authority";
 import { readiness, keeperStatus } from "@/backend/readiness";
 import packageInfo from "../../../../package.json";
 import { NextResponse } from "next/server";
 import deployment from "@/escrow/deployment.json";
 import keeperConfig from "@/escrow/keeper-config.json";
 export async function GET() {
-  const [ready, service] = await Promise.all([readiness(), keeperStatus()]);
+  const [ready, service, program] = await Promise.all([
+    readiness(),
+    keeperStatus(),
+    programAuthority(),
+  ]);
   return NextResponse.json(
     {
       app: "pipicachu",
@@ -42,7 +47,9 @@ export async function GET() {
         ready.limiter && ready.mode !== "local-test"
           ? "shared-redis"
           : "per-instance-degraded",
-      upgradeAuthority: "retained-for-devnet-demo",
+      upgradeAuthority:
+        program.state === "unknown" ? "unverified" : program.authority,
+      programTrust: program,
     },
     { headers: { "Cache-Control": "no-store" } },
   );

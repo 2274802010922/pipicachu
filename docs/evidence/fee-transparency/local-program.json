@@ -1,0 +1,93 @@
+{
+  "network": "synthetic-local",
+  "checks": [
+    {
+      "case": "existing manager config cannot be overwritten"
+    },
+    {
+      "case": "register and application in one transaction"
+    },
+    {
+      "case": "pending submission idempotent"
+    },
+    {
+      "case": "non-manager cannot reject"
+    },
+    {
+      "case": "manager rejection"
+    },
+    {
+      "case": "wallet resubmits rejected application"
+    },
+    {
+      "case": "non-manager cannot approve"
+    },
+    {
+      "case": "manager approval with immutable application actor"
+    },
+    {
+      "case": "approved profile cannot reapply"
+    },
+    {
+      "case": "approval does not enable unbonded arbitrator"
+    },
+    {
+      "case": "policy changed during signing invalidates stale consent"
+    },
+    {
+      "case": "manager cannot change policy while accepting"
+    },
+    {
+      "case": "new deal snapshots late-ruling policy"
+    },
+    {
+      "case": "fund rejects changed principal"
+    },
+    {
+      "case": "fund rejects changed arbitrator fee"
+    },
+    {
+      "case": "fund rejects changed platform fee"
+    },
+    {
+      "case": "fund rejects changed recipient"
+    },
+    {
+      "case": "fund rejects changed terms"
+    },
+    {
+      "case": "fund rejects changed deadline"
+    },
+    {
+      "case": "fund rejects changed seller"
+    },
+    {
+      "case": "reviewed funding binds amount, fees, recipients and UTF-8 terms"
+    },
+    {
+      "case": "late ruling still settles and unlocks bond",
+      "signature": "3tYvokMvY9fYTWYeDukuyB4MKNm6i1AB6k9cRLQeiPKPao2YvMByHqs3kymVEiEgLQzn2wXkgrbHdceRJceGLS24"
+    },
+    {
+      "case": "stale mutual acceptance after ruling rejected"
+    },
+    {
+      "case": "concurrent funding cannot over-reserve bond; rejection is 6004; cleanup unlocks exactly once"
+    },
+    {
+      "case": "policy update only while paused"
+    },
+    {
+      "case": "old manager cannot accept on behalf of new manager"
+    },
+    {
+      "case": "manager transfer requires both signatures"
+    },
+    {
+      "case": "previous manager has no approval bypass"
+    },
+    {
+      "case": "revoked wallet may request approval again"
+    }
+  ]
+}

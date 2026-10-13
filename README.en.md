@@ -154,3 +154,11 @@ Linux/WSL program harness: `bash scripts/checks/program.sh`. [Deployment/config]
 We built the state machine, constraints, settlement/bond logic, client, recovery, proxy/limiter and UI. Infrastructure uses Anchor, Solana SDK/SPL Token, Next.js and Phantom.
 
 Code: [Apache-2.0](LICENSE) · [Third-party/artwork notices](THIRD_PARTY_NOTICES.md) · [Security reporting](.github/SECURITY.md).
+
+## Transparent 98 / 1 / 1 fees
+
+The pre-signing allocation reads the on-chain deal and shows exact amounts and recipients. \`fund_reviewed\` commits the buyer's reviewed principal, fees, participants, treasury, deadlines and UTF-8 terms; mismatches fail before funding. Refunds return the full principal with zero service fees; network fees and SOL account rent are separate.
+
+Finalized SPL transfers are checked against the deal's vault, mint and receiving accounts. Upgrade authority is read from Solana: an upgradeable program is never presented as immutable. Existing deals retain their existing fee terms.
+
+[Design and immutability gate](docs/architecture/fee-transparency.md) · [Live program status](https://pipicachu.vercel.app/api/program-status).

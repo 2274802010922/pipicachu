@@ -103,6 +103,25 @@ pub struct Fund<'info> {
     pub organization: UncheckedAccount<'info>,
 }
 #[derive(Accounts)]
+pub struct FundReviewed<'info> {
+    pub buyer: Signer<'info>,
+    #[account(mut, seeds=[b"deal",deal.seller.as_ref(),&deal.nonce.to_le_bytes()], bump=deal.bump, has_one=mint)]
+    pub deal: Box<Account<'info, Deal>>,
+    pub mint: Box<Account<'info, Mint>>,
+    #[account(mut, seeds=[b"arb",deal.arbitrator.as_ref()], bump=arbitrator.bump, has_one=mint)]
+    pub arbitrator: Box<Account<'info, Arbitrator>>,
+    #[account(mut, token::mint=mint, token::authority=buyer)]
+    pub source: Box<Account<'info, TokenAccount>>,
+    #[account(mut, seeds=[b"vault",deal.key().as_ref()], bump, token::mint=mint, token::authority=deal)]
+    pub vault: Box<Account<'info, TokenAccount>>,
+    pub token_program: Program<'info, Token>,
+    /// CHECK: Seed-bound optional registry, validated for owner/discriminator in handlers.
+    #[account(seeds=[b"organization",deal.arbitrator.as_ref()],bump)]
+    pub organization: UncheckedAccount<'info>,
+    #[account(seeds=[b"platform_fee_v1"], bump=fee_config.bump)]
+    pub fee_config: Account<'info, FeeConfig>,
+}
+#[derive(Accounts)]
 pub struct Settle<'info> {
     pub actor: Signer<'info>,
     #[account(mut, seeds=[b"deal",deal.seller.as_ref(),&deal.nonce.to_le_bytes()], bump=deal.bump, has_one=mint)]

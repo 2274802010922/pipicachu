@@ -2,6 +2,8 @@
 import { Buffer } from "buffer";
 import { useState, useEffect } from "react";
 import { PublicKey } from "@solana/web3.js";
+import { paymentTermsHash } from "@/escrow/payment-terms";
+import { PaymentBreakdown } from "../components/payment-breakdown";
 import { noteCommitment } from "@/escrow/note-commitment";
 import { useLanguage } from "../i18n/provider";
 import { useWallet } from "../wallet";
@@ -17,7 +19,8 @@ import {
   bondIx,
   readDeal,
   readArbitrator,
-  fundIx,
+  fundReviewedIx,
+  readFeeTreasury,
   settleIxs,
 } from "@/escrow/client";
 
@@ -41,6 +44,7 @@ export function useDealController(id: string) {
     fresh,
     now: networkNow,
     receipts,
+    treasury,
     refresh,
   } = useDeal(id);
   const [evidence, setEvidence] = useState(""),
@@ -137,21 +141,34 @@ export function useDealController(id: string) {
         const actor = who,
           d = new PublicKey(id);
         if (name === "fund") {
+          if (!treasury) throw Error("PAYMENT_TERMS_CHANGED");
+          const expected = await paymentTermsHash(deal, treasury);
           if (
             !(await confirmation.ask(
-              deal.resolutionPolicyVersion === 1
-                ? t(
-                    `Nạp ${amount(deal.amount)} USDC vào quỹ? Trọng tài được xử sau hạn SLA. Cọc không phải bảo hiểm; bỏ xử và hai bên bất đồng có thể khóa tiền.`,
-                    `Deposit ${amount(deal.amount)} USDC into escrow? The arbitrator may rule past the SLA. Bond is not insurance; abandonment without mutual agreement may lock funds.`,
-                  )
-                : t(
-                    `Nạp ${amount(deal.amount)} USDC theo điều kiện deal cũ?`,
-                    `Deposit ${amount(deal.amount)} USDC under the legacy terms?`,
-                  ),
+              <>
+                <PaymentBreakdown deal={deal} treasury={treasury} compact />
+                <p>
+                  {t(
+                    "Trọng tài có thể xử sau SLA. Cọc không phải bảo hiểm; bỏ xử và hai bên bất đồng có thể khóa tiền.",
+                    "The arbitrator may rule after SLA. Bond is not insurance; abandonment without agreement may lock funds.",
+                  )}
+                </p>
+              </>,
             ))
           )
             throw Object.assign(Error("WALLET_REJECTED"), { code: 4001 });
-          return [await fundIx(actor, deal)];
+          const c = connection();
+          const [latest, recipient] = await Promise.all([
+            readDeal(c, id, "finalized"),
+            readFeeTreasury(c),
+          ]);
+          if (
+            !(await paymentTermsHash(latest, recipient.toBase58())).equals(
+              expected,
+            )
+          )
+            throw Error("PAYMENT_TERMS_CHANGED");
+          return [await fundReviewedIx(actor, deal, expected)];
         }
         if (name === "deliver" || name === "dispute") {
           return [await act(name, actor, d, await noteCommitment(evidence))];
@@ -201,6 +218,7 @@ export function useDealController(id: string) {
     readAt,
     fresh,
     receipts,
+    treasury,
     refresh,
     who,
     confirmation,

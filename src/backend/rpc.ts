@@ -26,6 +26,7 @@ const signature = z
 const integer = z.number().int().nonnegative().max(Number.MAX_SAFE_INTEGER);
 const options = z
   .object({
+    maxSupportedTransactionVersion: z.literal(0).optional(),
     commitment: z.enum(["processed", "confirmed", "finalized"]).optional(),
     encoding: z.enum(["base64", "json", "jsonParsed"]).optional(),
     minContextSlot: integer.optional(),
@@ -68,6 +69,7 @@ const options = z
 const encoded = z.string().max(1700);
 const params: Record<string, z.ZodType> = {
   getGenesisHash: z.tuple([]),
+  getTransaction: z.tuple([signature, options.optional()]),
   getAccountInfo: z.tuple([address, options.optional()]),
   getMultipleAccounts: z.tuple([
     z.array(address).min(1).max(100),
