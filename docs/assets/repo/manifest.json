@@ -1,0 +1,12 @@
+{
+  "source": "scripts/readme/build-assets.mjs",
+  "award": {
+    "name": "Best Solana Integration",
+    "event": "UniHackFest 2026",
+    "source": "Owner confirmation in the project conversation on 2026-10-13",
+    "announcementUrl": null
+  },
+  "brand": "Existing owner-provided pixel logo; artwork license unchanged",
+  "design": "Light terminal: cream, ink, lime and blue. Original HTML/CSS layout, no third-party award seal.",
+  "exports": ["hero-vi.png", "hero-en.png", "social-preview.png"]
+}

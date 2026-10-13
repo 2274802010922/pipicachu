@@ -1,166 +1,226 @@
-<p align="center"><img src="public/brand/picachu-logo.jpg" width="88" alt="pipicachu"></p>
-<h1 align="center">pipicachu · C2C escrow</h1>
-<p align="center">USDC escrow for community digital-goods trades.<br>One deal link. Fixed terms. Funds held in a program vault.</p>
 <p align="center">
-<a href="https://github.com/2274802010922/pipicachu/actions/workflows/quality.yml"><img src="https://github.com/2274802010922/pipicachu/actions/workflows/quality.yml/badge.svg?branch=main" alt="Quality CI"></a>
-<a href="LICENSE"><img src="https://img.shields.io/badge/License-Apache_2.0-2456E6?style=flat-square" alt="Apache 2.0"></a>
-<img src="https://img.shields.io/badge/USDC-Solana_Devnet-B7F34D?style=flat-square&amp;labelColor=091426" alt="USDC · Solana Devnet">
+  <img src="docs/assets/repo/hero-en.png" width="100%" alt="pipicachu — Best Solana Integration, UniHackFest 2026. USDC escrow for community trades.">
 </p>
-<p align="center"><a href="https://pipicachu.vercel.app">Open app</a> · <a href="#demo">Watch the demo</a> · <a href="#strengths-by-criterion">Strengths</a> · <a href="README.md">Tiếng Việt</a></p>
 
-## The buyer wants to inspect. The seller wants to be paid.
+<h1 align="center">pipicachu</h1>
+<p align="center"><strong>One deal link. Three clear roles. Funds held on Solana.</strong><br>USDC escrow for people trading digital goods through communities.</p>
 
-A seller shares a template pack in a community. A buyer is interested; both already have Solana wallets and choose USDC. The seller wants to know the funds are ready before delivering files. The buyer wants an inspection period before releasing payment.
+<p align="center">
+  <a href="https://github.com/2274802010922/pipicachu/actions/workflows/quality.yml"><img src="https://github.com/2274802010922/pipicachu/actions/workflows/quality.yml/badge.svg?branch=main" alt="Quality CI"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-Apache_2.0-2456E6?style=flat-square" alt="Apache 2.0"></a>
+  <a href="https://pipicachu.vercel.app"><img src="https://img.shields.io/badge/USDC-Solana_Devnet-B7F34D?style=flat-square&labelColor=091426" alt="USDC · Solana Devnet"></a>
+  <a href="docs/evidence/fee-transparency/immutable.json"><img src="https://img.shields.io/badge/Program-Immutable-2456E6?style=flat-square&labelColor=091426" alt="Devnet program upgrade authority removed"></a>
+</p>
 
-A community admin can help coordinate the deal. **pipicachu puts funds in a program vault and lets the parties' chosen arbitrator handle disputes.** Buyer, seller and arbitrator follow the same deal with agreed amounts, terms and deadlines.
+<p align="center"><a href="https://pipicachu.vercel.app"><strong>Try the product ↗</strong></a> · <a href="https://youtu.be/mTY3e3qX_4k">Watch the 2:56 demo ↗</a> · <a href="#evidence">Explore evidence</a> · <a href="README.md">Tiếng Việt</a></p>
 
-## One link, four steps
+> **Best Solana Integration — UniHackFest 2026**<br>
+> pipicachu brings Solana into escrow custody, role permissions and verifiable settlement.
 
-![pipicachu homepage](docs/assets/showcase/current/home-desktop-en.png)
+## Trading with someone new starts with a question of trust.
 
-| Step                     | Actor                                                                     | Result                                                   |
-| ------------------------ | ------------------------------------------------------------------------- | -------------------------------------------------------- |
-| **1. Create a link**     | Seller selects an available arbitrator and enters buyer, amount and terms | Fixed deal details and a shared link                     |
-| **2. Fund**              | Buyer reviews terms and signs the USDC deposit                            | Funds enter the vault before delivery                    |
-| **3. Deliver**           | Seller shares files through the agreed channel, enters a note and signs   | Deal enters buyer review                                 |
-| **4. Confirm / dispute** | Buyer confirms receipt or disputes before the deadline                    | Program settles, or the arbitrator chooses payout/refund |
+A seller wants to see the money before delivering a design template pack. The buyer wants to inspect the files before paying. A community admin can help, but holding the funds and resolving disputes often fall to the same intermediary.
 
-Arbitrators use a separate workspace to apply, receive approval, deposit bond and enable intake. **Prepaid capacity and standing consent** let new deals proceed directly to buyer funding. Capacity is reserved for active deals and released on settlement.
+**pipicachu separates custody from adjudication.** USDC stays in a program vault. The seller delivers through the agreed channel; the buyer confirms or disputes. The selected arbitrator resolves disputes under the terms agreed by both parties.
 
-## Fees tied to the settlement outcome
+| Buyer                                                                         | Seller                                                                     | Community arbitrator                                                                      |
+| ----------------------------------------------------------------------------- | -------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| Reviews terms, fees and recipients before funding. Gets an inspection window. | Sees escrow funding before delivery. Follows the outcome on the same link. | Prepares bond once, enables eligible deals and handles disputes in a dedicated workspace. |
 
-A new **1 USDC** deal paid to the seller splits as follows:
+## One link. Four steps.
 
-| Recipient          |   Share |        Amount |
-| ------------------ | ------: | ------------: |
-| Seller             | **98%** | **0.98 USDC** |
-| Arbitrator         |  **1%** | **0.01 USDC** |
-| pipicachu platform |  **1%** | **0.01 USDC** |
+| Step             | Action                                                                             | Outcome                                                                            |
+| ---------------- | ---------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| **01 · Create**  | The seller selects an available arbitrator, buyer, amount and terms.               | An on-chain deal and shareable link.                                               |
+| **02 · Fund**    | The buyer reviews the allocation and signs a USDC deposit.                         | The program checks the reviewed terms, holds funds and reserves bond capacity.     |
+| **03 · Deliver** | The seller sends the goods through the agreed channel and signs the delivery note. | The buyer's inspection window begins.                                              |
+| **04 · Settle**  | The buyer confirms or disputes before the deadline.                                | Settlement under the agreed conditions, or an arbitrator's payout/refund decision. |
 
-All three amounts transfer in one transaction. Buyer refunds return the full escrow amount with zero service fees; SOL network fees are separate.
-
-**Revenue model:** the platform collects 1% on seller payout; the arbitrator receives 1% for coordinating the deal. **Acquisition approach:** collaborate with admins of USDC communities and introduce deal links into their existing trading channels. A shared interface lets all three parties coordinate within those communities.
+Arbitrators are **approved, bonded and accepting in advance**. Standing consent removes per-deal acceptance signatures; the program checks available capacity at funding and releases the reservation at settlement.
 
 ## Demo
 
-[Open the app](https://pipicachu.vercel.app) · [Inspect a completed sample deal](https://pipicachu.vercel.app/deals/25JTcp8NdyqQoTksumh8hkUszc8SD3Ea3t2SNmor8Buj) · [Check its Explorer receipt](https://explorer.solana.com/tx/5a59q7bJQfGR5Qaxd3cPpV3QBTKRETvnMMKe8L64mTjirUzbQejrUBfs1DN2ArkTob7iSF45dU7raukS9AmWSTgK?cluster=devnet)
+[![A completed 1 USDC deal on the deployed pipicachu website](docs/assets/showcase/award-2026-10-13/result-en.png)](https://pipicachu.vercel.app/deals/5popFC7JC9YwwH6Tfrnn8zANYG86Nr953oZxvBXFnXSa)
 
-![Sample 1 USDC payout](docs/assets/showcase/current/completed-en.png)
+**Running product:** [open the sample deal](https://pipicachu.vercel.app/deals/5popFC7JC9YwwH6Tfrnn8zANYG86Nr953oZxvBXFnXSa) · [finalized receipt](https://explorer.solana.com/tx/4VMbqVwmszAiqdaG3mVgbmPRcEXdDUBCMfTZ2yhsR7zYZrDd12CXzzRvsQgkMaRHAo4JYHCKivaLV9j6bEN2dwQh?cluster=devnet) · [image provenance](docs/assets/showcase/award-2026-10-13/manifest.json).
 
-Finalized, CLI-signed **USDC Devnet sample:** 1 USDC →0.98 seller +0.01 arbitrator +0.01 platform. [Capture source and revision](docs/assets/showcase/current/manifest.json).
+These are read-only captures of the live deployment and a **1 USDC Devnet CLI-signed fixture**, not a customer transaction. The website verifies the actual vault, mint, receiving token accounts and amounts before displaying a verified receipt.
 
-[![Real Phantom signing video](docs/demo/video-vi-2026-10-05/thumbnail-vi.png)](https://www.youtube.com/watch?v=mTY3e3qX_4k)
+<details>
+<summary><strong>Explore the fee breakdown, home page and mobile UI</strong></summary>
 
-**v0.5 video · happy path · real Phantom:** 2 USDC →1.96 seller +0.02 arbitrator +0.02 platform. Vietnamese narration.
+**Fees and program authority read from the chain**
 
-## Strengths by criterion
+![Actual payment allocation and immutable program status](docs/assets/showcase/award-2026-10-13/fees-en.png)
+
+**Start with one link**
+
+![The deployed pipicachu home page](docs/assets/showcase/award-2026-10-13/home-en.png)
+
+<p align="center"><img src="docs/assets/showcase/award-2026-10-13/mobile-en.png" width="300" alt="Completed deal at a 375px mobile viewport"></p>
+
+</details>
+
+<details>
+<summary><strong>Watch the real Phantom demo · 2 minutes 56 seconds</strong></summary>
+
+[![pipicachu demo video](docs/demo/video-vi-2026-10-05/thumbnail-vi.png)](https://youtu.be/mTY3e3qX_4k)
+
+**v0.5 · happy path · Vietnamese narration and subtitles:** 2 USDC → 1.96 to the seller + 0.02 to the arbitrator + 0.02 to the platform. The current fee-transparency and immutable-program implementation is demonstrated by the website and receipts above.
+
+</details>
+
+## 98 / 1 / 1 — visible before signing
+
+When **1 USDC** is paid out to the seller:
+
+| Recipient  |   Share |        Amount |
+| ---------- | ------: | ------------: |
+| **Seller** | **98%** | **0.98 USDC** |
+| Arbitrator |      1% |     0.01 USDC |
+| pipicachu  |      1% |     0.01 USDC |
+
+**One atomic settlement** transfers all three amounts and unlocks the reserved bond. Refunds return **100% of principal** with zero service fees. Network fees and SOL account rent are separate. Each fee rounds down to a USDC atom; the seller receives the remainder. Legacy deals retain their stored terms.
+
+- **Review the actual terms:** principal, fees and recipients come from on-chain accounts.
+- **Sign the reviewed terms:** `fund_reviewed` binds principal, fees, recipients, deadlines and terms with a hash checked before funding.
+- **Verify the outcome:** finalized receipts are compared with actual transfers; missing evidence never becomes a verified result.
+
+> **The Devnet program is immutable.** Upgrade authority has been permanently removed. The operator cannot upgrade this program to replace a deal's settlement logic. Future contract versions require a new Program ID; existing deals retain their program and terms.
+>
+> [Authority=None and CI binary proof](docs/evidence/fee-transparency/immutable.json) · [live program status](https://pipicachu.vercel.app/api/program-status) · [fee-binding design](docs/architecture/fee-transparency.md).
+
+## Solana in the money flow
+
+| Component                 | Product responsibility                                                                |
+| ------------------------- | ------------------------------------------------------------------------------------- |
+| **PDA vault**             | Holds USDC per deal, separating principal from the arbitrator's personal wallet.      |
+| **SPL Token CPI**         | Executes payout/refund to fixed recipients and aggregates treasury aliases correctly. |
+| **Clock & state machine** | Enforces deadlines, signer permissions, states and bond capacity in the program.      |
+| **Signatures & finality** | Users hold their keys; transaction and receipt states follow chain evidence.          |
+| **Immutable program**     | Deployed code has no upgrade path; the CI binary is compared with Devnet.             |
+
+[Account constraints](programs/pipicachu-escrow/src/contexts.rs) · [settlement](programs/pipicachu-escrow/src/settlement.rs) · [reviewed funding](programs/pipicachu-escrow/src/funding.rs).
+
+## Architecture
+
+```mermaid
+flowchart LR
+  User[User + Phantom] --> Web[Role UI + controller]
+  Web --> Client[Core + Solana client / IDL]
+  Client --> RPC[Devnet RPC proxy]
+  Redis[(Redis: quotas / reports)] -.-> RPC
+  RPC --> Program["Anchor program<br/>State + money permissions"]
+  Keeper[Keeper: submits finalize] --> Program
+  Program --> Vault[PDA vault]
+  Vault --> Split["SPL Token CPI<br/>Payout or refund"]
+```
+
+**The UI guides; the program enforces money permissions.** BigInt/u64 amounts, shared IDL and tests keep schema and account order aligned. [Module boundaries](docs/architecture/quality.md) · [permissions](docs/architecture/v06.md).
+
+## Evidence
+
+| Verified                             | Scope                                                                                      | Evidence                                                                                      |
+| ------------------------------------ | ------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------- |
+| **126 TypeScript tests**             | Amounts, codecs, permissions, fee binding, receipts and failure cases.                     | [Deployment-revision CI](https://github.com/2274802010922/pipicachu/actions/runs/38346250501) |
+| **47 browser tests**                 | VI/EN, 375–1440px, keyboard/axe and mocked wallet providers.                               | [Browser harness](tests/e2e/)                                                                 |
+| **Native Rust + executable SBF**     | State machine, negative cases, capacity/races, legacy and treasury aliases.                | [Program harness](scripts/checks/program.sh)                                                  |
+| **6 finalized Devnet branches**      | Confirm, delivery timeout, rulings both ways, late ruling and mutual refund; CLI fixtures. | [Receipts and token deltas](docs/evidence/v06/live/acceptance.json)                           |
+| **58 deals / 70 accounts preserved** | Snapshot around the final upgrade, plus one fixture verifying the 98/1/1 split.            | [Fee-transparency rollout](docs/evidence/fee-transparency/rollout.json)                       |
+| **Authority=None**                   | Local/CI/deployed binaries match; authority removal is finalized.                          | [Immutable proof](docs/evidence/fee-transparency/immutable.json)                              |
+
+Counts are tied to a revision and verification scope. Devnet transactions are not counted as customers or revenue.
+
+## Product & engineering highlights
+
+**Business model:** pipicachu receives 1% on seller payout; the arbitrator receives 1%. The proposed distribution channel is community admins already using USDC, introducing escrow links into existing trade channels. This describes the model and approach, not realized revenue.
+
+<details>
+<summary><strong>Explore seven product and implementation criteria</strong></summary>
 
 ### BEST PRODUCT & BUSINESS
 
-- **Specific users:** community buyers/sellers of files, templates and digital resources already using Solana wallets and USDC. Buyers get an inspection step, sellers see funded status before delivery, and arbitrators manage bond/deals in their workspace.
-- **Fits existing trading channels:** one link for three roles, delivery through the agreed channel, four in-app steps and payout amounts shown before signing.
-- **Fees enforced by the program:** 1% platform +1% arbitrator on seller payout, with full-principal, zero-service-fee refunds. Admin-led community acquisition connects the model to the people coordinating trades.
+- A specific audience: digital-goods buyers and sellers who already have Solana wallets and choose USDC, with a clear role for community admins.
+- Four steps on one link, payout-based fees and a community-led distribution approach.
 
-**Evidence:** [workflow and fees](docs/product/README.md) · [Devnet settlements](docs/evidence/v06/live/acceptance.json).
+**Evidence:** [product scope, flow and fees](docs/product/README.md).
 
 ### BEST TECHNICAL BUILD
 
-- **Financial edge cases handled:** a state machine for funding, delivery, review, disputes and settlement; capacity concurrency, payout/refund, single settlement and bond unlock invariants.
-- **Compatibility across versions:** legacy/new deals, late-ruling policy and treasury aliases. Transfers consolidate by actual token account while conserving the escrow amount.
-- **Evidence-based transaction recovery:** signature/blockhash/expiry tracking, finality monitoring, state checks before retry and rebroadcast of the same bytes. The harness covers native Rust, executable SBF, negative cases and principal/bond invariants.
+- State machine, checked arithmetic, principal/bond conservation, double-settlement prevention and atomic payout.
+- Legacy ABI/term compatibility, recipient aliases, reviewed funding and signature checks before retry.
 
-**Evidence:** [Rust settlement](programs/pipicachu-escrow/src/settlement.rs) · [race/capacity/policy tests](tests/program/v06.ts) · [operation recovery](src/escrow/operation.ts).
+**Evidence:** [SBF/race/policy tests](tests/program/v06.ts) · [operations](src/escrow/operation.ts).
 
 ### Most Innovative Solution
 
-- **Two distinct intermediary responsibilities:** the program holds/transfers funds; the arbitrator rules between fixed recipients. Human dispute resolution remains part of the community workflow.
-- **Standing consent + prepaid capacity:** arbitrators pre-fund a pool and enable intake. Buyer funding atomically checks capacity and reserves bond, removing per-deal acceptance signing and reusing released capacity.
-- **One link coordinates roles:** shared terms, state and deadlines; each wallet sees its next appropriate action.
+- Program custody paired with approved arbitrators, prepaid bond and standing consent to reduce per-deal signatures.
+- A shared link coordinates three parties while delivery stays in the community's existing channel.
 
-**Evidence:** [standing consent/capacity](docs/product/organization-flow.md) · [permissions and state machine](programs/pipicachu-escrow/src/lib.rs) · [view model](src/escrow/view-model.ts).
+**Evidence:** [organization flow](docs/product/organization-flow.md).
 
 ### Best Solana Integration
 
-- **Solana holds and transfers USDC:** a per-deal PDA vault, SPL Token CPI and atomic seller/arbitrator/platform payout; refunds return to the buyer.
-- **Clock and finality in the workflow:** deadlines use network Clock, wallets authorize transactions, and the UI follows confirmed/finalized status to report on-chain outcomes.
-- **Independently inspectable receipts:** confirm, timeout, both ruling outcomes, late ruling, mutual settlement and service-signed keeper payout have Devnet evidence.
+- PDA, SPL Token CPI, Clock and finality execute escrow responsibilities directly.
+- Settlement branches have receipts; the immutable program has binary and authority evidence.
 
-**Evidence:** [PDA/account constraints](programs/pipicachu-escrow/src/contexts.rs) · [six finalized branches](docs/evidence/v06/live/acceptance.json) · [keeper payout](docs/evidence/v06/live/keeper-payout.json).
+**Evidence:** [Solana constraints](programs/pipicachu-escrow/src/contexts.rs) · [immutable proof](docs/evidence/fee-transparency/immutable.json).
 
 ### Best Security & Privacy Solution
 
-- **Money permissions enforced by the program:** signer, role, mint, owner, PDA, state and fixed-recipient checks; checked arithmetic and payout totals conserve principal.
-- **Validation around wallet signing:** simulation, message/signature binding, fixed Devnet genesis, bounded RPC inputs/responses and shared rate limiting. Money requests pass service checks before submission.
-- **Data scoped to the task:** users retain keys and sign with Phantom; goods/evidence use the agreed channel and notes are hashed in the browser. Rate limiting stores expiring HMAC IP identifiers; the web server holds no participant private keys.
+- Rust enforces signer/role/PDA/mint/recipient constraints; wallet message binding and simulation guard submission.
+- The web app holds no participant keys or goods/evidence files; the RPC proxy has validation, caps and shared limits.
 
-**Evidence:** [constraints](programs/pipicachu-escrow/src/contexts.rs) · [wallet binding](src/escrow/wallet-transaction.ts) · [RPC validation](src/backend/rpc.ts) · [HMAC/Redis](src/backend/redis.ts).
+**Evidence:** [wallet binding](src/escrow/wallet-transaction.ts) · [RPC validation](src/backend/rpc.ts).
 
 ### Best User Experience
 
-- **Four steps with role-based actions:** buyers fund/confirm, sellers deliver, arbitrators rule. The current stage and primary action are highlighted.
-- **Short actions and clear feedback:** enter a note and sign; dialogs show amounts/recipients/fees. Signing, submitted, confirming, finalized and recovery states have distinct feedback.
-- **VI/EN and responsive accessibility:** language switching preserves input; controls target 44px minimum, visible focus and keyboard support, with axe checks at 375/768/1024/1440px.
+- Role-specific actions, visible fees before signing, short notes and transaction lifecycle feedback.
+- VI/EN, 44px controls, visible focus, keyboard, responsive and axe checks.
 
-**Evidence:** [role flow](src/escrow/view-model.ts) · [responsive/axe QA](tests/e2e/organization.spec.ts) · [note/signing workflow](tests/e2e/simple-notes.spec.ts).
-
-<img src="docs/assets/showcase/current/completed-mobile-en.png" width="280" alt="Sample Devnet result on mobile">
+**Evidence:** [view model](src/escrow/view-model.ts) · [fee UI tests](tests/e2e/payment-transparency.spec.ts).
 
 ### Best System Architecture
 
-- **Clear responsibility boundaries:** UI presents, controllers orchestrate actions, core handles state/amounts, the Solana client builds/reads instructions, the backend validates RPC, and the program decides money permissions.
-- **Shared schemas and decisions:** IDL supplies discriminators/account order/signer/writable metadata; one view model determines role/action/deadline. BigInt/u64 amounts and ABI compatibility connect the layers.
-- **Reproducible verification:** pinned dependencies/lockfile, Action SHAs and Agave checksum; CI compares Rust-generated IDL and runs web/browser/program tests. A complete account snapshot is batched into two RPCs.
+- UI/controller/core/client/backend/program boundaries; shared IDL instruction schemas.
+- Pinned dependencies/lockfile and Action SHAs; native/SBF/browser checks reproduce from source.
 
-```mermaid
-flowchart TB
-  Wallet[Phantom signature] --> UI[Role-based UI]
-  UI --> Controller[Controller + core + Solana client]
-  Controller --> RPC[Devnet RPC proxy]
-  Redis[Redis: quotas and reports] -.-> RPC
-  RPC --> Program[Anchor program: permissions and state]
-  Keeper[Keeper: submits finalize] --> Program
-  Program --> Vault[PDA vault + SPL Token CPI]
-```
+**Evidence:** [architecture](docs/architecture/quality.md) · [Quality CI](.github/workflows/quality.yml).
 
-**Evidence:** [module boundaries](docs/architecture/quality.md) · [IDL](client/idl/escrow.json) · [CI](.github/workflows/quality.yml) · [snapshot queries](src/escrow/queries.ts).
+</details>
 
-## Implementation evidence
+## Quick start
 
-| Result                          | Verified scope                                                                                   | Source                                                                               |
-| ------------------------------- | ------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------ |
-| **122 unit/integration tests**  | Amounts, state, codecs, permissions, operations and recovery                                     | [CI on dd32f2e](https://github.com/2274802010922/pipicachu/actions/runs/37876012065) |
-| **41 browser tests**            | VI/EN, roles, responsive layout, keyboard/axe and injected wallet-provider interactions          | [Browser harness](tests/e2e/)                                                        |
-| **6 finalized Devnet branches** | Confirm, delivery timeout, arbitrator payout/refund, late ruling and mutual refund; CLI fixtures | [Receipts and token deltas](docs/evidence/v06/live/acceptance.json)                  |
-| **Keeper payout**               | One service-signed transaction with the 98/1/1 split and bond release                            | [Workflow-dispatch receipt](docs/evidence/v06/live/keeper-payout.json)               |
-| **46 compatible deals**         | Money, fees, terms, state, workflow, policy and deadlines preserved across the verified upgrade  | [Binary/IDL/snapshot](docs/evidence/quality/protocol-rollout.json)                   |
-
-Counts are tied to revisions and test types. The [technical report](docs/evidence/quality/README.md) records their sources.
-
-## Run and reproduce
-
-Node 24; pinned npm/dependencies and lockfile.
+Requires **Node.js 24** and the npm version in `package.json`.
 
 ```bash
 npm ci
 cp .env.example .env.local
 npm run dev
-npm run verify
 ```
 
-Linux/WSL program harness: `bash scripts/checks/program.sh`. [Deployment/config](docs/deployment/README.md) · [Architecture and permissions](docs/architecture/v06.md) · [Reproduction guide](docs/testing/reproduce.md) · [Contributor workflow](.github/CONTRIBUTING.md).
+```bash
+npm run verify
+# Program harness on Linux / WSL
+bash scripts/checks/program.sh
+```
 
-## Source and attribution
+| Guide                                     | Contents                                                            |
+| ----------------------------------------- | ------------------------------------------------------------------- |
+| [Deployment](docs/deployment/README.md)   | Vercel, RPC and Redis configuration.                                |
+| [Reproduction](docs/testing/reproduce.md) | Running the harness and distinguishing fixtures from real receipts. |
+| [Contributing](.github/CONTRIBUTING.md)   | Workflow, checks and commits.                                       |
+| [Security](.github/SECURITY.md)           | Private reporting and maintained scope.                             |
 
-We built the state machine, constraints, settlement/bond logic, client, recovery, proxy/limiter and UI. Infrastructure uses Anchor, Solana SDK/SPL Token, Next.js and Phantom.
+<details>
+<summary><strong>Devnet scope and trust model</strong></summary>
 
-Code: [Apache-2.0](LICENSE) · [Third-party/artwork notices](THIRD_PARTY_NOTICES.md) · [Security reporting](.github/SECURITY.md).
+The demo uses USDC Devnet. Users sign with their own wallets; goods are delivered through the agreed external channel. Arbitrators decide disputes under the agreed terms. The immutable program is versioned by Program ID. [Permissions, settlement conditions and trust boundaries](docs/architecture/v06.md).
 
-## Transparent 98 / 1 / 1 fees
+</details>
 
-The pre-signing allocation reads the on-chain deal and shows exact amounts and recipients. \`fund_reviewed\` commits the buyer's reviewed principal, fees, participants, treasury, deadlines and UTF-8 terms; mismatches fail before funding. Refunds return the full principal with zero service fees; network fees and SOL account rent are separate.
+---
 
-Finalized SPL transfers are checked against the deal's vault, mint and receiving accounts. Upgrade authority is read from Solana: an upgradeable program is never presented as immutable. Existing deals retain their existing fee terms.
+<p align="center"><strong>pipicachu</strong> · Best Solana Integration · UniHackFest 2026<br><a href="https://pipicachu.vercel.app">Website</a> · <a href="https://github.com/2274802010922/pipicachu/issues">Issues</a> · <a href="LICENSE">Apache-2.0</a> · <a href="THIRD_PARTY_NOTICES.md">Attribution & artwork</a></p>
 
-[Design and immutability gate](docs/architecture/fee-transparency.md) · [Live program status](https://pipicachu.vercel.app/api/program-status).
-
-The current Devnet program is **immutable**: [finalized authority-removal receipt and CI binary proof](docs/evidence/fee-transparency/immutable.json). Future contract versions require a new Program ID; existing deals retain their program and terms.
+We built the escrow program, state machine, fee binding, settlement/bond logic, client, proxy and UI. Infrastructure uses Anchor, Solana SDK/SPL Token, Next.js and Phantom. The pixel logo retains its separate artwork licensing scope.

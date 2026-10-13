@@ -1,4 +1,12 @@
-# pipicachu · minh bạch phí · 13/10/2026
+# pipicachu · hồ sơ repo sau giải · 14/10/2026
+
+## Repo sau giải Best Solana Integration
+
+Owner xác nhận dự án đạt Best Solana Integration và yêu cầu decor repo; chưa có link công bố, owner yêu cầu cứ trình bày trước. README VI/EN làm mới, banner light terminal, showcase production35cab42, bảng phí/immutable và evidence126/47. Bảy tiêu chí cũ giữ trong phần mở rộng. Không thay runtime hoặc contract.
+
+Asset source: scripts/readme/build-assets.mjs; hero VI/EN + social preview1200×630 ở docs/assets/repo. Screenshot đọc live, không ký ví, có manifest riêng ở docs/assets/showcase/award-2026-10-13. Hero là artwork do project dựng, không phải huy hiệu chính thức của ban tổ chức. Award source là owner confirmation.
+
+Social preview đã tạo file; browser GitHub hiện chưa đăng nhập nên chưa đặt ảnh trong Settings. Không tự đăng nhập bằng token hoặc công bố link award giả. About/topics có thể cập nhật qua CLI. GitHub render desktop/mobile và CI là cổng bàn giao.
 
 ## Yêu cầu hiện tại
 

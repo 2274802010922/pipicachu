@@ -1,0 +1,52 @@
+{
+  "at": "2026-10-13T11:08:41.162Z",
+  "site": "https://pipicachu.vercel.app",
+  "commit": "35cab42d3d000cc638032699e0f7354e5523235d",
+  "readonly": true,
+  "signed": false,
+  "connectedWallet": false,
+  "deal": "5popFC7JC9YwwH6Tfrnn8zANYG86Nr953oZxvBXFnXSa",
+  "scope": "Real deployed UI. Finalized CLI Devnet fixture; not a customer transaction or Phantom test.",
+  "captures": [
+    {
+      "file": "home-vi.png",
+      "viewport": "1440x1000",
+      "source": "deployed home"
+    },
+    {
+      "file": "result-vi.png",
+      "viewport": "1440x1000",
+      "source": "completed Devnet fixture"
+    },
+    {
+      "file": "fees-vi.png",
+      "viewport": "1440x1000",
+      "source": "exact allocation region, no content modifications"
+    },
+    {
+      "file": "mobile-vi.png",
+      "viewport": "375x900",
+      "source": "same deployed deal"
+    },
+    {
+      "file": "home-en.png",
+      "viewport": "1440x1000",
+      "source": "deployed home"
+    },
+    {
+      "file": "result-en.png",
+      "viewport": "1440x1000",
+      "source": "completed Devnet fixture"
+    },
+    {
+      "file": "fees-en.png",
+      "viewport": "1440x1000",
+      "source": "exact allocation region, no content modifications"
+    },
+    {
+      "file": "mobile-en.png",
+      "viewport": "375x900",
+      "source": "same deployed deal"
+    }
+  ]
+}
