@@ -610,5 +610,6 @@
   },
   "bondLockedBeforeAndAfter": "0",
   "incorrectReviewedFeeSimulationError": 6009,
-  "immutability": "awaiting-final-gate"
+  "immutability": "authority removed after final gate",
+  "immutabilityProof": "immutable.json"
 }

@@ -15,11 +15,13 @@ User yêu cầu end-to-end: phí98/1/1 rõ trước ký, người dùng tự ki�
 
 ## Kiểm chứng
 
-npm verify pass126TypeScript +45browser, VI/EN375/768/1024/1440/axe. SBF/native/IDL pass: lifecycle39, organization13, v06+reviewed-fund29, alias2×4; native5. Sáu receipt lịch sử được verifier mới đọc live và khớp. [Proof](../../evidence/fee-transparency/rollout.json), [design](../../architecture/fee-transparency.md).
+npm verify pass126TypeScript +47browser, VI/EN375/768/1024/1440/axe. SBF/native/IDL pass: lifecycle39, organization13, v06+reviewed-fund29, alias2×4; native5. Sáu receipt lịch sử được verifier mới đọc live và khớp. [Proof](../../evidence/fee-transparency/rollout.json), [design](../../architecture/fee-transparency.md).
 
 ## Cổng cuối
 
-Đang chờ CI/publish của checkpoint này; chưa công bố program immutable. Chỉ bỏ upgrade authority sau đối chiếu binary/CI và receipt, rồi lưu signature + đọc authority=None. Bỏ quyền là không thể hoàn tác; lần đổi contract tiếp theo phải dùng Program ID mới. Không giả immutable bằng config. Web vẫn có thể cập nhật.
+CI38345111648 tại b6d342b pass quality/escrow-program. Binary từ CI trùng local và deployed, padding còn lại zero. Program Devnet4Xds…Xnrb đã **immutable**: authority=None finalized; [receipt](../../evidence/fee-transparency/immutable.json). Không upgrade cùng Program ID nữa. Đổi contract về sau phải dùng Program ID mới và giữ routing cho deal cũ. UI/backend vẫn được cập nhật; manager quản lý registry theo code hiện hữu.
+
+Website checkpoint b6d342b đã smoke live375/1440, nhận đúng bảng0,98/0,01/0,01 và verifier receipt. Commit cuối đồng bộ wording/refund, không đổi Rust/binary; phải kiểm CI/Vercel theo exact commit khi bàn giao. Không dùng cấu hình để giả immutable.
 
 ## Phần độc lập chưa xử lý
 

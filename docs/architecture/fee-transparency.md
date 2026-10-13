@@ -31,6 +31,8 @@ Nguồn: [verifier](../../src/escrow/settlement-receipt.ts), [negative tests](..
 
 ## Quyền nâng cấp và bất biến
 
+**Đã thực hiện trên Devnet ngày13/10/2026:** [authority=None finalized và binary CI](../evidence/fee-transparency/immutable.json). Immutable khóa code; manager vẫn quản lý registry/policy cho việc nhận deal theo quyền đã có, không sửa điều khoản deal hiện hữu.
+
 `GET /api/program-status` đọc program và ProgramData đúng PDA/loader ở finalized, kiểm tag/layout rồi đọc Option upgrade authority. Cache thành công tối đa30 giây. RPC lỗi hoặc dữ liệu sai là unknown, không phải immutable. Health cũng dùng kết quả này.
 
 Một manager/trọng tài không có instruction sửa phí khác với việc program không còn quyền upgrade. Multisig/timelock giảm quyền đơn phương nhưng vẫn cho nâng cấp. Chỉ khi ProgramData authority=None mới được công bố đã bỏ quyền nâng cấp; đây là thao tác không thể hoàn tác. Khi cần đổi contract sau đó, phát hành Program ID mới và giữ đường đọc/settlement phiên bản cũ. Không migrate hoặc đổi điều kiện deal cũ một cách ngầm định.

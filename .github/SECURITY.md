@@ -1,6 +1,6 @@
 # Báo lỗi bảo mật / Security reports
 
-Phạm vi đang duy trì là branch `main` của MVP Devnet. Chương trình còn upgrade authority và chưa có audit độc lập; lịch sử archive không phải bản được khuyến nghị triển khai.
+Phạm vi đang duy trì là branch `main` của MVP Devnet. Program Devnet đã bỏ upgrade authority ngày13/10/2026 và chưa có audit độc lập; lịch sử archive không phải bản được khuyến nghị triển khai.
 
 Báo riêng lỗi có thể đổi người nhận, rút tiền trái quyền, chi lặp, phá binding chữ ký hoặc làm lộ secret qua [Report a vulnerability](https://github.com/2274802010922/pipicachu/security/advisories/new). Không đăng exploit hoặc secret trong issue công khai. Lỗi giao diện thông thường có thể dùng [Issues](https://github.com/2274802010922/pipicachu/issues).
 

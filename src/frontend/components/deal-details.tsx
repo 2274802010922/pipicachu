@@ -46,7 +46,8 @@ export function DealDetails({
               {amount(
                 ["refunded", "cancelled"].includes(deal.state) ? 0n : deal.fee,
               )}{" "}
-              USDC (1%)
+              USDC ({["refunded", "cancelled"].includes(deal.state) ? "0" : "1"}
+              %)
             </dd>
           </div>
           <div>
@@ -57,7 +58,12 @@ export function DealDetails({
                   ? 0n
                   : deal.platformFee,
               )}{" "}
-              USDC ({deal.feeVersion === 0 ? "0" : "1"}%)
+              USDC (
+              {["refunded", "cancelled"].includes(deal.state) ||
+              deal.feeVersion === 0
+                ? "0"
+                : "1"}
+              %)
             </dd>
           </div>
           <div>

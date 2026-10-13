@@ -12,3 +12,5 @@
 - npm run verify; build-sbf + test:program; Devnet receipt và Phantom thật là cổng riêng.
 - Không gọi local/mocked wallet là Phantom proof. Trọng tài bỏ xử và không đồng thuận có thể kẹt tiền.
 - Khóa cọc sau khi trọng tài accept và buyer nạp; mở khóa đúng một lần khi terminal.
+
+- Từ13/10/2026, program Devnet `4Xds5m5JtWR8HbNLdGeF7e3Qh3akKMHwMfjKsQeVXnrb` đã immutable (authority=None). Không thử upgrade PID này; thay contract cần Program ID mới và phương án giữ deal cũ. Proof: docs/evidence/fee-transparency/immutable.json.

@@ -120,3 +120,55 @@ for (const width of [375, 768, 1024, 1440])
       page.getByRole("region", { name: "On-chain payment allocation" }),
     ).toContainText("program remains upgradeable");
   });
+for (const state of ["immutable", "unknown"] as const)
+  test(`refund fees and ${state} authority are stated accurately`, async ({
+    page,
+  }) => {
+    const f = preparationFixture(1, 2_000_000n, 0n, 5, 100_000n, 1);
+    await page.route("**/api/program-status", (r) =>
+      r.fulfill({
+        status: state === "unknown" ? 503 : 200,
+        json: {
+          state,
+          authority: null,
+          programId: PROGRAM_ID.toBase58(),
+          programData: PROGRAM_ID.toBase58(),
+          checkedAt: new Date().toISOString(),
+        },
+      }),
+    );
+    await page.route("**/api/rpc", (r) => {
+      const b = r.request().postDataJSON();
+      return r.fulfill({
+        json: {
+          jsonrpc: "2.0",
+          id: b.id,
+          result:
+            b.method === "getMultipleAccounts"
+              ? snapshotBatchFixture(f, fixtureTime, true)
+              : b.method === "getAccountInfo"
+                ? { context: { slot: 1 }, value: f.deal }
+                : [],
+        },
+      });
+    });
+    await page.goto(`/deals/${preparationAddress}`);
+    const allocation = page.getByRole("region", {
+      name: "Phân bổ tiền on-chain",
+    });
+    await expect(allocation).toContainText("Hoàn 100% · phí dịch vụ 0");
+    await expect(allocation).toContainText(
+      state === "immutable"
+        ? "Chương trình đã bỏ quyền nâng cấp"
+        : "Chưa xác minh được quyền nâng cấp",
+    );
+    await page.getByText("Điều kiện giao dịch", { exact: true }).click();
+    await expect(
+      page.locator("details").filter({
+        has: page.getByText("Điều kiện giao dịch", { exact: true }),
+      }),
+    ).toContainText("USDC (0%)");
+    await expect(
+      page.getByText("Đã đối chiếu chuyển tiền finalized", { exact: true }),
+    ).toHaveCount(0);
+  });

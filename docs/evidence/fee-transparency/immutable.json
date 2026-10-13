@@ -1,0 +1,20 @@
+{
+  "at": "2026-10-13T04:18:38.230Z",
+  "network": "devnet",
+  "programId": "4Xds5m5JtWR8HbNLdGeF7e3Qh3akKMHwMfjKsQeVXnrb",
+  "sourceCommit": "b6d342b6087c2f39e377833dd07c5eb1e6a58213",
+  "ciRun": 38345111648,
+  "binarySha256": "1d78f1ebca22843996e8b79b701d18706c82fc959774332a892c1fb242458487",
+  "localCiDeployedEqual": true,
+  "trailingPaddingZero": true,
+  "activeDeals": 0,
+  "lockedBond": 0,
+  "authorityBefore": "DwTKmg68k39b8jZWt1CHypfoPs5JuJsuP88SfKcbW3uj",
+  "deployedSlot": "510499143",
+  "verifiedAt": "2026-10-13T04:20:29.972Z",
+  "programData": "2y8EiqwTxfU6t87QrnC7B2ejPWnYCFBU1Mz8Q7KfSazx",
+  "authorityAfter": null,
+  "state": "immutable",
+  "finalizedSignature": "268sVoHSVD8xewNq37mZPFi7ya2NVpmtYFzxZPac3htYjX1MUwQqVuKfyuDdNWtDHa1bjRgG8FkFifhB6SwQxjoo",
+  "slot": 510502290
+}

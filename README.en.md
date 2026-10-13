@@ -162,3 +162,5 @@ The pre-signing allocation reads the on-chain deal and shows exact amounts and r
 Finalized SPL transfers are checked against the deal's vault, mint and receiving accounts. Upgrade authority is read from Solana: an upgradeable program is never presented as immutable. Existing deals retain their existing fee terms.
 
 [Design and immutability gate](docs/architecture/fee-transparency.md) · [Live program status](https://pipicachu.vercel.app/api/program-status).
+
+The current Devnet program is **immutable**: [finalized authority-removal receipt and CI binary proof](docs/evidence/fee-transparency/immutable.json). Future contract versions require a new Program ID; existing deals retain their program and terms.

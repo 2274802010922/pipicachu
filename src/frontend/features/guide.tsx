@@ -93,8 +93,8 @@ export function Guide({ privacy = false }: { privacy?: boolean }) {
               </li>
               <li>
                 {t(
-                  "Chương trình Devnet còn quyền nâng cấp, chưa audit độc lập. Không dùng tài sản thật.",
-                  "The Devnet program retains upgrade authority and has no independent audit. Do not use real assets.",
+                  "Kiểm tra quyền nâng cấp trực tiếp trên trang deal. Bản Devnet chưa audit độc lập; không dùng tài sản thật.",
+                  "Check upgrade authority directly on the deal page. This Devnet build has no independent audit; do not use real assets.",
                 )}
               </li>
             </ul>

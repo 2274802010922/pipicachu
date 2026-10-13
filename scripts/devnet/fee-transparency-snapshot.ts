@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import { createHash } from "node:crypto";
-import { Connection, Keypair } from "@solana/web3.js";
+import { Connection, PublicKey } from "@solana/web3.js";
 import { PROGRAM_ID } from "../../src/escrow/constants";
 import {
   PROGRAM_DATA,
@@ -55,11 +55,6 @@ fs.writeFileSync(
 );
 if (process.argv.includes("--backup-binary"))
   fs.writeFileSync("work/fee-previous-program.so", data.data.subarray(45));
-const signer = Keypair.fromSecretKey(
-  Uint8Array.from(
-    JSON.parse(fs.readFileSync("work/private/fixture-signer.json", "utf8")),
-  ),
-);
 console.log(
   JSON.stringify({
     file: output,
@@ -68,7 +63,8 @@ console.log(
       ["funded", "delivered", "disputed"].includes(d.state),
     ).length,
     authority: authority.authority,
-    localSigner: signer.publicKey.toBase58(),
-    solLamports: await c.getBalance(signer.publicKey),
+    authoritySolLamports: authority.authority
+      ? await c.getBalance(new PublicKey(authority.authority))
+      : null,
   }),
 );

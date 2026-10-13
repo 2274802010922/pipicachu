@@ -142,6 +142,8 @@ Số liệu theo revision và loại kiểm thử; [báo cáo kỹ thuật](docs
 - Instruction \`fund_reviewed\` đối chiếu hash của số tiền, phí, người nhận, thời hạn và điều khoản đã xem. Thay đổi bất kỳ trường nào đều bị chặn trước khi nạp; deal cũ giữ điều kiện cũ.
 - Receipt được đối chiếu với transfer finalized, đúng vault/mint/token account và tổng tiền. Quyền nâng cấp được đọc live từ Solana, không suy ra từ một nhãn cấu hình.
 
+**Program Devnet hiện đã bỏ quyền nâng cấp**: [receipt và đối chiếu binary CI](docs/evidence/fee-transparency/immutable.json). Các deal ở program này giữ nguyên logic; đổi smart contract về sau phải dùng Program ID mới.
+
 [Thiết kế và cổng bất biến](docs/architecture/fee-transparency.md) · [Trạng thái chương trình](https://pipicachu.vercel.app/api/program-status). Program còn upgrade authority thì chủ quyền vẫn có thể thay code; multisig/timelock không đồng nghĩa immutable. Chỉ công bố đã bỏ quyền khi có bằng chứng on-chain.
 
 ## Chạy và tái hiện
